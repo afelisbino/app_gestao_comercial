@@ -4,13 +4,16 @@ import { opcaoMenuProps } from "../interfaces/interfaceNavbar";
 const menuApp: menuPrincipalProps[] = [
   {
     categoria: "Home",
+    admin: false,
   },
   {
     categoria: "Administrar",
+    admin: false,
     itens: [
       {
         nome: "Categorias",
         telaItem: "Categoria",
+        admin: true,
       },
       // {
       //   nome: "Cardápio",
@@ -19,43 +22,52 @@ const menuApp: menuPrincipalProps[] = [
       {
         nome: "Fornecedores",
         telaItem: "Fornecedor",
+        admin: true,
       },
       {
         nome: "Produtos",
         telaItem: "Produtos",
+        admin: true,
       },
       {
         nome: "Estoque",
         telaItem: "Estoque",
+        admin: true,
       },
       {
         nome: "Movimentação de caixa",
         telaItem: "MovimentacaoCaixa",
+        admin: true,
       },
       {
         nome: "Vendas fiado",
         telaItem: "ListarFiado",
+        admin: false,
       },
-      {
-        nome: "Usuários",
-        telaItem: "Usuario",
-      },
+      // {
+      //   nome: "Usuários",
+      //   telaItem: "Usuario",
+      // },
     ],
   },
   {
     categoria: "Relatórios",
+    admin: true,
     itens: [
       {
         nome: "Vendas",
         telaItem: "RelatorioVenda",
+        admin: true,
       },
       {
         nome: "Caixa",
         telaItem: "RelatorioCaixa",
+        admin: true,
       },
       {
         nome: "Estoque",
         telaItem: "RelatorioEstoque",
+        admin: true,
       },
     ],
   },
@@ -93,7 +105,7 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 ">
-              {menuApp.map(({ categoria, itens }) => {
+              {menuApp.map(({ categoria, itens, admin }) => {
                 if (itens === undefined) {
                   return (
                     <li className="nav-item">
@@ -112,80 +124,73 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                 } else {
                   return (
                     <li className="nav-item dropdown">
-                      <a
-                        className="nav-link dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {categoria}
-                      </a>
+                      {localStorage.getItem("tipoUsuario") === "0" ? (
+                        !admin ? (
+                          <a
+                            className="nav-link dropdown-toggle"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            {categoria}
+                          </a>
+                        ) : (
+                          <></>
+                        )
+                      ) : (
+                        <a
+                          className="nav-link dropdown-toggle"
+                          href="#"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {categoria}
+                        </a>
+                      )}
                       <ul className="dropdown-menu">
-                        {itens.map(({ telaItem, nome }) => {
-                          return (
-                            <li>
-                              <a
-                                className="dropdown-item"
-                                href="#"
-                                data-bs-dismiss="offcanvas"
-                                onClick={() => {
-                                  selecionarOpcaoMenu(telaItem);
-                                }}
-                              >
-                                {nome}
-                              </a>
-                            </li>
-                          );
-                        })}
+                        {localStorage.getItem("tipoUsuario") === "0"
+                          ? itens.map(({ telaItem, nome, admin }) => {
+                              if (!admin) {
+                                return (
+                                  <li>
+                                    <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      data-bs-dismiss="offcanvas"
+                                      onClick={() => {
+                                        selecionarOpcaoMenu(telaItem);
+                                      }}
+                                    >
+                                      {nome}
+                                    </a>
+                                  </li>
+                                );
+                              }
+                            })
+                          : itens.map(({ telaItem, nome }) => {
+                              return (
+                                <li>
+                                  <a
+                                    className="dropdown-item"
+                                    href="#"
+                                    data-bs-dismiss="offcanvas"
+                                    onClick={() => {
+                                      selecionarOpcaoMenu(telaItem);
+                                    }}
+                                  >
+                                    {nome}
+                                  </a>
+                                </li>
+                              );
+                            })}
                       </ul>
                     </li>
                   );
                 }
               })}
             </ul>
-            <hr />
-            <div className="dropdown">
-              <a
-                href="#"
-                className="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <img
-                  src={"https://github.com/mdo.png"}
-                  width="32"
-                  height="32"
-                  className="rounded-circle me-2"
-                />
-                <strong>UserName</strong>
-              </a>
-              <ul className="dropdown-menu text-small shadow">
-                <li>
-                  <a className="dropdown-item" href="#">
-                    New project...
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Sign out
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>

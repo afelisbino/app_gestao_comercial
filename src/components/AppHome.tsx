@@ -71,7 +71,7 @@ export function AppHome() {
         {autenticado ? (
           <CarregarTela nomeTela={opcaoMenu} />
         ) : (
-          <Login autenticarUsuarioAdm={validarAutenticacaoUsuario} />
+          <Login autenticarUsuarioSistema={validarAutenticacaoUsuario} />
         )}
       </main>
     </>
