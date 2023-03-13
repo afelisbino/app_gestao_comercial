@@ -11,6 +11,7 @@ export function MovimentacoesCaixa() {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
   const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
 
+  const [movimentacaoData, setarMovimentacaoData] = useState<Date | null>(null);
   const [movimentacaoValor, setarMovimentacaoValor] = useState<string>("");
   const [movimentacaoTipo, selecionarMovimentacaoTipo] = useState<string>("");
   const [movimentacaoComentario, setarMovimentacaoComentario] =
@@ -39,7 +40,8 @@ export function MovimentacoesCaixa() {
     let requisicao: retornoRequisicaoProps = await registraMovimentacao(
       parseFloat(movimentacaoValor),
       movimentacaoTipo,
-      movimentacaoComentario
+      movimentacaoComentario,
+      movimentacaoData?.toISOString() ?? null
     );
 
     if (requisicao.status) {
@@ -72,7 +74,7 @@ export function MovimentacoesCaixa() {
       )}
       <form onSubmit={salvarMovimentacaoCaixa} className="mt-5">
         <div className="row">
-          <div className="col-lg-6 col-md-6 col-sm-12 gap-1">
+          <div className="col-lg-4 col-md-4 col-sm-12 gap-1">
             <div className="form-floating">
               <input
                 type="text"
@@ -91,7 +93,7 @@ export function MovimentacoesCaixa() {
               <label htmlFor="mcxValor">Valor</label>
             </div>
           </div>
-          <div className="col-lg-6 col-md-6 col-sm-12 gap-1">
+          <div className="col-lg-4 col-md-4 col-sm-12 gap-1">
             <div className="form-floating">
               <select
                 className="form-select"
@@ -110,6 +112,21 @@ export function MovimentacoesCaixa() {
                 <option value="saida">Saida</option>
               </select>
               <label htmlFor="mcxTipo">Tipo de movimentação</label>
+            </div>
+          </div>
+          <div className="col-lg-4 col-md-4 col-sm-12 gap-1">
+            <div className="form-floating">
+              <input
+                type="date"
+                autoComplete="off"
+                className="form-control"
+                id="mcxData"
+                placeholder="Data da movimentação"
+                onChange={(event) => {
+                  setarMovimentacaoData(event.target.valueAsDate);
+                }}
+              />
+              <label htmlFor="mcxData">Data da movimentação</label>
             </div>
           </div>
           <div className="col-12 gap-1">

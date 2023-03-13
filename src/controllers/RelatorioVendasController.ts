@@ -11,7 +11,8 @@ export async function buscaInformacoesVendasLocalDataAtual(): Promise<estatistic
             return {
                 qtdTotalVendas: 0,
                 valorTotalLucro: 0,
-                valorTotalVendas: 0
+                valorTotalVendas: 0,
+                estatisticasVenda: []
             }
         });
 }
@@ -30,7 +31,8 @@ export async function buscaInformacoesVendasLocalPeriodo(dataInicio: string, dat
             return {
                 qtdTotalVendas: 0,
                 valorTotalLucro: 0,
-                valorTotalVendas: 0
+                valorTotalVendas: 0,
+                estatisticasVenda: []
             }
         });
 }

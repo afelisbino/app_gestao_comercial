@@ -61,6 +61,31 @@ export function EstatisticasVenda() {
     setarDadosGraficoValoresFormaPagamento,
   ] = useState<graficoLinhaDataSetsProps[]>([]);
 
+  const [labelsGraficoPeriodo, setarLabelGraficoPeriodo] = useState<string[]>(
+    []
+  );
+  const [dadosGraficoQtdVendasPeriodo, setarDadosGraficoQtdVendasPeriodo] =
+    useState<graficoBarraDataSetsProps[]>([
+      { data: [], label: "", backgroundColor: "" },
+    ]);
+
+  const [
+    dadosGraficoValoresVendasPeriodo,
+    setarDadosGraficoValoresVendasPeriodo,
+  ] = useState<graficoLinhaDataSetsProps[]>([]);
+
+  const [
+    dadosGraficoQtdFormaPagamentosPeriodo,
+    setarDadosGraficoFormaPagamentosPeriodo,
+  ] = useState<graficoBarraDataSetsProps[]>([
+    { data: [], label: "", backgroundColor: "" },
+  ]);
+
+  const [
+    dadosGraficoValoresFormaPagamentoPeriodo,
+    setarDadosGraficoValoresFormaPagamentoPeriodo,
+  ] = useState<graficoLinhaDataSetsProps[]>([]);
+
   const [listaVendas, setarListaVendas] = useState<vendasFinalizadaProps[]>([]);
   const [itensVenda, setarItensVenda] = useState<itensVendaProps[]>([]);
 
@@ -86,20 +111,20 @@ export function EstatisticasVenda() {
     setarDadosGraficoQtdVendas([
       {
         label: "Normal",
-        data: estatisticasVendas.map(
-          (quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+        data: estatisticasVendas
+          .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
             return quantidadeVendas.totalNormal;
-          }
-        ),
+          })
+          .reverse(),
         backgroundColor: "rgb(0,0,139)",
       },
       {
         label: "Fiado",
-        data: estatisticasVendas.map(
-          (quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+        data: estatisticasVendas
+          .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
             return quantidadeVendas.totalFiado;
-          }
-        ),
+          })
+          .reverse(),
         backgroundColor: "rgb(100,149,237)",
       },
     ]);
@@ -107,21 +132,21 @@ export function EstatisticasVenda() {
     setarDadosGraficoValoresVendas([
       {
         label: "Valor total de vendas (R$)",
-        data: estatisticasVendas.map(
-          (valoresVendas: estatisticaVendasUltimosSeteDias) => {
+        data: estatisticasVendas
+          .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
             return valoresVendas.valorTotalVendas;
-          }
-        ),
+          })
+          .reverse(),
         backgroundColor: "rgb(152,251,152)",
         borderColor: "rgb(152,251,152)",
       },
       {
         label: "Valor total de ganhos (R$)",
-        data: estatisticasVendas.map(
-          (valoresLucros: estatisticaVendasUltimosSeteDias) => {
+        data: estatisticasVendas
+          .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
             return valoresLucros.valorTotalGanhos;
-          }
-        ),
+          })
+          .reverse(),
         backgroundColor: "rgb(0,128,0)",
         borderColor: "rgb(0,128,0)",
       },
@@ -130,18 +155,22 @@ export function EstatisticasVenda() {
     setarDadosGraficoFormaPagamentos([
       {
         label: "Vendas cartão",
-        data: estatisticasVendas.map(
-          (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-            qtdFormasPagamento.totalCartao
-        ),
+        data: estatisticasVendas
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalCartao
+          )
+          .reverse(),
         backgroundColor: "rgb(240,230,140)",
       },
       {
         label: "Vendas dinheiro",
-        data: estatisticasVendas.map(
-          (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-            qtdFormasPagamento.totalDinheiro
-        ),
+        data: estatisticasVendas
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalDinheiro
+          )
+          .reverse(),
         backgroundColor: "rgb(255,140,0)",
       },
     ]);
@@ -149,39 +178,153 @@ export function EstatisticasVenda() {
     setarDadosGraficoValoresFormaPagamento([
       {
         label: "Valor total no cartão (R$)",
-        data: estatisticasVendas.map(
-          (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-            valorFormasPagamento.valorTotalCartao
-        ),
+        data: estatisticasVendas
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalCartao
+          )
+          .reverse(),
         backgroundColor: "rgb(75,0,130)",
         borderColor: "rgb(75,0,130)",
       },
       {
         label: "Valor total no dinheiro (R$)",
-        data: estatisticasVendas.map(
-          (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-            valorFormasPagamento.valorTotalDinheiro
-        ),
+        data: estatisticasVendas
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalDinheiro
+          )
+          .reverse(),
         backgroundColor: "rgb(147,112,219)",
         borderColor: "rgb(147,112,219)",
       },
     ]);
 
     setarLabelGrafico(
-      estatisticasVendas.map((diasVendas: estatisticaVendasUltimosSeteDias) => {
-        return diasVendas.dataLabel;
-      })
+      estatisticasVendas
+        .map((diasVendas: estatisticaVendasUltimosSeteDias) => {
+          return diasVendas.dataLabel;
+        })
+        .reverse()
     );
 
     buscarEstatisticasAtuais(false);
   }
 
   async function buscaEstatisticasVendaPeriodo() {
-    setarDadosVendasPeriodo(
-      await buscaInformacoesVendasLocalPeriodo(
-        dataInicio?.toISOString() ?? "",
-        dataFim?.toISOString() ?? ""
-      )
+    const dadosEstatisticas = await buscaInformacoesVendasLocalPeriodo(
+      dataInicio?.toISOString() ?? "",
+      dataFim?.toISOString() ?? ""
+    );
+
+    setarDadosVendasPeriodo(dadosEstatisticas);
+
+    setarDadosGraficoQtdVendasPeriodo([
+      {
+        label: "Normal",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+              return quantidadeVendas.totalNormal;
+            })
+            .reverse(),
+        backgroundColor: "rgb(0,0,139)",
+      },
+      {
+        label: "Fiado",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+              return quantidadeVendas.totalFiado;
+            })
+            .reverse(),
+        backgroundColor: "rgb(100,149,237)",
+      },
+    ]);
+
+    setarDadosGraficoValoresVendasPeriodo([
+      {
+        label: "Valor total de vendas (R$)",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
+              return valoresVendas.valorTotalVendas;
+            })
+            .reverse(),
+        backgroundColor: "rgb(152,251,152)",
+        borderColor: "rgb(152,251,152)",
+      },
+      {
+        label: "Valor total de ganhos (R$)",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
+              return valoresLucros.valorTotalGanhos;
+            })
+            .reverse(),
+        backgroundColor: "rgb(0,128,0)",
+        borderColor: "rgb(0,128,0)",
+      },
+    ]);
+
+    setarDadosGraficoFormaPagamentosPeriodo([
+      {
+        label: "Vendas cartão",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map(
+              (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+                qtdFormasPagamento.totalCartao
+            )
+            .reverse(),
+        backgroundColor: "rgb(240,230,140)",
+      },
+      {
+        label: "Vendas dinheiro",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map(
+              (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+                qtdFormasPagamento.totalDinheiro
+            )
+            .reverse(),
+        backgroundColor: "rgb(255,140,0)",
+      },
+    ]);
+
+    setarDadosGraficoValoresFormaPagamentoPeriodo([
+      {
+        label: "Valor total no cartão (R$)",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map(
+              (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+                valorFormasPagamento.valorTotalCartao
+            )
+            .reverse(),
+        backgroundColor: "rgb(75,0,130)",
+        borderColor: "rgb(75,0,130)",
+      },
+      {
+        label: "Valor total no dinheiro (R$)",
+        data:
+          dadosEstatisticas.estatisticasVenda
+            .map(
+              (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+                valorFormasPagamento.valorTotalDinheiro
+            )
+            .reverse(),
+        backgroundColor: "rgb(147,112,219)",
+        borderColor: "rgb(147,112,219)",
+      },
+    ]);
+
+    setarLabelGraficoPeriodo(
+      dadosEstatisticas.estatisticasVenda
+        .map((diasVendas: estatisticaVendasUltimosSeteDias) => {
+          return diasVendas.dataLabel;
+        })
+        .reverse()
     );
   }
 
@@ -484,15 +627,114 @@ export function EstatisticasVenda() {
               </div>
               <hr />
               <div className="row">
-                <div className="col-12">
-                  <TabelaVendasFinalizado
-                    listaVendas={listaVendas}
-                    buscandoLista={buscandoEstatisticasPeriodo}
-                    buscandoItensVenda={buscandoItensVenda}
-                    visualizarItensVenda={(vendaToken) =>
-                      buscaItensVenda(vendaToken)
-                    }
-                  />
+                <ul
+                  className="nav nav-tabs justify-content-center"
+                  id="myTab"
+                  role="tablist"
+                >
+                  <li className="nav-item" role="presentation">
+                    <button
+                      className="nav-link text-bg-light active"
+                      id="visao-geral-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#visao-geral-tab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="visao-geral-tab-pane"
+                      aria-selected="true"
+                    >
+                      Visão Geral
+                    </button>
+                  </li>
+                  <li className="nav-item" role="presentation">
+                    <button
+                      className="nav-link text-bg-light"
+                      id="mais-detalhes-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#mais-detalhes-tab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="mais-detalhes-tab-pane"
+                      aria-selected="false"
+                    >
+                      Mais detalhes
+                    </button>
+                  </li>
+                </ul>
+                <div className="tab-content" id="myTabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="visao-geral-tab-pane"
+                    role="tabpanel"
+                    aria-labelledby="visao-geral-tab"
+                    tabIndex={0}
+                  >
+                    {!buscandoEstatisticasPeriodo ? (
+                      <div
+                        className="row mt-3 mb-3 overflow-auto"
+                        style={{ maxHeight: "30rem" }}
+                      >
+                        <div className="d-flex flex-row flex-wrap justify-content-center align-items-center px-auto">
+                          <>
+                            <div className="col-12 col-md-6 col-lg-6">
+                              <Barras
+                                tituloGrafico="Quantidade de vendas por tipo"
+                                labels={labelsGraficoPeriodo}
+                                datasets={dadosGraficoQtdVendasPeriodo}
+                              />
+                            </div>
+                            <div className="col-12 col-md-6 col-lg-6">
+                              <Linha
+                                tituloGrafico="Comparativos de valores de vendas e ganhos"
+                                labels={labelsGraficoPeriodo}
+                                datasets={dadosGraficoValoresVendasPeriodo}
+                              />
+                            </div>
+                            <div className="col-12 col-md-6 col-lg-6">
+                              <Barras
+                                tituloGrafico="Comparativos de quantidade de vendas em cartão e dinheiro"
+                                labels={labelsGraficoPeriodo}
+                                datasets={dadosGraficoQtdFormaPagamentosPeriodo}
+                              />
+                            </div>
+                            <div className="col-12 col-md-6 col-lg-6">
+                              <Linha
+                                tituloGrafico="Comparativos de valores de vendas em cartão e dinheiro"
+                                labels={labelsGraficoPeriodo}
+                                datasets={
+                                  dadosGraficoValoresFormaPagamentoPeriodo
+                                }
+                              />
+                            </div>
+                          </>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div className="col-auto">
+                          <Spinner />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className="tab-pane fade"
+                    id="mais-detalhes-tab-pane"
+                    role="tabpanel"
+                    aria-labelledby="mais-detalhes-tab"
+                    tabIndex={0}
+                  >
+                    <div className="col-12">
+                      <TabelaVendasFinalizado
+                        listaVendas={listaVendas}
+                        buscandoLista={buscandoEstatisticasPeriodo}
+                        buscandoItensVenda={buscandoItensVenda}
+                        visualizarItensVenda={(vendaToken) =>
+                          buscaItensVenda(vendaToken)
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

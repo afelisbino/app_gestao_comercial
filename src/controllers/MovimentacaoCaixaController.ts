@@ -1,11 +1,12 @@
 import { retornoRequisicaoProps } from '../interfaces/interfaceReturnoRequisicao';
 import instanciaAxios from "../libraries/AxiosInstance";
 
-export async function registraMovimentacao(mcxValor: number, mcxTipo: string, mcxComentario: string | null): Promise<retornoRequisicaoProps> {
+export async function registraMovimentacao(mcxValor: number, mcxTipo: string, mcxComentario: string | null, mcxData: string|null): Promise<retornoRequisicaoProps> {
     return await instanciaAxios.post<retornoRequisicaoProps>("caixa/movimentacao/entrada", JSON.stringify({
         mcxTipo: mcxTipo,
         mcxValor: mcxValor,
-        mcxComentario: mcxComentario
+        mcxComentario: mcxComentario,
+        mcxData: mcxData
     })).then(({data}) => {
         return data;
     }).catch((error) => {

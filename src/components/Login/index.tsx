@@ -4,10 +4,10 @@ import { usuarioProps } from "../../interfaces/interfaceUsuario";
 import { Alerta } from "../Alerta";
 
 interface loginProps {
-  autenticarUsuarioAdm: (validado: boolean) => void;
+  autenticarUsuarioSistema: (validado: boolean) => void;
 }
 
-export function Login({ autenticarUsuarioAdm }: loginProps) {
+export function Login({ autenticarUsuarioSistema }: loginProps) {
   const [nomeUsuario, setarNomeUsuario] = useState<string>("");
   const [senhaUsuario, setarSenhaUsuario] = useState<string>("");
   const [autenticandoUsuario, carregarAutenticacaoUsuario] = useState(false);
@@ -26,25 +26,19 @@ export function Login({ autenticarUsuarioAdm }: loginProps) {
       })
       .then(({ data }) => {
         if (data.status) {
-          localStorage.setItem("token", data.token ?? "");
+          localStorage.setItem("token", data.token);
 
-          if (data.admin !== undefined) {
-            if (data.admin) {
-              localStorage.setItem("admin", "ativo");
-
-              autenticarUsuarioAdm(true);
-            } else {
-              setarMensagemAlerta(
-                "Este usuario não possui privilegios para acessar esta area!"
-              );
-              dispararAlerta(true);
-              autenticarUsuarioAdm(false);
-            }
+          if (data.admin) {
+            localStorage.setItem("tipoUsuario", "1");
+          } else {
+            localStorage.setItem("tipoUsuario", "0");
           }
+
+          autenticarUsuarioSistema(true);
         } else {
           setarMensagemAlerta(data.msg);
           dispararAlerta(true);
-          autenticarUsuarioAdm(false);
+          autenticarUsuarioSistema(false);
         }
       })
       .finally(() => carregarAutenticacaoUsuario(false));

@@ -2,6 +2,7 @@ export interface estatisticaVendas {
     qtdTotalVendas: number;
     valorTotalVendas: number;
     valorTotalLucro: number;
+    estatisticasVenda: estatisticaVendasUltimosSeteDias[];
 }
 
 export interface estatisticaVendasUltimosSeteDias {

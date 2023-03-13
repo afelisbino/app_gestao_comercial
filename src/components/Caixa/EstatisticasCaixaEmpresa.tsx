@@ -99,8 +99,8 @@ export function EstatisticasCaixaEmpresa({
                 {
                   label: "Total em caixa (R$)",
                   data: dadosGraficoFechamentoCaixa,
-                  backgroundColor: "rgb(0,206,209)",
-                  borderColor: "rgb(0,206,209)",
+                  backgroundColor: "rgb(72,61,139)",
+                  borderColor: "rgb(72,61,139)",
                 },
               ]}
             />
@@ -113,14 +113,14 @@ export function EstatisticasCaixaEmpresa({
                 {
                   label: "Receita (R$)",
                   data: dadosGraficoReceita,
-                  backgroundColor: "rgb(255,99,71)",
-                  borderColor: "rgb(255,99,71)",
+                  backgroundColor: "rgb(46,139,87)",
+                  borderColor: "rgb(46,139,87)",
                 },
                 {
                   label: "Lucro (R$)",
                   data: dadosGraficoLucro,
-                  backgroundColor: "rgb(50,205,50)",
-                  borderColor: "rgb(50,205,50)",
+                  backgroundColor: "rgb(152,251,152)",
+                  borderColor: "rgb(152,251,152)",
                 },
               ]}
             />

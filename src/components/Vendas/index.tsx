@@ -50,10 +50,41 @@ export function Vendas() {
     }
   }
 
-  function adicionaItemSacola(item: sacolaProp) {
-    setarItensSacola([...itensSacola, item].reverse());
-    somaValorItemDoTotal(item.scl_sub_total);
-    setarFiltro("");
+  function adicionaItemSacola(qtdAtualEstoque: number, item: sacolaProp) {
+    if (verificaDisponibilidadeProdutoEstoque(qtdAtualEstoque, item.pro_id)) {
+      alertarMensagemSistema(
+        "warning",
+        "Não possuímos essa quantidade de produto no estoque!"
+      );
+    } 
+    else if(item.scl_qtd > qtdAtualEstoque){
+      alertarMensagemSistema(
+        "warning",
+        "Não possuímos essa quantidade de produto no estoque!"
+      );
+    }
+    else {
+      setarItensSacola([...itensSacola, item].reverse());
+      somaValorItemDoTotal(item.scl_sub_total);
+      setarFiltro("");
+    }
+  }
+
+  function verificaDisponibilidadeProdutoEstoque(
+    qtdAtualEstoque: number,
+    tokenProduto: string
+  ): boolean {
+    const somaItensProdutoAdicionado = itensSacola.reduce(
+      (somatoriaQtd, produto) => {
+        if (produto.pro_id === tokenProduto)
+          return somatoriaQtd + produto.scl_qtd;
+
+        return 0;
+      },
+      0
+    );
+
+    return somaItensProdutoAdicionado >= qtdAtualEstoque;
   }
 
   function descontaValorItemDoTotal(subTotalItem: number) {
@@ -86,7 +117,7 @@ export function Vendas() {
         let produto = filtraProdutoCodigoBarras(filtro);
 
         if (produto) {
-          adicionaItemSacola({
+          adicionaItemSacola(produto.est_qtd_atual, {
             scl_qtd: 1,
             scl_sub_total: produto?.pro_valor ?? 0,
             pro_id: produto?.pro_id ?? "",
@@ -224,6 +255,8 @@ export function Vendas() {
     }
 
     processarVenda(false);
+
+    buscaListaProdutoAtivos();
   }
 
   function limpaDadosVenda() {
@@ -295,10 +328,10 @@ export function Vendas() {
         </div>
       </div>
 
-      <div className="row g-2 g-lg-4 row-cols-1 row-cols-lg-2 mt-3">
+      <div className="row mt-3 mb-5" style={{ maxHeight: "40rem" }}>
         <div
           style={{ maxHeight: "35rem" }}
-          className="col-lg-9 col-md-9 col-sm-12 overflow-auto py-3"
+          className="col-lg-9 col-md-9 col-12 overflow-auto py-3"
         >
           {!carregandoListaProdutos ? (
             <div className="d-flex justify-content-center flex-wrap">
@@ -310,8 +343,11 @@ export function Vendas() {
                           processandoVenda={processandoVenda}
                           pro_id={produto.pro_id}
                           pro_nome={produto.pro_nome}
+                          pro_qtd_atual_estoque={produto.est_qtd_atual}
                           pro_valor={produto.pro_valor}
-                          adicionarProduto={(item) => adicionaItemSacola(item)}
+                          adicionarProduto={(qtdAtualEstoque, item) =>
+                            adicionaItemSacola(qtdAtualEstoque, item)
+                          }
                         />
                       </div>
                     );
@@ -324,7 +360,10 @@ export function Vendas() {
                           pro_id={produto.pro_id}
                           pro_nome={produto.pro_nome}
                           pro_valor={produto.pro_valor}
-                          adicionarProduto={(item) => adicionaItemSacola(item)}
+                          pro_qtd_atual_estoque={produto.est_qtd_atual}
+                          adicionarProduto={(qtdAtualEstoque, item) =>
+                            adicionaItemSacola(qtdAtualEstoque, item)
+                          }
                         />
                       </div>
                     );
