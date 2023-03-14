@@ -56,14 +56,12 @@ export function Vendas() {
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
-    } 
-    else if(item.scl_qtd > qtdAtualEstoque){
+    } else if (item.scl_qtd > qtdAtualEstoque) {
       alertarMensagemSistema(
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
-    }
-    else {
+    } else {
       setarItensSacola([...itensSacola, item].reverse());
       somaValorItemDoTotal(item.scl_sub_total);
       setarFiltro("");
@@ -328,17 +326,17 @@ export function Vendas() {
         </div>
       </div>
 
-      <div className="row mt-3 mb-5" style={{ maxHeight: "40rem" }}>
+      <div className="row mt-3">
         <div
           style={{ maxHeight: "35rem" }}
-          className="col-lg-9 col-md-9 col-12 overflow-auto py-3"
+          className="col-lg-9 col-md-6 col-12 overflow-auto "
         >
           {!carregandoListaProdutos ? (
-            <div className="d-flex justify-content-center flex-wrap">
+            <div className="d-flex justify-content-center flex-wrap gap-2 mb-5 mt-3">
               {listaProdutoFiltrado.length === 0
                 ? listaProduto.map((produto) => {
                     return (
-                      <div className="my-2 mx-2">
+                      <div>
                         <Produtos
                           processandoVenda={processandoVenda}
                           pro_id={produto.pro_id}
@@ -354,7 +352,7 @@ export function Vendas() {
                   })
                 : listaProdutoFiltrado.map((produto) => {
                     return (
-                      <div className="my-2 mx-2">
+                      <div>
                         <Produtos
                           processandoVenda={processandoVenda}
                           pro_id={produto.pro_id}
@@ -384,13 +382,21 @@ export function Vendas() {
           )}
         </div>
 
-        <div className="col-lg-3 col-md-3 col-sm-12 px-3">
+        <div className="col-lg-3 col-md-6 col-sm-12 px-3">
           <div className="d-flex flex-column flex-wrap">
             <div>
               <h3 className="text-center mb-2">Itens do carrinho</h3>
+              <div>
+                <h1
+                  id="venTotal"
+                  className="text-center border rounded p-2 mt-1"
+                >
+                  R$ 0.00
+                </h1>
+              </div>
               <ul
                 className="list-group overflow-auto"
-                style={{ maxHeight: "30rem" }}
+                style={{ maxHeight: "25rem" }}
               >
                 {itensSacola.length === 0 ? (
                   <>
@@ -415,11 +421,6 @@ export function Vendas() {
                   })
                 )}
               </ul>
-            </div>
-            <div>
-              <h1 id="venTotal" className="text-center border rounded p-2 mt-1">
-                R$ 0.00
-              </h1>
             </div>
           </div>
         </div>

@@ -29,10 +29,10 @@ export function ItemEstoque({
     <div
       key={pro_id}
       className="card shadow border border-0 bg-light bg-gradient mt-3 mb-4"
-      style={{ minWidth: "21rem", height: "auto" }}
+      style={{ width: "21rem", height: "auto" }}
     >
       <div className="card-header">
-        <h5 className="card-title text-center">
+        <h5 className="card-title text-center text-wrap">
           {pro_nome + (!pro_disponivel ? " (Desativado)" : "")}
         </h5>
       </div>
@@ -49,6 +49,8 @@ export function ItemEstoque({
             </div>
           </div>
         </div>
+      </div>
+      <div className="card-footer">
         <div className="row mt-3">
           <div className="d-grid gap-2 d-inline-flex justify-content-center">
             <div className="col-auto">

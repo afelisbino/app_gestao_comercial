@@ -263,8 +263,11 @@ export function Estoque() {
               aria-labelledby="visaoGeral-tab"
               tabIndex={0}
             >
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center p-auto">
+              <div className="row ">
+                <div
+                  className="d-flex flex-wrap justify-content-center p-auto overflow-auto"
+                  style={{ maxHeight: "35rem" }}
+                >
                   {carregandoListaProdutosEstoque ? (
                     <>
                       <div className="col-auto mx-auto">
@@ -347,7 +350,10 @@ export function Estoque() {
               tabIndex={0}
             >
               <div className="row">
-                <div className="d-flex flex-wrap justify-content-center p-auto">
+                <div
+                  className="d-flex flex-wrap justify-content-center p-auto overflow-auto"
+                  style={{ maxHeight: "35rem" }}
+                >
                   {carregandoListaProdutosEstoque ? (
                     <>
                       <div className="col-auto mx-auto">
@@ -440,7 +446,10 @@ export function Estoque() {
               tabIndex={0}
             >
               <div className="row">
-                <div className="d-flex flex-wrap justify-content-center p-auto">
+                <div
+                  className="d-flex flex-wrap justify-content-center p-auto overflow-auto"
+                  style={{ maxHeight: "35rem" }}
+                >
                   {carregandoListaProdutosEstoque ? (
                     <>
                       <div className="col-auto mx-auto">
@@ -527,7 +536,10 @@ export function Estoque() {
               tabIndex={0}
             >
               <div className="row">
-                <div className="d-flex flex-wrap justify-content-center p-auto">
+                <div
+                  className="d-flex flex-wrap justify-content-center p-auto overflow-auto"
+                  style={{ maxHeight: "35rem" }}
+                >
                   {carregandoListaProdutosEstoque ? (
                     <>
                       <div className="col-auto mx-auto">
