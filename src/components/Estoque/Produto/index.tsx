@@ -468,6 +468,7 @@ export function Produto() {
                         type="number"
                         name="pro_qtd_minimo"
                         id="pro_qtd_minimo"
+                        min={0}
                         className="form-control"
                         placeholder="Qtd. Mínimo"
                         value={qtdMinimaProduto ?? 0}
@@ -748,11 +749,12 @@ export function Produto() {
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
-                        type="text"
+                        type="number"
                         name="pro_qtd_minimo_edicao"
                         id="pro_qtd_minimo_edicao"
                         className="form-control"
                         placeholder="Qtd. Mínimo"
+                        min={0}
                         value={qtdMinimaProduto ?? 0}
                         onChange={(event) => {
                           setarQtdMinima(event.target.valueAsNumber);
