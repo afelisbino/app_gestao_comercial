@@ -37,7 +37,7 @@ const menuApp: menuPrincipalProps[] = [
       {
         nome: "Movimentação de caixa",
         telaItem: "MovimentacaoCaixa",
-        admin: true,
+        admin: false,
       },
       {
         nome: "Vendas fiado",
