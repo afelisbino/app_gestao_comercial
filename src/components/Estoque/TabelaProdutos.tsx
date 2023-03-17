@@ -7,7 +7,7 @@ import {
 } from "phosphor-react";
 import { produtoProps } from "../../interfaces/interfaceProdutos";
 import { Placeholder } from "../Loaders/Placeholder";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
@@ -45,18 +45,19 @@ export function TabelaProdutos({
   const [listaFiltroProdutos, setarListaFiltroProduto] = useState<
     produtoProps[]
   >([]);
+  const [filtroProduto, setarFiltroProduto] = useState<string>("");
 
-  function filtraProdutoNome(filtro: string) {
-    if (filtro.length !== 0) {
+  useEffect(() => {
+    if (filtroProduto.length !== 0) {
       setarListaFiltroProduto(
         listaProdutos.filter((el: produtoProps) =>
-          el["pro_nome"].toLowerCase().includes(filtro.toLowerCase())
+          el["pro_nome"].toLowerCase().includes(filtroProduto.toLowerCase())
         )
       );
     } else {
       setarListaFiltroProduto([]);
     }
-  }
+  }, [filtroProduto]);
 
   return (
     <>
@@ -68,8 +69,9 @@ export function TabelaProdutos({
               className="form-control"
               id="pro_nome_filtro"
               placeholder="Produto"
+              value={filtroProduto}
               disabled={carregandoListaProdutos}
-              onChange={(event) => filtraProdutoNome(event.target.value)}
+              onChange={(event) => setarFiltroProduto(event.target.value)}
             />
             <label htmlFor="pro_nome_filtro">Pesquisar nome do produto</label>
           </div>
@@ -89,6 +91,7 @@ export function TabelaProdutos({
             </thead>
             <tbody className="overflow-auto">
               {carregandoListaProdutos ? (
+
                 <>
                   <tr>
                     <th className="w-auto" scope="row">
@@ -155,7 +158,7 @@ export function TabelaProdutos({
                 listaProdutos.map((produto) => {
                   return (
                     <>
-                      <tr>
+                      <tr key={produto.pro_id}>
                         <th className="w-auto" scope="row">
                           <button
                             type="button"
@@ -186,7 +189,10 @@ export function TabelaProdutos({
                               type="button"
                               key={produto.pro_id + "-desativa_produto"}
                               title="Desativar produto"
-                              onClick={() => desativarProduto(produto.pro_id)}
+                              onClick={() => {
+                                desativarProduto(produto.pro_id);
+                                setarFiltroProduto("");
+                              }}
                               className="btn btn-danger shadow"
                               disabled={processandoRequisicao}
                             >
@@ -197,7 +203,10 @@ export function TabelaProdutos({
                               type="button"
                               key={produto.pro_id + "-ativa_produto"}
                               title="Ativar produto"
-                              onClick={() => ativarProduto(produto.pro_id)}
+                              onClick={() => {
+                                ativarProduto(produto.pro_id);
+                                setarFiltroProduto("");
+                              }}
                               className="btn btn-success shadow"
                               disabled={processandoRequisicao}
                             >
@@ -248,7 +257,7 @@ export function TabelaProdutos({
                 listaFiltroProdutos.map((produto) => {
                   return (
                     <>
-                      <tr>
+                      <tr key={produto.pro_id}>
                         <th className="w-auto" scope="row">
                           <button
                             type="button"
@@ -279,7 +288,10 @@ export function TabelaProdutos({
                               type="button"
                               key={produto.pro_id + "-desativa_produto"}
                               title="Desativar produto"
-                              onClick={() => desativarProduto(produto.pro_id)}
+                              onClick={() => {
+                                desativarProduto(produto.pro_id);
+                                setarFiltroProduto("");
+                              }}
                               className="btn btn-danger shadow"
                               disabled={processandoRequisicao}
                             >
@@ -290,7 +302,10 @@ export function TabelaProdutos({
                               type="button"
                               key={produto.pro_id + "-ativa_produto"}
                               title="Ativar produto"
-                              onClick={() => ativarProduto(produto.pro_id)}
+                              onClick={() => {
+                                ativarProduto(produto.pro_id);
+                                setarFiltroProduto("");
+                              }}
                               className="btn btn-success shadow"
                               disabled={processandoRequisicao}
                             >
