@@ -1,8 +1,10 @@
 import axios from "axios";
 import authorization from "./TokenApp";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const instanciaAxios = axios.create({
-    baseURL: "https://api.manstock.com.br/public/index.php/api/",
+    baseURL: BASE_URL,
     responseType: 'json',
     headers: {
         'Content-Type': 'application/json, multipart/form-data',
