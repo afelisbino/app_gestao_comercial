@@ -18,6 +18,7 @@ import { Spinner } from "../Loaders/Spinner";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
 
 export function Vendas() {
+  const [qtdItensProduto, setarQtdItem] = useState<number>(1);
   const [itensSacola, setarItensSacola] = useState<sacolaProp[]>([]);
   const [totalCompra, setarTotalCompra] = useState<number>(0);
   const [listaProduto, setarListaProduto] = useState<produtoAtivosProps[]>([]);
@@ -47,6 +48,10 @@ export function Vendas() {
   function excluirItem(index: number) {
     if (index > -1) {
       itensSacola.splice(index, 1);
+
+      if (refFiltro.current) {
+        refFiltro.current.focus();
+      }
     }
   }
 
@@ -65,6 +70,10 @@ export function Vendas() {
       setarItensSacola([...itensSacola, item].reverse());
       somaValorItemDoTotal(item.scl_sub_total);
       setarFiltro("");
+
+      if (refFiltro.current) {
+        refFiltro.current.focus();
+      }
     }
   }
 
@@ -105,6 +114,10 @@ export function Vendas() {
     setarListaProduto(await buscarListaProdutoAtivo());
 
     carregarListaProdutos(false);
+
+    if (refFiltro.current) {
+      refFiltro.current.focus();
+    }
   }
 
   function buscaProdutoNomeOuCodigoBarras(filtro: string) {
@@ -116,11 +129,13 @@ export function Vendas() {
 
         if (produto) {
           adicionaItemSacola(produto.est_qtd_atual, {
-            scl_qtd: 1,
-            scl_sub_total: produto?.pro_valor ?? 0,
+            scl_qtd: qtdItensProduto,
+            scl_sub_total: (produto?.pro_valor ?? 0) * qtdItensProduto,
             pro_id: produto?.pro_id ?? "",
             pro_nome: produto?.pro_nome ?? "",
           });
+
+          setarQtdItem(1);
         }
       } else {
         setarFiltroProduto(filtraProdutoNome(filtro));
@@ -166,7 +181,6 @@ export function Vendas() {
 
   useEffect(() => {
     buscaListaProdutoAtivos();
-    refFiltro.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -265,33 +279,57 @@ export function Vendas() {
     setarVendaFiado(false);
     setarNomeClienteFiado("");
     setarTotalCompra(0);
+    setarQtdItem(1);
+    selecionarTipoPagamento("");
   }
 
   return (
     <>
-      {processandoVenda ? (
-        <div className="row mt-5">
-          <Spinner />
-        </div>
-      ) : (
-        <></>
-      )}
-      {mensagemAlerta !== null ? (
-        <div className="row mt-5">
-          <div className="col-12">
-            <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
+      <div className="row mt-5 mb-3">
+        {processandoVenda ? (
+          <div className="row">
+            <Spinner />
+          </div>
+        ) : (
+          <></>
+        )}
+        {mensagemAlerta !== null ? (
+          <div className="row">
+            <div className="col-12">
+              <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <div className="row row-cols-lg-auto g-2">
+        <div className="col-lg-2 col-md-4 col-sm">
+          <div className="form-floating mb-3">
+            <input
+              type="number"
+              disabled={carregandoListaProdutos}
+              autoComplete="off"
+              className="form-control"
+              key="qtdAdicionarProduto"
+              placeholder="Quantidade de itens a ser adicionado"
+              value={qtdItensProduto}
+              onChange={(event) => {
+                setarQtdItem(event.target.valueAsNumber);
+              }}
+            />
+            <label htmlFor="qtdAdicionarProduto">
+              Quantidade de itens a ser adicionado
+            </label>
           </div>
         </div>
-      ) : (
-        <></>
-      )}
-      <div className="row row-cols-lg-auto g-3 mt-5">
-        <div className="col-lg-9 col-md-9 col-sm">
+        <div className="col-lg-8 col-md col-sm">
           <div className="form-floating mb-3">
             <input
               ref={refFiltro}
               type="text"
               disabled={carregandoListaProdutos}
+              autoFocus={true}
               autoComplete="off"
               className="form-control"
               key="produtoPesquisa"
@@ -306,12 +344,12 @@ export function Vendas() {
             </label>
           </div>
         </div>
-        <div className="col-md-3 col-lg-3 col-12">
-          <div className="d-grid ">
+        <div className="col-lg-2 col-12 mb-3">
+          <div className="d-grid">
             <button
               key={"finalizaVenda"}
               type="button"
-              className="btn btn-secondary btn-lg shadown my-1"
+              className="btn btn-secondary btn-lg shadown my-auto"
               data-bs-toggle="modal"
               data-bs-target="#finalizaVenda"
               disabled={
@@ -396,7 +434,7 @@ export function Vendas() {
               </div>
               <ul
                 className="list-group overflow-auto"
-                style={{ maxHeight: "25rem" }}
+                style={{ maxHeight: "12rem" }}
               >
                 {itensSacola.length === 0 ? (
                   <>
