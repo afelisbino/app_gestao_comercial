@@ -7,7 +7,7 @@ const instanciaAxios = axios.create({
     baseURL: BASE_URL,
     responseType: 'json',
     headers: {
-        'Content-Type': 'application/json, multipart/form-data',
+        'Content-Type': 'application/json',
         Authorization: authorization
     }
 });
