@@ -1,4 +1,3 @@
-import { Spinner } from "phosphor-react";
 import { FormEvent, useEffect, useState } from "react";
 import { buscarListaCategoria } from "../../../controllers/CategoriaController";
 import { buscarListaFornecedores } from "../../../controllers/FornecedorController";
@@ -16,24 +15,20 @@ import {
   ativarProduto,
   desativarProduto,
   buscarListaHistoricoProduto,
-  buscarListaHistoricoEstoque,
 } from "../../../controllers/ProdutoController";
 import { categoriaProps } from "../../../interfaces/interfaceCategoria";
 import { codigoBarrasProps } from "../../../interfaces/interfaceCodigoBarrasProduto";
 import { fornecedorProps } from "../../../interfaces/interfaceFornecedor";
-import {
-  historicoEstoqueEmpresaProps,
-  historicoProdutoEstoqueProps,
-} from "../../../interfaces/interfaceHistoricoEstoqueEmpresa";
+import { historicoProdutoEstoqueProps } from "../../../interfaces/interfaceHistoricoEstoqueEmpresa";
 import { produtoProps } from "../../../interfaces/interfaceProdutos";
 import { retornoRequisicaoProps } from "../../../interfaces/interfaceReturnoRequisicao";
 import { Alerta } from "../../Alerta";
 import { OpcaoCategoria } from "../../Categorias/OpcaoCategoria";
 import { OpcaoFornecedor } from "../../Fornecedores/OpcaoFornecedor";
-import { TabelaHistoricoEstoque } from "../TabelaHistoricoEstoque";
 import { TabelaProdutos } from "../TabelaProdutos";
 import { TabelaCodigoBarras } from "./CodigoBarras/TabelaCodigoBarras";
 import { TabelaHistoricoEstoqueProduto } from "./TabelaHistoricoEstoqueProduto";
+import { Spinner } from "../../Loaders/Spinner";
 
 export function Produto() {
   const [listaProdutos, setarListaProdutos] = useState<produtoProps[]>([]);
@@ -52,16 +47,19 @@ export function Produto() {
     useState<string>("");
 
   const [tokenProduto, setarTokenProduto] = useState<string | null>(null);
+
   const [nomeProduto, setarNomeProduto] = useState<string | null>(null);
-  const [qtdAtualProduto, setarQtdAtual] = useState<number>(0);
-  const [qtdMinimaProduto, setarQtdMinima] = useState<number>(0);
-  const [precoVendaProduto, setarPrecoVenda] = useState<string>("");
-  const [valorCustoProduto, setarValorCustoProduto] = useState<string>("");
   const [descricaoProduto, setarDescricaoProduto] = useState<string | null>(
     null
   );
 
-  const [valorLucro, setarValorLucroProduto] = useState<string>("");
+  const [qtdAtualProduto, setarQtdAtual] = useState<number>(0);
+  const [qtdMinimaProduto, setarQtdMinima] = useState<number>(0);
+
+  const [precoVendaProduto, setarPrecoVenda] = useState<string>("");
+  const [valorCustoProduto, setarValorCustoProduto] = useState<string>("");
+  const [valorLucro, setarValorLucroProduto] = useState<string>("0.00");
+  const [porcentagemLucro, setarPorcentagemLucroProduto] = useState<string>("0.00");
 
   const [listaCodigoBarras, setarListaCodigoBarras] = useState<
     codigoBarrasProps[]
@@ -98,16 +96,19 @@ export function Produto() {
     setarTokenProduto(idProduto);
     setarNomeProduto(nomeProduto);
     setarDescricaoProduto(descricaoProduto);
-    setarPrecoVenda(Number(precoProduto).toFixed(2).toString());
-    setarValorCustoProduto(Number(valorCompra).toFixed(2).toString());
+    setarPrecoVenda(Number(precoProduto).toFixed(2));
+    setarValorCustoProduto(Number(valorCompra).toFixed(2));
     selecionarOpcaoCategoria(tokenCategoria);
     selecionarOpcaoFornecedor(tokenFornecedor);
     setarQtdAtual(estoqueAtual);
     setarQtdMinima(estoqueMinimo);
+  }
 
-    setarValorLucroProduto(
-      calculaLucroProduto(Number(precoProduto), Number(valorCompra))
-    );
+  function calculaPorcentagemLucroProduto(
+    precoVenda: number = 0,
+    valorCompra: number = 0
+  ): number {
+    return (precoVenda > 0 && valorCompra > 0) ? (((precoVenda - valorCompra) / precoVenda) * 100) : 0;
   }
 
   async function buscaListaProdutos() {
@@ -193,12 +194,11 @@ export function Produto() {
   function calculaLucroProduto(
     precoVenda: number = 0,
     valorCompra: number = 0
-  ): string {
+  ): number {
     if (precoVenda > 0 && valorCompra > 0) {
-      let lucro: number = precoVenda - valorCompra;
-      return lucro.toFixed(2).toString();
+      return precoVenda - valorCompra;
     } else {
-      return "0.00";
+      return 0;
     }
   }
 
@@ -256,6 +256,7 @@ export function Produto() {
           codigoBarrasProduto: listaCodigoBarras,
           estoqueAtualProduto: qtdAtualProduto,
           estoqueMinimoProduto: qtdMinimaProduto,
+          margemLucro: porcentagemLucro
         })
       );
 
@@ -275,6 +276,7 @@ export function Produto() {
           tokenFornecedor: fornecedorSelecionado,
           estoqueAtualProduto: qtdAtualProduto,
           estoqueMinimoProduto: qtdMinimaProduto,
+          margemLucro: porcentagemLucro
         })
       );
       processarRequisicao(false);
@@ -324,6 +326,24 @@ export function Produto() {
       alertarMensagem(null);
     }, 10000);
   }
+
+  useEffect(() => {
+    setarValorLucroProduto(
+      mascaraValorMoedaBrasileira(
+        calculaLucroProduto(
+          Number(precoVendaProduto),
+          Number(valorCustoProduto)
+        )
+      )
+    );
+
+    setarPorcentagemLucroProduto(
+      calculaPorcentagemLucroProduto(
+        Number(precoVendaProduto),
+        Number(valorCustoProduto)
+      ).toFixed(2)
+    );
+  }, [precoVendaProduto, valorCustoProduto]);
 
   return (
     <>
@@ -480,7 +500,7 @@ export function Produto() {
                       <label htmlFor="pro_qtd_minimo">Qtd. Mínimo</label>
                     </div>
                   </div>
-                  <div className="col-md-3 col-lg-3 col-sm-12">
+                  <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
                         type="text"
@@ -488,16 +508,10 @@ export function Produto() {
                         id="pro_preco_venda"
                         className="form-control"
                         placeholder="Preço de venda"
-                        value={precoVendaProduto ?? ""}
+                        value={precoVendaProduto ?? "0.00"}
                         onChange={(event) => {
                           setarPrecoVenda(
                             formatarValorMoeda(event.target.value)
-                          );
-                          setarValorLucroProduto(
-                            calculaLucroProduto(
-                              parseFloat(precoVendaProduto),
-                              parseFloat(valorCustoProduto)
-                            )
                           );
                         }}
                         required
@@ -505,7 +519,7 @@ export function Produto() {
                       <label htmlFor="pro_preco_venda">Preço de venda</label>
                     </div>
                   </div>
-                  <div className="col-md-3 col-lg-3 col-sm-12">
+                  <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
                         type="text"
@@ -513,23 +527,16 @@ export function Produto() {
                         id="pro_preco_custo"
                         className="form-control"
                         placeholder="Preço de custo"
-                        value={valorCustoProduto ?? ""}
+                        value={valorCustoProduto ?? "0.00"}
                         onChange={(event) => {
                           setarValorCustoProduto(
                             formatarValorMoeda(event.target.value)
-                          );
-                          setarValorLucroProduto(
-                            calculaLucroProduto(
-                              parseFloat(precoVendaProduto),
-                              parseFloat(valorCustoProduto)
-                            )
                           );
                         }}
                       />
                       <label htmlFor="pro_preco_custo">Preço de custo</label>
                     </div>
                   </div>
-
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
@@ -538,12 +545,26 @@ export function Produto() {
                         id="pro_lucro_produto"
                         className="form-control"
                         placeholder="Lucro produto"
-                        value={mascaraValorMoedaBrasileira(
-                          parseFloat(valorLucro) ?? 0
-                        )}
+                        value={valorLucro ?? "0.00"}
                         disabled
                       />
-                      <label htmlFor="pro_lucro_produto">Lucro produto</label>
+                      <label htmlFor="pro_lucro_produto">Lucro (R$)</label>
+                    </div>
+                  </div>
+                  <div className="col-md-2 col-lg-2 col-sm-12">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        name="pro_porcentagem_lucro"
+                        id="pro_porcentagem_lucro"
+                        className="form-control"
+                        placeholder="Margem de lucro"
+                        value={porcentagemLucro}
+                        disabled
+                      />
+                      <label htmlFor="pro_porcentagem_lucro">
+                        Margem de Lucro (%)
+                      </label>
                     </div>
                   </div>
                   <div className="col-sm-12 col-lg-6 col-md-6 mt-3">
@@ -764,7 +785,7 @@ export function Produto() {
                       <label htmlFor="pro_qtd_minimo_edicao">Qtd. Mínimo</label>
                     </div>
                   </div>
-                  <div className="col-md-3 col-lg-3 col-sm-12">
+                  <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
                         type="text"
@@ -785,7 +806,7 @@ export function Produto() {
                       </label>
                     </div>
                   </div>
-                  <div className="col-md-3 col-lg-3 col-sm-12">
+                  <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
                         type="text"
@@ -814,13 +835,27 @@ export function Produto() {
                         id="pro_lucro_produto_edicao"
                         className="form-control"
                         placeholder="Lucro produto"
-                        value={mascaraValorMoedaBrasileira(
-                          parseFloat(valorLucro) ?? 0
-                        )}
+                        value={valorLucro}
                         disabled
                       />
                       <label htmlFor="pro_lucro_produto_edicao">
                         Lucro produto
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-md-2 col-lg-2 col-sm-12">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        name="pro_porcentagem_lucro_edicao"
+                        id="pro_porcentagem_lucro_edicao"
+                        className="form-control"
+                        placeholder="Margem de lucro"
+                        value={porcentagemLucro}
+                        disabled
+                      />
+                      <label htmlFor="pro_porcentagem_lucro_edicao">
+                        Margem de lucro (%)
                       </label>
                     </div>
                   </div>

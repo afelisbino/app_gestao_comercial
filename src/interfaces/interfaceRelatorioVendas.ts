@@ -2,6 +2,7 @@ export interface estatisticaVendas {
     qtdTotalVendas: number;
     valorTotalVendas: number;
     valorTotalLucro: number;
+    porcentagemTotalLucro: number;
     estatisticasVenda: estatisticaVendasUltimosSeteDias[];
 }
 
@@ -11,10 +12,12 @@ export interface estatisticaVendasUltimosSeteDias {
     totalNormal: number;
     totalCartao: number;
     totalDinheiro: number;
+    totalPix: number;
     valorTotalVendas: number;
     valorTotalGanhos: number;
     valorTotalCartao: number;
     valorTotalDinheiro: number;
+    valorTotalPix: number;
 }
 
 export interface vendasFinalizadaProps {
@@ -26,4 +29,5 @@ export interface vendasFinalizadaProps {
     ven_desconto: number;
     ven_total: number;
     ven_lucro: number;
+    ven_porcentagem_lucro: number;
 }

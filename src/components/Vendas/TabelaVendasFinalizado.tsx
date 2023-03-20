@@ -30,7 +30,8 @@ export function TabelaVendasFinalizado({
             <th scope="col">Valor compra</th>
             <th scope="col">Desconto compra</th>
             <th scope="col">Valor pago</th>
-            <th scope="col">Ganhos</th>
+            <th scope="col">Ganhos (R$)</th>
+            <th scope="col">Ganhos (%)</th>
           </tr>
         </thead>
         <tbody className="overflow-auto">
@@ -61,29 +62,6 @@ export function TabelaVendasFinalizado({
                 <td className="w-auto">
                   <Placeholder />
                 </td>
-              </tr>
-              <tr>
-                <th className="w-auto" scope="row">
-                  <PlaceholderButton />
-                </th>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
-                <td className="w-auto">
-                  <Placeholder />
-                </td>
                 <td className="w-auto">
                   <Placeholder />
                 </td>
@@ -92,6 +70,38 @@ export function TabelaVendasFinalizado({
                 <th className="w-auto" scope="row">
                   <PlaceholderButton />
                 </th>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
+              </tr>
+              <tr>
+                <th className="w-auto" scope="row">
+                  <PlaceholderButton />
+                </th>
+                <td className="w-auto">
+                  <Placeholder />
+                </td>
                 <td className="w-auto">
                   <Placeholder />
                 </td>
@@ -139,12 +149,12 @@ export function TabelaVendasFinalizado({
                   </th>
                   <td className="w-auto">{venda.ven_data}</td>
                   <td className="w-auto">{venda.ven_tipo}</td>
+                  <td className="w-auto">{venda.ven_pagamento}</td>
                   <td className="w-auto">
                     {mascaraValorMoedaBrasileira(
                       Number(venda.ven_valor_compra)
                     )}
                   </td>
-                  <td className="w-auto">{venda.ven_pagamento}</td>
                   <td className="w-auto">
                     {mascaraValorMoedaBrasileira(Number(venda.ven_desconto))}
                   </td>
@@ -158,6 +168,16 @@ export function TabelaVendasFinalizado({
                     }
                   >
                     {mascaraValorMoedaBrasileira(Number(venda.ven_lucro))}
+                  </td>
+                  <td
+                    className={
+                      "w-auto fw-bold " +
+                      (venda.ven_porcentagem_lucro < 0
+                        ? "text-danger"
+                        : "text-success")
+                    }
+                  >
+                    {Number(venda.ven_porcentagem_lucro)}
                   </td>
                 </tr>
               );

@@ -7,7 +7,7 @@ import {
 } from "phosphor-react";
 import { produtoProps } from "../../interfaces/interfaceProdutos";
 import { Placeholder } from "../Loaders/Placeholder";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
@@ -91,47 +91,9 @@ export function TabelaProdutos({
             </thead>
             <tbody className="overflow-auto">
               {carregandoListaProdutos ? (
-
                 <>
                   <tr>
                     <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-50">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-50">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
                       <PlaceholderButton />
                       <PlaceholderButton />
                       <PlaceholderButton />
