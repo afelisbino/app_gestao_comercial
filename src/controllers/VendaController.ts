@@ -3,6 +3,25 @@ import { sacolaProp } from './../interfaces/interfaceSacola';
 import instanciaAxios from "../libraries/AxiosInstance";
 import { itensVendaProps, vendaFiadoProps } from '../interfaces/interfaceVenda';
 
+interface formaPagamentoProps {
+    valor: string;
+    nome: string;
+}
+
+export const tiposPagamentos: formaPagamentoProps[] = [
+    {
+        valor: 'dinheiro',
+        nome: 'Dinheiro'
+    },
+    {
+        valor: 'cartao',
+        nome: 'Cartão'
+    },
+    {
+        valor: 'pix',
+        nome: 'Pix'
+    }
+];
 
 export async function finalizarVendaLocalNormal(totalCompra: number, valorDesconto: number, itensSacola: sacolaProp[], tipoPagamento?: string): Promise<retornoRequisicaoProps> {
     return await instanciaAxios.post<retornoRequisicaoProps>('venda/registrar/local/normal',
