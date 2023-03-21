@@ -308,18 +308,18 @@ export function Cardapio() {
                 className="form-control"
                 value={valorProduto ?? ""}
                 placeholder="Valor"
-                onChange={(event) =>
-                  setarValorProduto(
-                    mascaraValorMoedaBrasileira(event.target.value)
-                  )
-                }
-                onCopy={(event) => {
-                  setarValorProduto(
-                    mascaraValorMoedaBrasileira(
-                      event.clipboardData.getData("text")
-                    )
-                  );
-                }}
+                // onChange={(event) =>
+                //   setarValorProduto(
+                //     mascaraValorMoedaBrasileira(event.target.value)
+                //   )
+                // }
+                // onCopy={(event) => {
+                //   setarValorProduto(
+                //     mascaraValorMoedaBrasileira(
+                //       event.clipboardData.getData("text")
+                //     )
+                //   );
+                // }}
                 required
               />
               <label htmlFor="cdp_valor">Valor do produto</label>

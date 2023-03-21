@@ -21,7 +21,6 @@ export function AppHome() {
   const [autenticado, validarAutenticacaoUsuario] = useState<boolean>(false);
 
   function CarregarTela({ nomeTela }: TelaProps) {
-    verificarAutorizacao();
 
     switch (nomeTela) {
       case "Home":
@@ -49,13 +48,9 @@ export function AppHome() {
     }
   }
 
-  function verificarAutorizacao() {
-    validarAutenticacaoUsuario(localStorage.getItem("token") ? true : false);
-  }
-
   useEffect(() => {
-    verificarAutorizacao();
-  }, []);
+    validarAutenticacaoUsuario(localStorage.getItem("token") ? true : false);
+  }, [opcaoMenu]);
 
   return (
     <>
