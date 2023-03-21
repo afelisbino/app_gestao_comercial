@@ -17,6 +17,7 @@ export async function buscaEstatisticasCaixaPeriodo(dataInicio: string, dataFim:
                 resumo: {
                     valorTotalEntrada: 0,
                     valorTotalLucro: 0,
+                    porcentagemTotalLucro: 0,
                     valorTotalReceita: 0,
                     valorTotalSaida: 0
                 }, fechamento: [{
@@ -31,6 +32,7 @@ export async function buscaEstatisticasCaixaPeriodo(dataInicio: string, dataFim:
                 valoresReceitaLucro: [{
                     data: "",
                     valorReceita: 0,
+                    porcentagemLucro: 0,
                     valorLucro: 0
                 }],
             }
@@ -53,6 +55,7 @@ export async function buscaEstatisticasCaixaMensal(mesInicio: string, mesFim: st
                 resumo: {
                     valorTotalEntrada: 0,
                     valorTotalLucro: 0,
+                    porcentagemTotalLucro: 0,
                     valorTotalReceita: 0,
                     valorTotalSaida: 0
                 }, fechamento: [{
@@ -67,6 +70,7 @@ export async function buscaEstatisticasCaixaMensal(mesInicio: string, mesFim: st
                 valoresReceitaLucro: [{
                     data: "",
                     valorReceita: 0,
+                    porcentagemLucro: 0,
                     valorLucro: 0
                 }],
             }
@@ -89,6 +93,7 @@ export async function buscaEstatisticasCaixaAnual(anoInicio: string, anoFim: str
                 resumo: {
                     valorTotalEntrada: 0,
                     valorTotalLucro: 0,
+                    porcentagemTotalLucro: 0,
                     valorTotalReceita: 0,
                     valorTotalSaida: 0
                 }, fechamento: [{
@@ -103,6 +108,7 @@ export async function buscaEstatisticasCaixaAnual(anoInicio: string, anoFim: str
                 valoresReceitaLucro: [{
                     data: "",
                     valorReceita: 0,
+                    porcentagemLucro: 0,
                     valorLucro: 0
                 }],
             }
