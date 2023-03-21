@@ -8,6 +8,7 @@ import {
 import {
   listaVendaFiadoAberto,
   processaPagamentoVendaFiado,
+  tiposPagamentos,
 } from "../../../controllers/VendaController";
 import { CurrencyDollar, ListNumbers } from "phosphor-react";
 import { mascaraValorMoedaBrasileira } from "../../../controllers/NumeroController";
@@ -35,6 +36,9 @@ export function Listar() {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
   const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
 
+  const [tipoPagamento, selecionarTipoPagamento] = useState<string>("");
+  const [tokenVenda, setarTokenProduto] = useState<string | null>(null);
+
   async function buscaListaVendas() {
     carregarListaVendas(true);
     setarListaVendasFiado(await listaVendaFiadoAberto());
@@ -49,18 +53,33 @@ export function Listar() {
     carregarListaItensVenda(false);
   }
 
-  async function pagaVendaFiado(tokenVenda: string) {
-    processarPagamentoVendaFiado(true);
-
-    const processa = await processaPagamentoVendaFiado(tokenVenda);
-
-    processarPagamentoVendaFiado(false);
-
-    if (processa.status) {
-      buscaListaVendas();
-      alertarMensagemSistema("success", processa.msg);
+  async function pagaVendaFiado() {
+    if (tipoPagamento === "") {
+      alertarMensagemSistema(
+        "warning",
+        "Precisa selecionar o tipo de pagamento!"
+      );
+    } else if (tokenVenda === null || tokenVenda === "") {
+      alertarMensagemSistema(
+        "warning",
+        "Venda não encontrada, entre em contato com o suporte!"
+      );
     } else {
-      alertarMensagemSistema("warning", processa.msg);
+      processarPagamentoVendaFiado(true);
+
+      const processa = await processaPagamentoVendaFiado(
+        tokenVenda,
+        tipoPagamento
+      );
+
+      processarPagamentoVendaFiado(false);
+
+      if (processa.status) {
+        buscaListaVendas();
+        alertarMensagemSistema("success", processa.msg);
+      } else {
+        alertarMensagemSistema("warning", processa.msg);
+      }
     }
   }
 
@@ -203,7 +222,9 @@ export function Listar() {
                           carregandoListaItensVenda || processandoPagamento
                         }
                         className="btn btn-success shadow m-1"
-                        onClick={() => pagaVendaFiado(venda.ven_id)}
+                        data-bs-toggle="modal"
+                        data-bs-target="#finalizarFiadoVendaModal"
+                        onClick={() => setarTokenProduto(venda.ven_id)}
                       >
                         <CurrencyDollar size={32} color="#ffffff" />
                       </button>
@@ -240,7 +261,9 @@ export function Listar() {
                           carregandoListaItensVenda || processandoPagamento
                         }
                         className="btn btn-success shadow m-1"
-                        onClick={() => pagaVendaFiado(venda.ven_id)}
+                        data-bs-toggle="modal"
+                        data-bs-target="#finalizarFiadoVendaModal"
+                        onClick={() => setarTokenProduto(venda.ven_id)}
                       >
                         <CurrencyDollar size={32} color="#ffffff" />
                       </button>
@@ -304,6 +327,71 @@ export function Listar() {
                 listaItensVenda={listaItensSacolaVenda}
                 carregandoListaItens={carregandoListaItensVenda}
               />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="modal fade"
+        id="finalizarFiadoVendaModal"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex={-1}
+        aria-labelledby="finalizarFiadoVendaModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-xl">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1
+                className="modal-title fs-5"
+                id="finalizarFiadoVendaModalLabel"
+              >
+                Processar pagamento fiado
+              </h1>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-12">
+                  <div className="form-floating mb-3">
+                    <select
+                      className="form-select"
+                      id="tipoPagamento"
+                      value={tipoPagamento}
+                      onChange={(event) =>
+                        selecionarTipoPagamento(event.target.value)
+                      }
+                      aria-label="Tipo de pagamento"
+                    >
+                      <option selected disabled value={""}>
+                        Selecione
+                      </option>
+                      {tiposPagamentos.map((tipo) => {
+                        return <option value={tipo.valor}>{tipo.nome}</option>;
+                      })}
+                    </select>
+                    <label htmlFor="tipoPagamento">Tipo de pagamento</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Voltar
+              </button>
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={() => pagaVendaFiado()}
+                data-bs-dismiss="modal"
+              >
+                Processar
+              </button>
             </div>
           </div>
         </div>

@@ -73,12 +73,19 @@ export async function listaItensVenda(tokenVenda: string): Promise<itensVendaPro
     });
 }
 
-export async function processaPagamentoVendaFiado(tokenVenda: string): Promise<retornoRequisicaoProps> {
-    return await instanciaAxios.patch("venda/fiado/pagar", { "tokenVenda": tokenVenda }, {
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+export async function processaPagamentoVendaFiado(tokenVenda: string, tipoPagamento: string): Promise<retornoRequisicaoProps> {
+    return await instanciaAxios.patch(
+        "venda/fiado/pagar",
+        {
+            "tokenVenda": tokenVenda,
+            tipoPagamento: tipoPagamento
         },
-    }).then(({ data }) => {
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        }
+    ).then(({ data }) => {
         return data;
     }).catch((error) => {
         console.log(error);
