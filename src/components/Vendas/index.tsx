@@ -13,6 +13,7 @@ import { Alerta } from "../Alerta";
 import {
   finalizarVendaLocalFiado,
   finalizarVendaLocalNormal,
+  tiposPagamentos,
 } from "../../controllers/VendaController";
 import { Spinner } from "../Loaders/Spinner";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
@@ -557,8 +558,13 @@ export function Vendas() {
                               <option selected disabled value={""}>
                                 Selecione
                               </option>
-                              <option value="dinheiro">Dinheiro</option>
-                              <option value="cartao">Cartão</option>
+                              {tiposPagamentos.map((tipo) => {
+                                return (
+                                  <option value={tipo.valor}>
+                                    {tipo.nome}
+                                  </option>
+                                );
+                              })}
                             </select>
                             <label htmlFor="tipoPagamento">
                               Tipo de pagamento
