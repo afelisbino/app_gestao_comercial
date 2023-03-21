@@ -12,6 +12,7 @@ export async function buscaInformacoesVendasLocalDataAtual(): Promise<estatistic
                 qtdTotalVendas: 0,
                 valorTotalLucro: 0,
                 valorTotalVendas: 0,
+                porcentagemTotalLucro: 0,
                 estatisticasVenda: []
             }
         });
@@ -32,6 +33,7 @@ export async function buscaInformacoesVendasLocalPeriodo(dataInicio: string, dat
                 qtdTotalVendas: 0,
                 valorTotalLucro: 0,
                 valorTotalVendas: 0,
+                porcentagemTotalLucro: 0,
                 estatisticasVenda: []
             }
         });
