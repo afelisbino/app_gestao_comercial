@@ -1,5 +1,4 @@
 import axios from "axios";
-import authorization from "./TokenApp";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -8,7 +7,7 @@ const instanciaAxios = axios.create({
     responseType: 'json',
     headers: {
         'Content-Type': 'application/json',
-        Authorization: authorization
+        Authorization: `Bearer ` + localStorage.getItem('token')
     }
 });
 

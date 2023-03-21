@@ -41,7 +41,10 @@ export function Login({ autenticarUsuarioSistema }: loginProps) {
           autenticarUsuarioSistema(false);
         }
       })
-      .finally(() => carregarAutenticacaoUsuario(false));
+      .finally(() => {
+        carregarAutenticacaoUsuario(false);
+        window.location.reload();
+      });
   }
 
   return (

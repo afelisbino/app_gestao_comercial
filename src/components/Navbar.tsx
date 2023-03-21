@@ -1,3 +1,4 @@
+import { UserCircle } from "phosphor-react";
 import { menuPrincipalProps } from "../interfaces/interfaceMenu";
 import { opcaoMenuProps } from "../interfaces/interfaceNavbar";
 
@@ -72,6 +73,11 @@ const menuApp: menuPrincipalProps[] = [
     ],
   },
 ];
+
+function logout() {
+  localStorage.clear();
+  window.location.reload();
+}
 
 export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
   return (
@@ -191,6 +197,33 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                 }
               })}
             </ul>
+            <hr />
+            <div className="dropdown">
+              <a
+                href="#"
+                className="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <UserCircle size={32} color="#2a2828" />
+                <strong>
+                  {localStorage.getItem("tipoUsuario") === "1"
+                    ? " Administrador"
+                    : " Operador"}
+                </strong>
+              </a>
+              <ul className="dropdown-menu text-small shadow">
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => logout()}
+                  >
+                    Sair
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
