@@ -173,6 +173,16 @@ export function EstatisticasVenda() {
           .reverse(),
         backgroundColor: "rgb(255,140,0)",
       },
+      {
+        label: "Vendas Pix",
+        data: estatisticasVendas
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalPix
+          )
+          .reverse(),
+        backgroundColor: "rgb(0,206,209)",
+      },
     ]);
 
     setarDadosGraficoValoresFormaPagamento([
@@ -198,6 +208,17 @@ export function EstatisticasVenda() {
         backgroundColor: "rgb(147,112,219)",
         borderColor: "rgb(147,112,219)",
       },
+      {
+        label: "Valor total no Pix (R$)",
+        data: estatisticasVendas
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalPix
+          )
+          .reverse(),
+        backgroundColor: "rgb(0,206,209)",
+        borderColor: "rgb(0,206,209)",
+      },
     ]);
 
     setarLabelGrafico(
@@ -222,22 +243,20 @@ export function EstatisticasVenda() {
     setarDadosGraficoQtdVendasPeriodo([
       {
         label: "Normal",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
-              return quantidadeVendas.totalNormal;
-            })
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+            return quantidadeVendas.totalNormal;
+          })
+          .reverse(),
         backgroundColor: "rgb(0,0,139)",
       },
       {
         label: "Fiado",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
-              return quantidadeVendas.totalFiado;
-            })
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map((quantidadeVendas: estatisticaVendasUltimosSeteDias) => {
+            return quantidadeVendas.totalFiado;
+          })
+          .reverse(),
         backgroundColor: "rgb(100,149,237)",
       },
     ]);
@@ -245,23 +264,21 @@ export function EstatisticasVenda() {
     setarDadosGraficoValoresVendasPeriodo([
       {
         label: "Valor total de vendas (R$)",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
-              return valoresVendas.valorTotalVendas;
-            })
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
+            return valoresVendas.valorTotalVendas;
+          })
+          .reverse(),
         backgroundColor: "rgb(152,251,152)",
         borderColor: "rgb(152,251,152)",
       },
       {
         label: "Valor total de ganhos (R$)",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
-              return valoresLucros.valorTotalGanhos;
-            })
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
+            return valoresLucros.valorTotalGanhos;
+          })
+          .reverse(),
         backgroundColor: "rgb(0,128,0)",
         borderColor: "rgb(0,128,0)",
       },
@@ -270,52 +287,69 @@ export function EstatisticasVenda() {
     setarDadosGraficoFormaPagamentosPeriodo([
       {
         label: "Vendas cartão",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map(
-              (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-                qtdFormasPagamento.totalCartao
-            )
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalCartao
+          )
+          .reverse(),
         backgroundColor: "rgb(240,230,140)",
       },
       {
         label: "Vendas dinheiro",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map(
-              (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-                qtdFormasPagamento.totalDinheiro
-            )
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalDinheiro
+          )
+          .reverse(),
         backgroundColor: "rgb(255,140,0)",
+      },
+      {
+        label: "Vendas Pix",
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              qtdFormasPagamento.totalPix
+          )
+          .reverse(),
+        backgroundColor: "rgb(0,206,209)",
       },
     ]);
 
     setarDadosGraficoValoresFormaPagamentoPeriodo([
       {
         label: "Valor total no cartão (R$)",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map(
-              (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-                valorFormasPagamento.valorTotalCartao
-            )
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalCartao
+          )
+          .reverse(),
         backgroundColor: "rgb(75,0,130)",
         borderColor: "rgb(75,0,130)",
       },
       {
         label: "Valor total no dinheiro (R$)",
-        data:
-          dadosEstatisticas.estatisticasVenda
-            .map(
-              (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
-                valorFormasPagamento.valorTotalDinheiro
-            )
-            .reverse(),
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalDinheiro
+          )
+          .reverse(),
         backgroundColor: "rgb(147,112,219)",
         borderColor: "rgb(147,112,219)",
+      },
+      {
+        label: "Valor total no Pix (R$)",
+        data: dadosEstatisticas.estatisticasVenda
+          .map(
+            (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
+              valorFormasPagamento.valorTotalPix
+          )
+          .reverse(),
+        backgroundColor: "rgb(0,206,209)",
+        borderColor: "rgb(0,206,209)",
       },
     ]);
 
@@ -423,17 +457,17 @@ export function EstatisticasVenda() {
               tabIndex={0}
             >
               <div className="row mt-3 py-3">
-                <div className="px-auto d-inline-flex d-lg-flex d-md-flex flex-row align-items-center justify-content-start justify-content-lg-center justify-content-md-center overflow-auto">
+                <div className="px-auto d-inline-flex d-lg-flex d-md-flex flex-row align-content-center justify-content-start justify-content-lg-center justify-content-md-center overflow-auto">
                   {!buscandoEstatisticasAtuais ? (
                     <>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <Cards
                           nome="Qtd. Total de vendas"
                           valor={dadosVendasAtual?.qtdTotalVendas ?? "0"}
                           cor={"text-bg-secondary"}
                         />
                       </div>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <Cards
                           nome="Valor total de vendas"
                           valor={mascaraValorMoedaBrasileira(
@@ -442,25 +476,35 @@ export function EstatisticasVenda() {
                           cor={"text-bg-secondary"}
                         />
                       </div>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <Cards
-                          nome="Valor total de ganhos"
+                          nome="Ganhos (R$)"
                           valor={mascaraValorMoedaBrasileira(
                             dadosVendasAtual?.valorTotalLucro ?? 0
                           )}
                           cor={"text-bg-secondary"}
                         />
                       </div>
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
+                        <Cards
+                          nome="Ganhos (%)"
+                          valor={dadosVendasAtual?.porcentagemTotalLucro ?? 0}
+                          cor={"text-bg-secondary"}
+                        />
+                      </div>
                     </>
                   ) : (
                     <>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <PlaceholderCardInfos />
                       </div>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <PlaceholderCardInfos />
                       </div>
-                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
+                        <PlaceholderCardInfos />
+                      </div>
+                      <div className="col-12 col-md-6 col-lg-2 mx-auto">
                         <PlaceholderCardInfos />
                       </div>
                     </>
@@ -602,16 +646,26 @@ export function EstatisticasVenda() {
                       </div>
                       <div className="col-auto col-md-4 col-lg-2 mx-auto">
                         <Cards
-                          nome="Valor total de ganhos"
+                          nome="Ganhos (R$)"
                           valor={mascaraValorMoedaBrasileira(
                             dadosVendasPeriodo?.valorTotalLucro ?? 0
                           )}
                           cor={"text-bg-secondary"}
                         />
                       </div>
+                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                        <Cards
+                          nome="Ganhos (%)"
+                          valor={dadosVendasPeriodo?.porcentagemTotalLucro ?? 0}
+                          cor={"text-bg-secondary"}
+                        />
+                      </div>
                     </>
                   ) : (
                     <>
+                      <div className="col-auto col-md-4 col-lg-2 mx-auto">
+                        <PlaceholderCardInfos />
+                      </div>
                       <div className="col-auto col-md-4 col-lg-2 mx-auto">
                         <PlaceholderCardInfos />
                       </div>

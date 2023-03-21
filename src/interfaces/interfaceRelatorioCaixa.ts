@@ -6,6 +6,7 @@ export interface estatisticaFechamentoCaixa {
 export interface estatisticaCaixa {
     valorTotalReceita: number;
     valorTotalLucro: number;
+    porcentagemTotalLucro:number;
     valorTotalEntrada: number;
     valorTotalSaida: number;
 }
@@ -14,6 +15,7 @@ export interface estatisticaReceitaLucro {
     data: string;
     valorReceita: number;
     valorLucro: number;
+    porcentagemLucro: number;
 }
 
 export interface estatisticaMovimentacaoCaixa {

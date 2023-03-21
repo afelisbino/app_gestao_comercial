@@ -80,10 +80,17 @@ export function EstatisticasCaixaEmpresa({
           </div>
           <div className="m-auto">
             <Cards
-              nome={"Lucros"}
+              nome={"Ganhos (R$)"}
               valor={mascaraValorMoedaBrasileira(
                 Number(dados.resumo.valorTotalLucro)
               )}
+              cor={"text-bg-secondary"}
+            />
+          </div>
+          <div className="m-auto">
+            <Cards
+              nome={"Ganhos (%)"}
+              valor={Number(dados.resumo.porcentagemTotalLucro)}
               cor={"text-bg-secondary"}
             />
           </div>

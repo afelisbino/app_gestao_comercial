@@ -24,6 +24,7 @@ export function EstatisticasCaixa() {
       resumo: {
         valorTotalEntrada: 0,
         valorTotalLucro: 0,
+        porcentagemTotalLucro: 0,
         valorTotalReceita: 0,
         valorTotalSaida: 0,
       },
@@ -45,6 +46,7 @@ export function EstatisticasCaixa() {
           data: "",
           valorReceita: 0,
           valorLucro: 0,
+          porcentagemLucro: 0,
         },
       ],
     });
@@ -54,6 +56,7 @@ export function EstatisticasCaixa() {
       resumo: {
         valorTotalEntrada: 0,
         valorTotalLucro: 0,
+        porcentagemTotalLucro: 0,
         valorTotalReceita: 0,
         valorTotalSaida: 0,
       },
@@ -75,6 +78,7 @@ export function EstatisticasCaixa() {
           data: "",
           valorReceita: 0,
           valorLucro: 0,
+          porcentagemLucro: 0,
         },
       ],
     });
@@ -84,6 +88,7 @@ export function EstatisticasCaixa() {
       resumo: {
         valorTotalEntrada: 0,
         valorTotalLucro: 0,
+        porcentagemTotalLucro: 0,
         valorTotalReceita: 0,
         valorTotalSaida: 0,
       },
@@ -105,6 +110,7 @@ export function EstatisticasCaixa() {
           data: "",
           valorReceita: 0,
           valorLucro: 0,
+          porcentagemLucro: 0,
         },
       ],
     });
