@@ -13,6 +13,7 @@ import { Alerta } from "../Alerta";
 import {
   finalizarVendaLocalFiado,
   finalizarVendaLocalNormal,
+  tiposPagamentos,
 } from "../../controllers/VendaController";
 import { Spinner } from "../Loaders/Spinner";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
@@ -184,10 +185,20 @@ export function Vendas() {
   }, []);
 
   useEffect(() => {
-    let valorTotalCompra = totalCompra;
+    let valorTotalCompra:number = totalCompra;
+
+    const labelTotalVenda = document.getElementById("venTotal");
+    const labelValorVenda = document.getElementById("valorTotalVenda");
 
     if (parseFloat(valorDesconto) > 0) {
+      
       valorTotalCompra = valorTotalCompra - parseFloat(valorDesconto);
+      if (labelTotalVenda) labelTotalVenda.innerHTML = mascaraValorMoedaBrasileira(valorTotalCompra);
+      if (labelValorVenda) labelValorVenda.innerHTML = mascaraValorMoedaBrasileira(valorTotalCompra);
+    }
+    else{
+      if (labelTotalVenda) labelTotalVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
+      if (labelValorVenda) labelValorVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
     }
 
     const valorTroco = parseFloat(valorPago) - valorTotalCompra;
@@ -557,8 +568,13 @@ export function Vendas() {
                               <option selected disabled value={""}>
                                 Selecione
                               </option>
-                              <option value="dinheiro">Dinheiro</option>
-                              <option value="cartao">Cartão</option>
+                              {tiposPagamentos.map((tipo) => {
+                                return (
+                                  <option value={tipo.valor}>
+                                    {tipo.nome}
+                                  </option>
+                                );
+                              })}
                             </select>
                             <label htmlFor="tipoPagamento">
                               Tipo de pagamento

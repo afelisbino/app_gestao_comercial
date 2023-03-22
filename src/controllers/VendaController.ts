@@ -3,6 +3,25 @@ import { sacolaProp } from './../interfaces/interfaceSacola';
 import instanciaAxios from "../libraries/AxiosInstance";
 import { itensVendaProps, vendaFiadoProps } from '../interfaces/interfaceVenda';
 
+interface formaPagamentoProps {
+    valor: string;
+    nome: string;
+}
+
+export const tiposPagamentos: formaPagamentoProps[] = [
+    {
+        valor: 'dinheiro',
+        nome: 'Dinheiro'
+    },
+    {
+        valor: 'cartao',
+        nome: 'Cartão'
+    },
+    {
+        valor: 'pix',
+        nome: 'Pix'
+    }
+];
 
 export async function finalizarVendaLocalNormal(totalCompra: number, valorDesconto: number, itensSacola: sacolaProp[], tipoPagamento?: string): Promise<retornoRequisicaoProps> {
     return await instanciaAxios.post<retornoRequisicaoProps>('venda/registrar/local/normal',
@@ -54,12 +73,19 @@ export async function listaItensVenda(tokenVenda: string): Promise<itensVendaPro
     });
 }
 
-export async function processaPagamentoVendaFiado(tokenVenda: string): Promise<retornoRequisicaoProps> {
-    return await instanciaAxios.patch("venda/fiado/pagar", { "tokenVenda": tokenVenda }, {
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+export async function processaPagamentoVendaFiado(tokenVenda: string, tipoPagamento: string): Promise<retornoRequisicaoProps> {
+    return await instanciaAxios.patch(
+        "venda/fiado/pagar",
+        {
+            "tokenVenda": tokenVenda,
+            tipoPagamento: tipoPagamento
         },
-    }).then(({ data }) => {
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        }
+    ).then(({ data }) => {
         return data;
     }).catch((error) => {
         console.log(error);
