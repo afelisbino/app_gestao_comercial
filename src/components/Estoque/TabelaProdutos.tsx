@@ -7,7 +7,7 @@ import {
 } from "phosphor-react";
 import { produtoProps } from "../../interfaces/interfaceProdutos";
 import { Placeholder } from "../Loaders/Placeholder";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
@@ -66,14 +66,15 @@ export function TabelaProdutos({
           <div className="form-floating mb-3">
             <input
               type="text"
+              autoComplete="off"
               className="form-control"
               id="pro_nome_filtro"
-              placeholder="Produto"
+              placeholder="Nome do produto"
               value={filtroProduto}
               disabled={carregandoListaProdutos}
               onChange={(event) => setarFiltroProduto(event.target.value)}
             />
-            <label htmlFor="pro_nome_filtro">Pesquisar nome do produto</label>
+            <label htmlFor="pro_nome_filtro">Pesquisar pelo nome do produto</label>
           </div>
         </div>
       </div>
@@ -128,7 +129,7 @@ export function TabelaProdutos({
                             key={produto.pro_id + "-edita_produto"}
                             className="btn btn-warning shadow m-1"
                             disabled={processandoRequisicao}
-                            onClick={() =>
+                            onClick={() => {
                               editarProduto(
                                 produto.pro_id,
                                 produto.pro_nome,
@@ -139,8 +140,9 @@ export function TabelaProdutos({
                                 produto.frn_token,
                                 produto.est_qtd_atual,
                                 produto.est_qtd_minimo
-                              )
-                            }
+                              );
+                              setarFiltroProduto("");
+                            }}
                             data-bs-toggle="modal"
                             data-bs-target="#produtoEdicaoModal"
                           >
@@ -181,9 +183,10 @@ export function TabelaProdutos({
                             title="Gerenciar codigos de barras do produto"
                             className="btn btn-secondary shadow m-1"
                             disabled={processandoRequisicao}
-                            onClick={() =>
-                              visualizarCodigosBarrasProduto(produto.pro_id)
-                            }
+                            onClick={() => {
+                              visualizarCodigosBarrasProduto(produto.pro_id);
+                              setarFiltroProduto("");
+                            }}
                             data-bs-toggle="modal"
                             data-bs-target="#codigoBarrasProdutoEdicaoModal"
                           >
@@ -194,9 +197,10 @@ export function TabelaProdutos({
                             key={produto.pro_id + "-historico_produto"}
                             title="Historico de estoque do produto"
                             className="btn btn-info shadow"
-                            onClick={() =>
-                              visualizarHistoricoEstoqueProduto(produto.pro_id)
-                            }
+                            onClick={() => {
+                              visualizarHistoricoEstoqueProduto(produto.pro_id);
+                              setarFiltroProduto("");
+                            }}
                             disabled={processandoRequisicao}
                             data-bs-toggle="modal"
                             data-bs-target="#historicoProdutoModal"
@@ -227,7 +231,7 @@ export function TabelaProdutos({
                             key={produto.pro_id + "-edita_produto"}
                             className="btn btn-warning shadow m-1"
                             disabled={processandoRequisicao}
-                            onClick={() =>
+                            onClick={() => {
                               editarProduto(
                                 produto.pro_id,
                                 produto.pro_nome,
@@ -238,8 +242,9 @@ export function TabelaProdutos({
                                 produto.frn_token,
                                 produto.est_qtd_atual,
                                 produto.est_qtd_minimo
-                              )
-                            }
+                              );
+                              setarFiltroProduto("");
+                            }}
                             data-bs-toggle="modal"
                             data-bs-target="#produtoEdicaoModal"
                           >
@@ -280,9 +285,10 @@ export function TabelaProdutos({
                             title="Gerenciar codigos de barras do produto"
                             className="btn btn-secondary shadow m-1"
                             disabled={processandoRequisicao}
-                            onClick={() =>
-                              visualizarCodigosBarrasProduto(produto.pro_id)
-                            }
+                            onClick={() => {
+                              visualizarCodigosBarrasProduto(produto.pro_id);
+                              setarFiltroProduto("");
+                            }}
                             data-bs-toggle="modal"
                             data-bs-target="#codigoBarrasProdutoEdicaoModal"
                           >
@@ -293,9 +299,10 @@ export function TabelaProdutos({
                             key={produto.pro_id + "-historico_produto"}
                             title="Historico de estoque do produto"
                             className="btn btn-info shadow"
-                            onClick={() =>
-                              visualizarHistoricoEstoqueProduto(produto.pro_id)
-                            }
+                            onClick={() => {
+                              visualizarHistoricoEstoqueProduto(produto.pro_id);
+                              setarFiltroProduto("");
+                            }}
                             disabled={processandoRequisicao}
                             data-bs-toggle="modal"
                             data-bs-target="#historicoProdutoModal"
