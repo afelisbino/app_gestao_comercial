@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Produtos } from "../ItensVenda/Produtos";
 import { Sacola } from "../Vendas/Sacola";
 import { sacolaProp } from "../../interfaces/interfaceSacola";
@@ -46,35 +46,42 @@ export function Vendas() {
 
   const refFiltro = useRef<HTMLInputElement | null>(null);
 
-  function excluirItem(index: number) {
-    if (index > -1) {
-      itensSacola.splice(index, 1);
-
-      if (refFiltro.current) {
-        refFiltro.current.focus();
-      }
-    }
+  function excluirItem(id: string) {
+    setarItensSacola(itensSacola.filter((item) => item.id !== id));
   }
 
-  function adicionaItemSacola(qtdAtualEstoque: number, item: sacolaProp) {
-    if (verificaDisponibilidadeProdutoEstoque(qtdAtualEstoque, item.pro_id)) {
+  function adicionaItemSacola(
+    qtdAtualEstoque: number,
+    idProduto: string,
+    nomeProduto: string,
+    qtdItem: number,
+    subTotal: number
+  ) {
+    if (verificaDisponibilidadeProdutoEstoque(qtdAtualEstoque, idProduto)) {
       alertarMensagemSistema(
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
-    } else if (item.scl_qtd > qtdAtualEstoque) {
+    } else if (qtdItem > qtdAtualEstoque) {
       alertarMensagemSistema(
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
     } else {
-      setarItensSacola([...itensSacola, item].reverse());
-      somaValorItemDoTotal(item.scl_sub_total);
-      setarFiltro("");
+      setarItensSacola(
+        [
+          ...itensSacola,
+          {
+            id: self.crypto.randomUUID(),
+            pro_id: idProduto,
+            scl_qtd: qtdItem,
+            scl_sub_total: subTotal,
+            pro_nome: nomeProduto,
+          },
+        ].reverse()
+      );
 
-      if (refFiltro.current) {
-        refFiltro.current.focus();
-      }
+      setarFiltro("");
     }
   }
 
@@ -93,20 +100,6 @@ export function Vendas() {
     );
 
     return somaItensProdutoAdicionado >= qtdAtualEstoque;
-  }
-
-  function descontaValorItemDoTotal(subTotalItem: number) {
-    let totalSacola = totalCompra - Number(subTotalItem);
-
-    if (totalSacola > 0) {
-      setarTotalCompra(totalSacola);
-    } else {
-      setarTotalCompra(0);
-    }
-  }
-
-  function somaValorItemDoTotal(subTotalItem: number) {
-    setarTotalCompra(totalCompra + Number(subTotalItem));
   }
 
   async function buscaListaProdutoAtivos() {
@@ -129,12 +122,13 @@ export function Vendas() {
         let produto = filtraProdutoCodigoBarras(filtro);
 
         if (produto) {
-          adicionaItemSacola(produto.est_qtd_atual, {
-            scl_qtd: qtdItensProduto,
-            scl_sub_total: (produto?.pro_valor ?? 0) * qtdItensProduto,
-            pro_id: produto?.pro_id ?? "",
-            pro_nome: produto?.pro_nome ?? "",
-          });
+          adicionaItemSacola(
+            produto.est_qtd_atual,
+            produto?.pro_id ?? "",
+            produto?.pro_nome ?? "",
+            qtdItensProduto,
+            (produto?.pro_valor ?? 0) * qtdItensProduto
+          );
 
           setarQtdItem(1);
         }
@@ -185,22 +179,25 @@ export function Vendas() {
   }, []);
 
   useEffect(() => {
-    let valorTotalCompra:number = totalCompra;
+    let valorTotalCompra: number = totalCompra;
 
     const labelTotalVenda = document.getElementById("venTotal");
     const labelValorVenda = document.getElementById("valorTotalVenda");
 
     if (parseFloat(valorDesconto) > 0) {
-      
       valorTotalCompra = valorTotalCompra - parseFloat(valorDesconto);
-      if (labelTotalVenda) labelTotalVenda.innerHTML = mascaraValorMoedaBrasileira(valorTotalCompra);
-      if (labelValorVenda) labelValorVenda.innerHTML = mascaraValorMoedaBrasileira(valorTotalCompra);
+      if (labelTotalVenda)
+        labelTotalVenda.innerHTML =
+          mascaraValorMoedaBrasileira(valorTotalCompra);
+      if (labelValorVenda)
+        labelValorVenda.innerHTML =
+          mascaraValorMoedaBrasileira(valorTotalCompra);
+    } else {
+      if (labelTotalVenda)
+        labelTotalVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
+      if (labelValorVenda)
+        labelValorVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
     }
-    else{
-      if (labelTotalVenda) labelTotalVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
-      if (labelValorVenda) labelValorVenda.innerHTML = mascaraValorMoedaBrasileira(totalCompra);
-    }
-
     const valorTroco = parseFloat(valorPago) - valorTotalCompra;
 
     const labelTroco = document.getElementById(
@@ -212,6 +209,18 @@ export function Vendas() {
         "Troco " +
         mascaraValorMoedaBrasileira(valorTroco > 0 ? valorTroco : 0.0);
   }, [valorPago, valorDesconto]);
+
+  useEffect(() => {
+    setarTotalCompra(
+      itensSacola.reduce((total: number, produto: sacolaProp) => {
+        return (total += produto.scl_sub_total);
+      }, 0)
+    );
+
+    if (refFiltro) {
+      refFiltro.current?.focus();
+    }
+  }, [itensSacola]);
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
     adicionarTipoAlerta(tipo);
@@ -392,8 +401,20 @@ export function Vendas() {
                           pro_nome={produto.pro_nome}
                           pro_qtd_atual_estoque={produto.est_qtd_atual}
                           pro_valor={produto.pro_valor}
-                          adicionarProduto={(qtdAtualEstoque, item) =>
-                            adicionaItemSacola(qtdAtualEstoque, item)
+                          adicionarProduto={(
+                            qtdAtualEstoque: number,
+                            idProduto: string,
+                            nomeProduto: string,
+                            qtdItem: number,
+                            subTotal: number
+                          ) =>
+                            adicionaItemSacola(
+                              qtdAtualEstoque,
+                              idProduto,
+                              nomeProduto,
+                              qtdItem,
+                              subTotal
+                            )
                           }
                         />
                       </div>
@@ -408,8 +429,20 @@ export function Vendas() {
                           pro_nome={produto.pro_nome}
                           pro_valor={produto.pro_valor}
                           pro_qtd_atual_estoque={produto.est_qtd_atual}
-                          adicionarProduto={(qtdAtualEstoque, item) =>
-                            adicionaItemSacola(qtdAtualEstoque, item)
+                          adicionarProduto={(
+                            qtdAtualEstoque: number,
+                            idProduto: string,
+                            nomeProduto: string,
+                            qtdItem: number,
+                            subTotal: number
+                          ) =>
+                            adicionaItemSacola(
+                              qtdAtualEstoque,
+                              idProduto,
+                              nomeProduto,
+                              qtdItem,
+                              subTotal
+                            )
                           }
                         />
                       </div>
@@ -453,18 +486,15 @@ export function Vendas() {
                     <h5 className="text-center">Nenhum item adicionado!</h5>
                   </>
                 ) : (
-                  itensSacola.map((item: sacolaProp, index: number) => {
+                  itensSacola.map((item: sacolaProp) => {
                     return (
                       <Sacola
                         processandoVenda={processandoVenda}
-                        index={index}
+                        id={item.id}
                         scl_qtd={item.scl_qtd}
                         scl_sub_total={item.scl_sub_total}
                         pro_nome={item.pro_nome}
-                        excluirItem={(index) => excluirItem(index)}
-                        descontarValor={(valorItem) =>
-                          descontaValorItemDoTotal(valorItem)
-                        }
+                        excluirItem={(id) => excluirItem(id)}
                       />
                     );
                   })

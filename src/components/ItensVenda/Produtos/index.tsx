@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { sacolaProp } from "../../../interfaces/interfaceSacola";
 import { mascaraValorMoedaBrasileira } from "../../../controllers/NumeroController";
 
 interface listaProdutoProps {
@@ -8,7 +7,13 @@ interface listaProdutoProps {
   pro_valor: number;
   pro_qtd_atual_estoque: number;
   processandoVenda: boolean;
-  adicionarProduto: (qtdAtualEstoque: number, item: sacolaProp) => void;
+  adicionarProduto: (
+    qtdAtualEstoque: number,
+    idProduto: string,
+    nomeProduto: string,
+    qtdItem: number,
+    subTotal: number
+  ) => void;
 }
 
 export function Produtos({
@@ -57,12 +62,13 @@ export function Produtos({
             className="btn btn-success btn-lg shadow"
             disabled={processandoVenda}
             onClick={() => {
-              adicionarProduto(pro_qtd_atual_estoque, {
-                pro_id: pro_id,
-                pro_nome: pro_nome,
-                scl_qtd: qtdItem,
-                scl_sub_total: pro_valor * qtdItem,
-              });
+              adicionarProduto(
+                pro_qtd_atual_estoque,
+                pro_id,
+                pro_nome,
+                qtdItem,
+                pro_valor * qtdItem
+              );
 
               adicionaQuatidade(1);
             }}
