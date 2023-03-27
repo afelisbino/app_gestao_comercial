@@ -5,7 +5,6 @@ import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
 interface tabelaProps {
   editar: (id: string) => void;
-  excluir: (id: string) => void;
   listaFornecedores: fornecedorProps[];
   carregandoLista: boolean;
   processandoRequisicao: boolean;
@@ -16,7 +15,6 @@ export function TabelaFornecedor({
   carregandoLista,
   processandoRequisicao,
   editar,
-  excluir,
 }: tabelaProps) {
   return (
     <div className="table-responsive mt-3" style={{ maxHeight: "20rem" }}>

@@ -11,7 +11,7 @@ export function TabelaHistoricoEstoque({
   carregandoListaHistorico,
 }: tabelaHistoricoEstoqueProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "25rem" }}>
+    <div className="table-responsive mt-3" style={{ maxHeight: "15rem" }}>
       <table className="table border rounded">
         <thead>
           <tr>

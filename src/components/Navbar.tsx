@@ -4,14 +4,17 @@ import { opcaoMenuProps } from "../interfaces/interfaceNavbar";
 
 const menuApp: menuPrincipalProps[] = [
   {
+    id: self.crypto.randomUUID(),
     categoria: "Home",
     admin: false,
   },
   {
+    id: self.crypto.randomUUID(),
     categoria: "Administrar",
     admin: false,
     itens: [
       {
+        id: self.crypto.randomUUID(),
         nome: "Categorias",
         telaItem: "Categoria",
         admin: true,
@@ -21,26 +24,31 @@ const menuApp: menuPrincipalProps[] = [
       //   telaItem: "Cardapio",
       // },
       {
+        id: self.crypto.randomUUID(),
         nome: "Fornecedores",
         telaItem: "Fornecedor",
         admin: true,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Produtos",
         telaItem: "Produtos",
         admin: true,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Estoque",
         telaItem: "Estoque",
         admin: true,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Movimentação de caixa",
         telaItem: "MovimentacaoCaixa",
         admin: false,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Vendas fiado",
         telaItem: "ListarFiado",
         admin: false,
@@ -52,20 +60,24 @@ const menuApp: menuPrincipalProps[] = [
     ],
   },
   {
+    id: self.crypto.randomUUID(),
     categoria: "Relatórios",
     admin: true,
     itens: [
       {
+        id: self.crypto.randomUUID(),
         nome: "Vendas",
         telaItem: "RelatorioVenda",
         admin: true,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Caixa",
         telaItem: "RelatorioCaixa",
         admin: true,
       },
       {
+        id: self.crypto.randomUUID(),
         nome: "Estoque",
         telaItem: "RelatorioEstoque",
         admin: true,
@@ -111,11 +123,12 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 ">
-              {menuApp.map(({ categoria, itens, admin }) => {
+              {menuApp.map(({ id, categoria, itens, admin }) => {
                 if (itens === undefined) {
                   return (
-                    <li className="nav-item">
+                    <li key={id} className="nav-item">
                       <a
+                        key={id + "-categoria"}
                         className="nav-link"
                         href="#"
                         data-bs-dismiss="offcanvas"
@@ -129,10 +142,11 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                   );
                 } else {
                   return (
-                    <li className="nav-item dropdown">
+                    <li key={id} className="nav-item dropdown">
                       {localStorage.getItem("tipoUsuario") === "0" ? (
                         !admin ? (
                           <a
+                            key={id + "-categoria"}
                             className="nav-link dropdown-toggle"
                             href="#"
                             role="button"
@@ -146,6 +160,7 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                         )
                       ) : (
                         <a
+                          key={id + "-categoria"}
                           className="nav-link dropdown-toggle"
                           href="#"
                           role="button"
@@ -157,11 +172,12 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                       )}
                       <ul className="dropdown-menu">
                         {localStorage.getItem("tipoUsuario") === "0"
-                          ? itens.map(({ telaItem, nome, admin }) => {
+                          ? itens.map(({ id, telaItem, nome, admin }) => {
                               if (!admin) {
                                 return (
-                                  <li>
+                                  <li key={id}>
                                     <a
+                                      key={id + "-item"}
                                       className="dropdown-item"
                                       href="#"
                                       data-bs-dismiss="offcanvas"
@@ -175,10 +191,11 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
                                 );
                               }
                             })
-                          : itens.map(({ telaItem, nome }) => {
+                          : itens.map(({ id, telaItem, nome }) => {
                               return (
-                                <li>
+                                <li key={id}>
                                   <a
+                                    key={id + "-item"}
                                     className="dropdown-item"
                                     href="#"
                                     data-bs-dismiss="offcanvas"

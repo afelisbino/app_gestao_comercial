@@ -12,6 +12,11 @@ interface graficoRoscaProps {
 export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
+  const data = {
+    labels: labels,
+    datasets: datasets,
+  };
+
   return (
     <Doughnut
       options={{
@@ -27,10 +32,7 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
           },
         },
       }}
-      data={{
-        labels: labels,
-        datasets: datasets,
-      }}
+      data={data}
     />
   );
 }

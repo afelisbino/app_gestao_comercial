@@ -1,4 +1,4 @@
-
+import { useId } from "react";
 import { categoriaProps } from "../../interfaces/interfaceCategoria";
 
 interface selectCategoriaProps {
@@ -16,20 +16,21 @@ export function OpcaoCategoria({
   listaCategoria,
   selecionarOpcaoCategoria,
 }: selectCategoriaProps) {
+  const idSelectCategoria = useId();
 
   return (
     <div className="form-floating">
       <select
         disabled={carregandoCategorias}
         className="form-select"
-        key={nomeSelect}
+        key={idSelectCategoria}
         name={nomeSelect}
         value={categoriaEscolhida}
         onChange={(event) => {
           selecionarOpcaoCategoria(event.target.value);
         }}
       >
-        <option value={""} selected disabled>
+        <option value={""} disabled>
           {!carregandoCategorias ? "Selecione" : "Carregando categorias..."}
         </option>
         {listaCategoria.map((categoria) => {
@@ -40,7 +41,7 @@ export function OpcaoCategoria({
           );
         })}
       </select>
-      <label htmlFor={nomeSelect}>Categorias</label>
+      <label htmlFor={idSelectCategoria}>Categorias</label>
     </div>
   );
 }
