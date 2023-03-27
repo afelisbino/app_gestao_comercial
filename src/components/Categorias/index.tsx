@@ -255,7 +255,6 @@ export function Categorias() {
             carregandoCategoria={carregandoCategorias}
             processandoRequisicao={processandoRequisicao}
             editar={(id, nome) => editarCategoria(id, nome)}
-            excluir={(id) => excluirCategoria(id)}
           />
         </div>
       </div>
