@@ -47,7 +47,7 @@ export function TabelaProdutos({
   >([]);
   const [filtroProduto, setarFiltroProduto] = useState<string>("");
 
-  useEffect(() => {
+  function aplicaFiltroProduto() {
     if (filtroProduto.length !== 0) {
       setarListaFiltroProduto(
         listaProdutos.filter((el: produtoProps) =>
@@ -57,7 +57,11 @@ export function TabelaProdutos({
     } else {
       setarListaFiltroProduto([]);
     }
-  }, [filtroProduto]);
+  }
+
+  useEffect(() => aplicaFiltroProduto(), [filtroProduto]);
+
+  useEffect(() => aplicaFiltroProduto(), [listaProdutos]);
 
   return (
     <>
@@ -74,7 +78,9 @@ export function TabelaProdutos({
               disabled={carregandoListaProdutos}
               onChange={(event) => setarFiltroProduto(event.target.value)}
             />
-            <label htmlFor="pro_nome_filtro">Pesquisar pelo nome do produto</label>
+            <label htmlFor="pro_nome_filtro">
+              Pesquisar pelo nome do produto
+            </label>
           </div>
         </div>
       </div>
@@ -141,7 +147,6 @@ export function TabelaProdutos({
                                 produto.est_qtd_atual,
                                 produto.est_qtd_minimo
                               );
-                              setarFiltroProduto("");
                             }}
                             data-bs-toggle="modal"
                             data-bs-target="#produtoEdicaoModal"
@@ -155,7 +160,6 @@ export function TabelaProdutos({
                               title="Desativar produto"
                               onClick={() => {
                                 desativarProduto(produto.pro_id);
-                                setarFiltroProduto("");
                               }}
                               className="btn btn-danger shadow"
                               disabled={processandoRequisicao}
@@ -169,7 +173,6 @@ export function TabelaProdutos({
                               title="Ativar produto"
                               onClick={() => {
                                 ativarProduto(produto.pro_id);
-                                setarFiltroProduto("");
                               }}
                               className="btn btn-success shadow"
                               disabled={processandoRequisicao}
@@ -185,7 +188,6 @@ export function TabelaProdutos({
                             disabled={processandoRequisicao}
                             onClick={() => {
                               visualizarCodigosBarrasProduto(produto.pro_id);
-                              setarFiltroProduto("");
                             }}
                             data-bs-toggle="modal"
                             data-bs-target="#codigoBarrasProdutoEdicaoModal"
@@ -199,7 +201,6 @@ export function TabelaProdutos({
                             className="btn btn-info shadow"
                             onClick={() => {
                               visualizarHistoricoEstoqueProduto(produto.pro_id);
-                              setarFiltroProduto("");
                             }}
                             disabled={processandoRequisicao}
                             data-bs-toggle="modal"
@@ -243,7 +244,6 @@ export function TabelaProdutos({
                                 produto.est_qtd_atual,
                                 produto.est_qtd_minimo
                               );
-                              setarFiltroProduto("");
                             }}
                             data-bs-toggle="modal"
                             data-bs-target="#produtoEdicaoModal"
@@ -257,7 +257,6 @@ export function TabelaProdutos({
                               title="Desativar produto"
                               onClick={() => {
                                 desativarProduto(produto.pro_id);
-                                setarFiltroProduto("");
                               }}
                               className="btn btn-danger shadow"
                               disabled={processandoRequisicao}
@@ -271,7 +270,6 @@ export function TabelaProdutos({
                               title="Ativar produto"
                               onClick={() => {
                                 ativarProduto(produto.pro_id);
-                                setarFiltroProduto("");
                               }}
                               className="btn btn-success shadow"
                               disabled={processandoRequisicao}
@@ -287,7 +285,6 @@ export function TabelaProdutos({
                             disabled={processandoRequisicao}
                             onClick={() => {
                               visualizarCodigosBarrasProduto(produto.pro_id);
-                              setarFiltroProduto("");
                             }}
                             data-bs-toggle="modal"
                             data-bs-target="#codigoBarrasProdutoEdicaoModal"
@@ -301,7 +298,6 @@ export function TabelaProdutos({
                             className="btn btn-info shadow"
                             onClick={() => {
                               visualizarHistoricoEstoqueProduto(produto.pro_id);
-                              setarFiltroProduto("");
                             }}
                             disabled={processandoRequisicao}
                             data-bs-toggle="modal"
