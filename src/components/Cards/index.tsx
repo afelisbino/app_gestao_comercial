@@ -11,7 +11,7 @@ export function Cards({ nome, valor, cor }: infoProps) {
 
   return (
     <div
-      id={idCard}
+      key={idCard}
       className={(cor ?? "text-bg-dark") + " card mx-1 mb-3 shadow"}
       style={{ width: "18rem" }}
     >

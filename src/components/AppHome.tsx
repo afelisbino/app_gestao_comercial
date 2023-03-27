@@ -21,7 +21,6 @@ export function AppHome() {
   const [autenticado, validarAutenticacaoUsuario] = useState<boolean>(false);
 
   function CarregarTela({ nomeTela }: TelaProps) {
-
     switch (nomeTela) {
       case "Home":
         return <Vendas />;

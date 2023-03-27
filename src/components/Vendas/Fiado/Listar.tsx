@@ -76,6 +76,7 @@ export function Listar() {
 
       if (processa.status) {
         buscaListaVendas();
+        selecionarTipoPagamento("");
         alertarMensagemSistema("success", processa.msg);
       } else {
         alertarMensagemSistema("warning", processa.msg);
@@ -111,14 +112,14 @@ export function Listar() {
   return (
     <>
       {processandoPagamento ? (
-        <div className="row mt-5">
+        <div className="row mt-3">
           <Spinner />
         </div>
       ) : (
         <></>
       )}
       {mensagemAlerta !== null ? (
-        <div className="row mt-5">
+        <div className="row mt-3">
           <div className="col-12">
             <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
           </div>
@@ -126,7 +127,7 @@ export function Listar() {
       ) : (
         <></>
       )}
-      <div className="row mt-5">
+      <div className="row mt-3">
         <div className="col-12">
           <div className="form-floating mb-3">
             <input
@@ -364,7 +365,7 @@ export function Listar() {
                       }
                       aria-label="Tipo de pagamento"
                     >
-                      <option selected disabled value={""}>
+                      <option disabled value={""}>
                         Selecione
                       </option>
                       {tiposPagamentos.map((tipo) => {

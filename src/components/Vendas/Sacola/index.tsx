@@ -1,37 +1,27 @@
-import { useId } from "react";
+
 import { mascaraValorMoedaBrasileira } from "../../../controllers/NumeroController";
 
 interface sacolaVendaProps {
-  index: number;
+  id: string;
   scl_qtd: number;
   scl_sub_total: number;
   pro_nome: string;
   processandoVenda: boolean;
-  excluirItem: (index: number) => void;
-  descontarValor: (valorItem: number) => void;
+  excluirItem: (id: string) => void;
 }
 
 export function Sacola({
-  index,
+  id,
   scl_qtd,
   scl_sub_total,
   pro_nome,
   processandoVenda,
   excluirItem,
-  descontarValor,
 }: sacolaVendaProps) {
-  function removerItemCarrinho(index: number, valorItem: number) {
-    excluirItem(index);
-
-    descontarValor(valorItem);
-  }
-
-  const itemSacola: string = useId();
-
   return (
     <>
       <li
-        key={itemSacola}
+        key={id}
         className="list-group-item d-flex justify-content-between align-items-start py-3"
       >
         <div className="ms-2 me-auto">
@@ -40,10 +30,10 @@ export function Sacola({
           </div>
           <button
             type="button"
-            id={"btn-deleta-item-" + itemSacola}
+            key={"btn-deleta-item-" + id}
             disabled={processandoVenda}
             className="btn btn-danger shadow mt-2"
-            onClick={() => removerItemCarrinho(index, scl_sub_total)}
+            onClick={() => excluirItem(id)}
           >
             Excluir
           </button>
