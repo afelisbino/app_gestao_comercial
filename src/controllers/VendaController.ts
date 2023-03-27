@@ -41,6 +41,7 @@ export async function finalizarVendaLocalFiado(totalCompra: number, nomeCliente:
     return await instanciaAxios.post<retornoRequisicaoProps>('venda/registrar/local/fiado',
         JSON.stringify({
             vendaValorCompra: totalCompra,
+            vendaValorDesconto: 0,
             nomeCliente: nomeCliente,
             itens: itensSacola,
             vendaTipoPagamento: null

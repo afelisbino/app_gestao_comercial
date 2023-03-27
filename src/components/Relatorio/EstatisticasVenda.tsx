@@ -516,37 +516,35 @@ export function EstatisticasVenda() {
                   className="row mt-3 overflow-auto"
                   style={{ maxHeight: "35rem" }}
                 >
-                  <div className="d-flex flex-row flex-wrap justify-content-center align-items-center px-auto">
-                    <>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Barras
-                          tituloGrafico="Quantidade vendas dos ultimos sete dias"
-                          labels={labelsGrafico}
-                          datasets={dadosGraficoQtdVendas}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Linha
-                          tituloGrafico="Comparativos de valores de vendas e ganhos dos ultimos sete dias"
-                          labels={labelsGrafico}
-                          datasets={dadosGraficoValoresVendas}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Barras
-                          tituloGrafico="Comparativos de quantidade de vendas em cartão e dinheiro"
-                          labels={labelsGrafico}
-                          datasets={dadosGraficoQtdFormaPagamentos}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Linha
-                          tituloGrafico="Comparativos de valores de vendas em cartão e dinheiro"
-                          labels={labelsGrafico}
-                          datasets={dadosGraficoValoresFormaPagamento}
-                        />
-                      </div>
-                    </>
+                  <div className="d-flex flex-row flex-wrap justify-content-center justify-content-lg-evenly align-items-center px-auto">
+                    <div className="col-12 col-md-6 col-lg-6">
+                      <Barras
+                        tituloGrafico="Quantidade vendas dos ultimos sete dias"
+                        labels={labelsGrafico}
+                        datasets={dadosGraficoQtdVendas}
+                      />
+                    </div>
+                    <div className="col-12 col-md-6 col-lg-6">
+                      <Linha
+                        tituloGrafico="Comparativos de valores de vendas e ganhos dos ultimos sete dias"
+                        labels={labelsGrafico}
+                        datasets={dadosGraficoValoresVendas}
+                      />
+                    </div>
+                    <div className="col-12 col-md-6 col-lg-6">
+                      <Barras
+                        tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                        labels={labelsGrafico}
+                        datasets={dadosGraficoQtdFormaPagamentos}
+                      />
+                    </div>
+                    <div className="col-12 col-md-6 col-lg-6">
+                      <Linha
+                        tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                        labels={labelsGrafico}
+                        datasets={dadosGraficoValoresFormaPagamento}
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -728,39 +726,37 @@ export function EstatisticasVenda() {
                         className="row mt-3 mb-3 overflow-auto"
                         style={{ maxHeight: "30rem" }}
                       >
-                        <div className="d-flex flex-row flex-wrap justify-content-center align-items-center px-auto">
-                          <>
-                            <div className="col-12 col-md-6 col-lg-6">
-                              <Barras
-                                tituloGrafico="Quantidade de vendas por tipo"
-                                labels={labelsGraficoPeriodo}
-                                datasets={dadosGraficoQtdVendasPeriodo}
-                              />
-                            </div>
-                            <div className="col-12 col-md-6 col-lg-6">
-                              <Linha
-                                tituloGrafico="Comparativos de valores de vendas e ganhos"
-                                labels={labelsGraficoPeriodo}
-                                datasets={dadosGraficoValoresVendasPeriodo}
-                              />
-                            </div>
-                            <div className="col-12 col-md-6 col-lg-6">
-                              <Barras
-                                tituloGrafico="Comparativos de quantidade de vendas em cartão e dinheiro"
-                                labels={labelsGraficoPeriodo}
-                                datasets={dadosGraficoQtdFormaPagamentosPeriodo}
-                              />
-                            </div>
-                            <div className="col-12 col-md-6 col-lg-6">
-                              <Linha
-                                tituloGrafico="Comparativos de valores de vendas em cartão e dinheiro"
-                                labels={labelsGraficoPeriodo}
-                                datasets={
-                                  dadosGraficoValoresFormaPagamentoPeriodo
-                                }
-                              />
-                            </div>
-                          </>
+                        <div className="d-flex flex-row flex-wrap justify-content-center justify-content-lg-evenly align-items-center px-auto">
+                          <div className="col-12 col-md-6 col-lg-6">
+                            <Barras
+                              tituloGrafico="Quantidade de vendas por tipo"
+                              labels={labelsGraficoPeriodo}
+                              datasets={dadosGraficoQtdVendasPeriodo}
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 col-lg-6">
+                            <Linha
+                              tituloGrafico="Comparativos de valores de vendas e ganhos"
+                              labels={labelsGraficoPeriodo}
+                              datasets={dadosGraficoValoresVendasPeriodo}
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 col-lg-6">
+                            <Barras
+                              tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                              labels={labelsGraficoPeriodo}
+                              datasets={dadosGraficoQtdFormaPagamentosPeriodo}
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 col-lg-6">
+                            <Linha
+                              tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                              labels={labelsGraficoPeriodo}
+                              datasets={
+                                dadosGraficoValoresFormaPagamentoPeriodo
+                              }
+                            />
+                          </div>
                         </div>
                       </div>
                     ) : (

@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { fornecedorProps } from "../../interfaces/interfaceFornecedor";
 
 interface opcaoFornecedorProps {
@@ -15,19 +16,21 @@ export function OpcaoFornecedor({
   listaFornecedor,
   selecionarOpcaoFornecedor,
 }: opcaoFornecedorProps) {
+  const idSelectFornecedor = useId();
+
   return (
     <div className="form-floating">
       <select
         disabled={carregandoFornecedores}
         className="form-select"
-        key={nomeSelect}
+        key={idSelectFornecedor}
         name={nomeSelect}
         value={fornecedorSelecionado}
         onChange={(event) => {
           selecionarOpcaoFornecedor(event.target.value);
         }}
       >
-        <option value={""} selected disabled>
+        <option value={""} disabled>
           {!carregandoFornecedores ? "Selecione" : "Carregando fornecedores..."}
         </option>
         {listaFornecedor.map((fornecedor) => {
@@ -38,7 +41,7 @@ export function OpcaoFornecedor({
           );
         })}
       </select>
-      <label htmlFor={nomeSelect}>Fornecedores</label>
+      <label htmlFor={idSelectFornecedor}>Fornecedores</label>
     </div>
   );
 }

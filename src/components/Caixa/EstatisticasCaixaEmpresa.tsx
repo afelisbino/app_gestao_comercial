@@ -49,9 +49,9 @@ export function EstatisticasCaixaEmpresa({
 
   return (
     <>
-      <div id={idEstatisticas} className="row mt-3">
-        <div className="d-flex justify-content-center align-items-center flex-nowrap">
-          <div className="m-auto">
+      <div className="row overflow-auto">
+        <div className="px-auto d-inline-flex d-lg-flex d-md-flex flex-row align-items-center justify-content-start justify-content-lg-center justify-content-md-center ">
+          <div className="col-auto mx-auto">
             <Cards
               nome={"Receitas"}
               valor={mascaraValorMoedaBrasileira(
@@ -60,7 +60,7 @@ export function EstatisticasCaixaEmpresa({
               cor={"text-bg-secondary"}
             />
           </div>
-          <div className="m-auto">
+          <div className="col-auto mx-auto">
             <Cards
               nome={"Saídas Manuais"}
               valor={mascaraValorMoedaBrasileira(
@@ -69,7 +69,7 @@ export function EstatisticasCaixaEmpresa({
               cor={"text-bg-secondary"}
             />
           </div>
-          <div className="m-auto">
+          <div className="col-auto mx-auto">
             <Cards
               nome={"Entradas Manuais"}
               valor={mascaraValorMoedaBrasileira(
@@ -78,7 +78,7 @@ export function EstatisticasCaixaEmpresa({
               cor={"text-bg-secondary"}
             />
           </div>
-          <div className="m-auto">
+          <div className="col-auto mx-auto">
             <Cards
               nome={"Ganhos (R$)"}
               valor={mascaraValorMoedaBrasileira(
@@ -87,7 +87,7 @@ export function EstatisticasCaixaEmpresa({
               cor={"text-bg-secondary"}
             />
           </div>
-          <div className="m-auto">
+          <div className="col-auto mx-auto">
             <Cards
               nome={"Ganhos (%)"}
               valor={Number(dados.resumo.porcentagemTotalLucro)}
@@ -96,9 +96,9 @@ export function EstatisticasCaixaEmpresa({
           </div>
         </div>
       </div>
-      <div className="row overflow-auto" style={{ maxHeight: "30rem" }}>
+      <div className="row overflow-auto" style={{ maxHeight: "35rem" }}>
         <div className="d-inline-flex flex-row flex-wrap">
-          <div className="mx-auto col-6">
+          <div className="mx-auto col-12 col-md-6 col-lg-6">
             <Linha
               tituloGrafico="Valores fechamento de caixa"
               labels={labelFechamentoCaixa}
@@ -112,7 +112,7 @@ export function EstatisticasCaixaEmpresa({
               ]}
             />
           </div>
-          <div className="mx-auto col-6">
+          <div className="mx-auto col-12 col-md-6 col-lg-6">
             <Linha
               tituloGrafico="Receita x Lucro"
               labels={labelReceitasLucros}

@@ -230,7 +230,7 @@ export function EstatisticasEstoque() {
         </div>
       </form>
       <hr />
-      <div className="row">
+      <div className="row" style={{ maxHeight: "100rem" }}>
         <div className="col-12">
           <ul
             className="nav nav-tabs justify-content-center"
@@ -275,7 +275,7 @@ export function EstatisticasEstoque() {
               tabIndex={0}
             >
               <div className="row mt-3">
-                <div className="d-flex justify-content-center flex-wrap align-items-center p-auto">
+                <div className="d-flex justify-content-lg-center align-items-center flex-nowrap overflow-auto">
                   {carregandoEstatisticaEstoque ? (
                     <div className="m-auto">
                       <Spinner />
@@ -318,16 +318,25 @@ export function EstatisticasEstoque() {
               labelsGraficoProdutosVendidos.length === 0 ? (
                 <></>
               ) : (
-                <div className="row mt-4">
-                  <div className="d-flex justify-content-center flex-wrap align-items-center p-auto">
-                    <div className="m-auto">
+                <div
+                  className="row mt-3 mb-3 overflow-auto"
+                  style={{ maxHeight: "20rem" }}
+                >
+                  <div className="d-flex flex-wrap justify-content-center justify-content-lg-evenly align-items-center px-auto">
+                    <div
+                      className="col-auto p-auto"
+                      style={{ height: "auto", width: "auto" }}
+                    >
                       <Rosca
                         tituloGrafico="Movimentações do estoque"
                         labels={labelsGraficoMovimentacaoEstoque}
                         datasets={dadosGraficoMovimentacaoEstoque}
                       />
                     </div>
-                    <div className="m-auto">
+                    <div
+                      className="col-auto p-auto"
+                      style={{ height: "auto", width: "auto" }}
+                    >
                       <Rosca
                         tituloGrafico="Produtos mais vendidos"
                         labels={labelsGraficoProdutosVendidos}

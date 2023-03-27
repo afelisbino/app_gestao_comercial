@@ -43,38 +43,6 @@ export function Fornecedores() {
     buscarDadosFornecedor(id);
   }
 
-  async function excluirFornecedor(id: string) {
-    processarRequisicao(true);
-
-    await instanciaAxios
-      .delete("fornecedor/excluir", {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        data: {
-          tokenFornecedor: id,
-        },
-      })
-      .then(({ data }) => {
-        if (data.status) {
-          alertarMensagemSistema("success", data.msg);
-          buscarListaFornecedores();
-        } else {
-          alertarMensagemSistema("warning", data.msg);
-        }
-      })
-      .catch((error) => {
-        alertarMensagemSistema(
-          "warning",
-          "Erro durante processamento, tente novamente!"
-        );
-        console.log(error);
-      })
-      .finally(() => {
-        processarRequisicao(false);
-      });
-  }
-
   function validarCNPJ(cnpj: string): boolean {
     cnpj = cnpj.replace(/[^\d]+/g, "");
 
@@ -137,7 +105,6 @@ export function Fornecedores() {
     processarFormulario(true);
 
     if (documentoFornecedor !== null && !validarCNPJ(documentoFornecedor)) {
-      processarFormulario(false);
       alertarMensagemSistema("warning", "Documento do fornecedor é invalido!");
       document.getElementById("frn_doc")?.focus();
       return;
@@ -148,6 +115,8 @@ export function Fornecedores() {
     } else {
       alterar();
     }
+
+    processarFormulario(false);
   }
 
   async function buscarListaFornecedores() {
@@ -183,14 +152,13 @@ export function Fornecedores() {
         console.log(error);
       })
       .finally(() => {
-        processarFormulario(false);
         limparCampos();
         buscarListaFornecedores();
       });
   }
 
   async function alterar() {
-    processarRequisicao(true);
+    processarFormulario(true);
 
     await instanciaAxios
       .put<retornoRequisicaoProps>(
@@ -222,7 +190,6 @@ export function Fornecedores() {
         console.log(error);
       })
       .finally(() => {
-        processarFormulario(false);
         limparCampos();
         buscarListaFornecedores();
       });
@@ -241,7 +208,9 @@ export function Fornecedores() {
           setarNomeFornecedor(data.frn_nome);
           setarTokenFornecedor(data.frn_id);
 
-          if (data.frn_doc) mascararCnpj(data.frn_doc);
+          data.frn_doc
+            ? mascararCnpj(data.frn_doc)
+            : setarDocumentoFornecedor(null);
         }
       })
       .catch((error) => {
@@ -359,7 +328,6 @@ export function Fornecedores() {
             carregandoLista={carregandoFornecedor}
             processandoRequisicao={processandoRequisicao}
             editar={(id) => editarFornecedor(id)}
-            excluir={(id) => excluirFornecedor(id)}
           />
         </div>
       </div>
