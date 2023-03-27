@@ -5,7 +5,7 @@ export function PlaceholderCardInfos() {
 
   return (
     <div
-      id={idCard}
+      key={idCard}
       className={"text-light-dark card mx-1 mb-3 shadow"}
       style={{ width: "18rem" }}
     >

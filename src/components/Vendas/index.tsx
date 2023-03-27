@@ -19,6 +19,7 @@ import { Spinner } from "../Loaders/Spinner";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
 
 export function Vendas() {
+  const telaId = useId();
   const [qtdItensProduto, setarQtdItem] = useState<number>(1);
   const [itensSacola, setarItensSacola] = useState<sacolaProp[]>([]);
   const [totalCompra, setarTotalCompra] = useState<number>(0);
@@ -54,15 +55,14 @@ export function Vendas() {
     qtdAtualEstoque: number,
     idProduto: string,
     nomeProduto: string,
-    qtdItem: number,
-    subTotal: number
+    valorProduto: number
   ) {
     if (verificaDisponibilidadeProdutoEstoque(qtdAtualEstoque, idProduto)) {
       alertarMensagemSistema(
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
-    } else if (qtdItem > qtdAtualEstoque) {
+    } else if (qtdItensProduto > qtdAtualEstoque) {
       alertarMensagemSistema(
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
@@ -74,14 +74,15 @@ export function Vendas() {
           {
             id: self.crypto.randomUUID(),
             pro_id: idProduto,
-            scl_qtd: qtdItem,
-            scl_sub_total: subTotal,
+            scl_qtd: qtdItensProduto,
+            scl_sub_total: valorProduto * qtdItensProduto,
             pro_nome: nomeProduto,
           },
         ].reverse()
       );
 
       setarFiltro("");
+      setarQtdItem(1);
     }
   }
 
@@ -108,10 +109,6 @@ export function Vendas() {
     setarListaProduto(await buscarListaProdutoAtivo());
 
     carregarListaProdutos(false);
-
-    if (refFiltro.current) {
-      refFiltro.current.focus();
-    }
   }
 
   function buscaProdutoNomeOuCodigoBarras(filtro: string) {
@@ -126,11 +123,8 @@ export function Vendas() {
             produto.est_qtd_atual,
             produto?.pro_id ?? "",
             produto?.pro_nome ?? "",
-            qtdItensProduto,
-            (produto?.pro_valor ?? 0) * qtdItensProduto
+            produto?.pro_valor ?? 0
           );
-
-          setarQtdItem(1);
         }
       } else {
         setarFiltroProduto(filtraProdutoNome(filtro));
@@ -176,6 +170,10 @@ export function Vendas() {
 
   useEffect(() => {
     buscaListaProdutoAtivos();
+
+    if (refFiltro) {
+      refFiltro.current?.focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -288,6 +286,10 @@ export function Vendas() {
 
     processarVenda(false);
 
+    if (refFiltro) {
+      refFiltro.current?.focus();
+    }
+
     buscaListaProdutoAtivos();
   }
 
@@ -305,25 +307,23 @@ export function Vendas() {
 
   return (
     <>
-      <div className="row mt-5 mb-3">
-        {processandoVenda ? (
-          <div className="row">
-            <Spinner />
+      {processandoVenda ? (
+        <div key={self.crypto.randomUUID()} className="row mt-2 mb-3">
+          <Spinner />
+        </div>
+      ) : (
+        <></>
+      )}
+      {mensagemAlerta !== null ? (
+        <div key={self.crypto.randomUUID()} className="row mt-2 mb-3">
+          <div className="col-12">
+            <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
           </div>
-        ) : (
-          <></>
-        )}
-        {mensagemAlerta !== null ? (
-          <div className="row">
-            <div className="col-12">
-              <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className="row row-cols-lg-auto g-2">
+        </div>
+      ) : (
+        <></>
+      )}
+      <div key={telaId} className="row mt-3 row-cols-lg-auto g-2 clearfix">
         <div className="col-lg-2 col-md-4 col-sm">
           <div className="form-floating mb-3">
             <input
@@ -332,14 +332,14 @@ export function Vendas() {
               autoComplete="off"
               className="form-control"
               key="qtdAdicionarProduto"
-              placeholder="Quantidade de itens a ser adicionado"
+              placeholder="Quantidade de itens"
               value={qtdItensProduto}
               onChange={(event) => {
                 setarQtdItem(event.target.valueAsNumber);
               }}
             />
             <label htmlFor="qtdAdicionarProduto">
-              Quantidade de itens a ser adicionado
+              Quantidade de itens
             </label>
           </div>
         </div>
@@ -405,15 +405,13 @@ export function Vendas() {
                             qtdAtualEstoque: number,
                             idProduto: string,
                             nomeProduto: string,
-                            qtdItem: number,
-                            subTotal: number
+                            valorProduto: number
                           ) =>
                             adicionaItemSacola(
                               qtdAtualEstoque,
                               idProduto,
                               nomeProduto,
-                              qtdItem,
-                              subTotal
+                              valorProduto
                             )
                           }
                         />
@@ -433,15 +431,13 @@ export function Vendas() {
                             qtdAtualEstoque: number,
                             idProduto: string,
                             nomeProduto: string,
-                            qtdItem: number,
-                            subTotal: number
+                            valorProduto: number
                           ) =>
                             adicionaItemSacola(
                               qtdAtualEstoque,
                               idProduto,
                               nomeProduto,
-                              qtdItem,
-                              subTotal
+                              valorProduto
                             )
                           }
                         />
@@ -595,12 +591,19 @@ export function Vendas() {
                               }
                               aria-label="Tipo de pagamento"
                             >
-                              <option selected disabled value={""}>
+                              <option
+                                key={self.crypto.randomUUID()}
+                                disabled
+                                value={""}
+                              >
                                 Selecione
                               </option>
                               {tiposPagamentos.map((tipo) => {
                                 return (
-                                  <option value={tipo.valor}>
+                                  <option
+                                    key={self.crypto.randomUUID()}
+                                    value={tipo.valor}
+                                  >
                                     {tipo.nome}
                                   </option>
                                 );

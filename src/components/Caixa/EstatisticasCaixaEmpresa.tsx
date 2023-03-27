@@ -49,7 +49,7 @@ export function EstatisticasCaixaEmpresa({
 
   return (
     <>
-      <div id={idEstatisticas} className="row mt-3">
+      <div key={idEstatisticas} className="row mt-3">
         <div className="d-flex justify-content-center align-items-center flex-nowrap">
           <div className="m-auto">
             <Cards

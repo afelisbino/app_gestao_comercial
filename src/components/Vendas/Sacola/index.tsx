@@ -30,7 +30,7 @@ export function Sacola({
           </div>
           <button
             type="button"
-            id={"btn-deleta-item-" + id}
+            key={"btn-deleta-item-" + id}
             disabled={processandoVenda}
             className="btn btn-danger shadow mt-2"
             onClick={() => excluirItem(id)}
