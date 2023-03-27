@@ -59,9 +59,7 @@ export function TabelaProdutos({
     }
   }
 
-  useEffect(() => aplicaFiltroProduto(), [filtroProduto]);
-
-  useEffect(() => aplicaFiltroProduto(), [listaProdutos]);
+  useEffect(() => aplicaFiltroProduto(), [filtroProduto, listaProdutos]);
 
   return (
     <>
@@ -153,7 +151,11 @@ export function TabelaProdutos({
                 </>
               ) : listaProdutos.length === 0 ? (
                 <>
-                  <td colSpan={4} className="text-center p-3">
+                  <td
+                    key={self.crypto.randomUUID()}
+                    colSpan={4}
+                    className="text-center p-3"
+                  >
                     Nenhum produto encontrado
                   </td>
                 </>
