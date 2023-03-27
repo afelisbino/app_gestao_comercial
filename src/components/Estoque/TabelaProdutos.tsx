@@ -99,7 +99,41 @@ export function TabelaProdutos({
             <tbody className="overflow-auto">
               {carregandoListaProdutos ? (
                 <>
-                  <tr>
+                  <tr key={self.crypto.randomUUID()}>
+                    <th className="w-auto" scope="row">
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                    </th>
+                    <td className="w-50">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                  </tr>
+                  <tr key={self.crypto.randomUUID()}>
+                    <th className="w-auto" scope="row">
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                    </th>
+                    <td className="w-50">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                  </tr>
+                  <tr key={self.crypto.randomUUID()}>
                     <th className="w-auto" scope="row">
                       <PlaceholderButton />
                       <PlaceholderButton />
