@@ -1,16 +1,18 @@
 import { FormEvent, useEffect, useState } from "react";
-import { TabelaCategoria } from "./TabelaCategoria";
-import instanciaAxios from "../../libraries/AxiosInstance";
 import { categoriaProps } from "../../interfaces/interfaceCategoria";
-import { Alerta } from "../Alerta";
+import { Spinner } from "../../components/Loaders/Spinner";
+import { Alerta } from "../../components/Alerta";
+import { TabelaCategoria } from "../../components/Categorias/TabelaCategoria";
+import {
+  atualizarCategoria,
+  buscarListaCategoria,
+  cadastrarCategoria,
+} from "../../controllers/CategoriaController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
-import { Spinner } from "../Loaders/Spinner";
 
-export function Categorias() {
+const Categoria = () => {
   const [carregandoCategorias, carregarCategorias] = useState(false);
-  const [listaCategoria, carregarListaCategoria] = useState<categoriaProps[]>(
-    []
-  );
+  const [listaCategoria, setarListaCategoria] = useState<categoriaProps[]>([]);
   const [processandoRequisicao, processarRequisicao] = useState(false);
   const [processandoFormulario, processarFormulario] = useState(false);
 
@@ -19,134 +21,15 @@ export function Categorias() {
   const [nomeCategoria, setarNomeCategoria] = useState<string>("");
   const [tokenCategoria, setarTokenCategoria] = useState<string | null>(null);
 
-  async function buscarListaCategoria() {
-    carregarCategorias(true);
-
-    await instanciaAxios
-      .get<categoriaProps[]>("categoria/listar")
-      .then(({ data }) => {
-        carregarListaCategoria(data);
-      })
-      .catch((error) => {
-        alertarMensagemSistema(
-          "warning",
-          "Erro durante processamento, tente novamente!"
-        );
-        console.log(error);
-      })
-      .finally(() => {
-        carregarCategorias(false);
-      });
-  }
-
-  function editarCategoria(cat_id: string, cat_nome: string) {
+  const editarCategoria = (cat_id: string, cat_nome: string) => {
     setarNomeCategoria(cat_nome);
     setarTokenCategoria(cat_id);
-  }
+  };
 
-  async function excluirCategoria(cat_id: string) {
-    processarRequisicao(true);
-
-    await instanciaAxios
-      .delete<retornoRequisicaoProps>("categoria/excluir", {
-        data: {
-          tokenCategoria: cat_id,
-        },
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .then(({ data }) => {
-        if (data.status) {
-          alertarMensagemSistema("success", data.msg);
-          buscarListaCategoria();
-        } else {
-          alertarMensagemSistema("warning", data.msg);
-        }
-      })
-      .catch((error) => {
-        alertarMensagemSistema(
-          "warning",
-          "Erro durante processamento, tente novamente!"
-        );
-        console.log(error);
-      })
-      .finally(() => {
-        processarRequisicao(false);
-      });
-  }
-
-  async function salvarCategoria(event: FormEvent) {
-    event.preventDefault();
-    processarFormulario(true);
-
-    if (tokenCategoria != null) {
-      alterarCategoria();
-    } else {
-      cadastrarCategoria();
-    }
-  }
-
-  async function alterarCategoria() {
-    await instanciaAxios
-      .patch<retornoRequisicaoProps>(
-        "categoria/editar",
-        {
-          tokenCategoria: tokenCategoria,
-          nomeCategoria: nomeCategoria,
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      )
-      .then(({ data }) => {
-        if (data.status) {
-          alertarMensagemSistema("success", data.msg);
-        } else {
-          alertarMensagemSistema("warning", data.msg);
-        }
-      })
-      .catch((error) => {
-        alertarMensagemSistema(
-          "danger",
-          "Erro durante processamento, tente novamente!"
-        );
-        console.log(error);
-      })
-      .finally(() => {
-        limparCampos();
-        processarFormulario(false);
-        buscarListaCategoria();
-        setarTokenCategoria(null);
-      });
-  }
-
-  async function cadastrarCategoria() {
-    await instanciaAxios
-      .post<retornoRequisicaoProps>("categoria/cadastrar", {
-        nomeCategoria: nomeCategoria,
-      })
-      .then(({ data }) => {
-        if (data.status) {
-          alertarMensagemSistema("success", data.msg);
-        } else {
-          alertarMensagemSistema("warning", data.msg);
-        }
-      })
-      .catch((error) => {
-        alertarMensagemSistema(
-          "danger",
-          "Erro durante processamento, tente novamente!"
-        );
-        console.log(error);
-      })
-      .finally(() => {
-        limparCampos();
-        processarFormulario(false);
-        buscarListaCategoria();
-      });
+  async function listarCategoriaEmpresa() {
+    carregarCategorias(true);
+    setarListaCategoria(await buscarListaCategoria());
+    carregarCategorias(false);
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
@@ -163,8 +46,23 @@ export function Categorias() {
     setarTokenCategoria(null);
   }
 
+  const salvar = async (event: FormEvent) => {
+    event.preventDefault();
+
+    processarFormulario(true);
+
+    const status: retornoRequisicaoProps = tokenCategoria
+      ? await atualizarCategoria(nomeCategoria, tokenCategoria)
+      : await cadastrarCategoria(nomeCategoria);
+
+    alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
+    limparCampos();
+    processarFormulario(false);
+    listarCategoriaEmpresa();
+  };
+
   useEffect(() => {
-    buscarListaCategoria();
+    listarCategoriaEmpresa();
   }, []);
 
   return (
@@ -177,7 +75,7 @@ export function Categorias() {
         <></>
       )}
       <div className="row mt-5">
-        <form onSubmit={salvarCategoria}>
+        <form onSubmit={salvar}>
           {mensagemAlerta !== null ? (
             <div className="row">
               <div className="col-12">
@@ -260,4 +158,6 @@ export function Categorias() {
       </div>
     </>
   );
-}
+};
+
+export default Categoria;
