@@ -17,7 +17,7 @@ export function TabelaFornecedor({
   editar,
 }: tabelaProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "20rem" }}>
+    <div className="table-responsive mt-3" style={{ maxHeight: "30rem" }}>
       <table className="table border rounded">
         <caption>Lista de Fornecedores</caption>
         <thead>
@@ -27,39 +27,39 @@ export function TabelaFornecedor({
             <th scope="col">Documento</th>
           </tr>
         </thead>
-        <tbody className="overflow-auto">
+        <tbody>
           {carregandoLista ? (
             <>
-              <tr>
+              <tr key={self.crypto.randomUUID()}>
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
                 <td className="w-50">
                   <Placeholder />
                 </td>
-                <td className="w-auto">
+                <td className="w-50">
                   <Placeholder />
                 </td>
               </tr>
-              <tr>
+              <tr key={self.crypto.randomUUID()}>
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
                 <td className="w-50">
                   <Placeholder />
                 </td>
-                <td className="w-auto">
+                <td className="w-50">
                   <Placeholder />
                 </td>
               </tr>
-              <tr>
+              <tr key={self.crypto.randomUUID()}>
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
                 <td className="w-50">
                   <Placeholder />
                 </td>
-                <td className="w-auto">
+                <td className="w-50">
                   <Placeholder />
                 </td>
               </tr>
@@ -89,7 +89,7 @@ export function TabelaFornecedor({
                       </button>
                     </th>
                     <td className="w-50">{fornecedor.frn_nome}</td>
-                    <td className="w-auto">{fornecedor.frn_doc ?? "--"}</td>
+                    <td className="w-50">{fornecedor.frn_doc ?? "--"}</td>
                   </tr>
                 </>
               );
