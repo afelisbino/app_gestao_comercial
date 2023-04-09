@@ -91,7 +91,7 @@ function logout() {
   window.location.reload();
 }
 
-export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
+const Navbar = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
   return (
     <nav className="navbar bg-light fixed-top shadow">
       <div className="container-fluid">
@@ -246,4 +246,6 @@ export function Navbar({ selecionarOpcaoMenu }: opcaoMenuProps) {
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;
