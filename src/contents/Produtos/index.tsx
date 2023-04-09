@@ -21,8 +21,8 @@ import { historicoProdutoEstoqueProps } from "../../interfaces/interfaceHistoric
 import { buscarListaCategoria } from "../../controllers/CategoriaController";
 import { buscarListaFornecedores } from "../../controllers/FornecedorController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
-import { TabelaCodigoBarras } from "../../components/Estoque/Produto/TabelaCodigoBarras";
-import { TabelaHistoricoEstoqueProduto } from "../../components/Estoque/Produto/TabelaHistoricoEstoqueProduto";
+import { TabelaCodigoBarras } from "../../components/Estoque/TabelaCodigoBarras";
+import { TabelaHistoricoEstoqueProduto } from "../../components/Estoque/TabelaHistoricoEstoqueProduto";
 import { OpcaoCategoria } from "../../components/Categorias/OpcaoCategoria";
 import { OpcaoFornecedor } from "../../components/Fornecedores/OpcaoFornecedor";
 import {
