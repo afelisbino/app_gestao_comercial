@@ -14,7 +14,14 @@ interface tabelaFiadoProps {
   finalizarVendaFiado: (vendaId: string) => void;
 }
 
-export function TabelaVendasFiadoAberto({listaVendasFiado, carregandoListaItensVenda, carregandoListaVendasFiados, processandoPagamento, buscaItensSacolaVenda, finalizarVendaFiado}: tabelaFiadoProps) {
+export function TabelaVendasFiadoAberto({
+  listaVendasFiado,
+  carregandoListaItensVenda,
+  carregandoListaVendasFiados,
+  processandoPagamento,
+  buscaItensSacolaVenda,
+  finalizarVendaFiado,
+}: tabelaFiadoProps) {
   const [filtroCliente, setarFiltroCliente] = useState<string>("");
 
   const listaVendasFiadoFiltro =
@@ -28,12 +35,14 @@ export function TabelaVendasFiadoAberto({listaVendasFiado, carregandoListaItensV
 
   return (
     <>
-      <div className="row mt-3">
+      <div className="row mt-4">
         <div className="col-12">
           <div className="form-floating mb-3">
             <input
               type="text"
-              disabled={carregandoListaVendasFiados}
+              disabled={
+                carregandoListaVendasFiados || listaVendasFiado.length === 0
+              }
               className="form-control"
               key="filtroClienteFiado"
               placeholder="Filtrar pelo nome do cliente"
