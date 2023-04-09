@@ -1,74 +1,79 @@
-import { FormEvent, useEffect, useState } from "react";
-import { buscarListaCategoria } from "../../../controllers/CategoriaController";
-import { buscarListaFornecedores } from "../../../controllers/FornecedorController";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { TabelaProdutos } from "../../components/Estoque/TabelaProdutos";
+import { produtoProps } from "../../interfaces/interfaceProdutos";
 import {
-  formatarValorMoeda,
-  mascaraValorMoedaBrasileira,
-} from "../../../controllers/NumeroController";
-import {
-  buscarListaTodosProdutos,
-  buscarListaCodigoBarrasProduto,
-  deletarCodigoBarrasProduto,
   adicionarNovoCodigoBarrasProduto,
-  cadastrarProduto,
   alterarProduto,
   ativarProduto,
-  desativarProduto,
+  buscarListaCodigoBarrasProduto,
   buscarListaHistoricoProduto,
-} from "../../../controllers/ProdutoController";
-import { categoriaProps } from "../../../interfaces/interfaceCategoria";
-import { codigoBarrasProps } from "../../../interfaces/interfaceCodigoBarrasProduto";
-import { fornecedorProps } from "../../../interfaces/interfaceFornecedor";
-import { historicoProdutoEstoqueProps } from "../../../interfaces/interfaceHistoricoEstoqueEmpresa";
-import { produtoProps } from "../../../interfaces/interfaceProdutos";
-import { retornoRequisicaoProps } from "../../../interfaces/interfaceReturnoRequisicao";
-import { Alerta } from "../../Alerta";
-import { OpcaoCategoria } from "../../Categorias/OpcaoCategoria";
-import { OpcaoFornecedor } from "../../Fornecedores/OpcaoFornecedor";
-import { TabelaProdutos } from "../TabelaProdutos";
-import { TabelaCodigoBarras } from "./CodigoBarras/TabelaCodigoBarras";
-import { TabelaHistoricoEstoqueProduto } from "./TabelaHistoricoEstoqueProduto";
-import { Spinner } from "../../Loaders/Spinner";
+  buscarListaTodosProdutos,
+  cadastrarProduto,
+  deletarCodigoBarrasProduto,
+  desativarProduto,
+} from "../../controllers/ProdutoController";
+import { Spinner } from "../../components/Loaders/Spinner";
+import { Alerta } from "../../components/Alerta";
+import { fornecedorProps } from "../../interfaces/interfaceFornecedor";
+import { categoriaProps } from "../../interfaces/interfaceCategoria";
+import { codigoBarrasProps } from "../../interfaces/interfaceCodigoBarrasProduto";
+import { historicoProdutoEstoqueProps } from "../../interfaces/interfaceHistoricoEstoqueEmpresa";
+import { buscarListaCategoria } from "../../controllers/CategoriaController";
+import { buscarListaFornecedores } from "../../controllers/FornecedorController";
+import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+import { TabelaCodigoBarras } from "../../components/Estoque/Produto/TabelaCodigoBarras";
+import { TabelaHistoricoEstoqueProduto } from "../../components/Estoque/Produto/TabelaHistoricoEstoqueProduto";
+import { OpcaoCategoria } from "../../components/Categorias/OpcaoCategoria";
+import { OpcaoFornecedor } from "../../components/Fornecedores/OpcaoFornecedor";
+import {
+  calculaPorcentagemLucroProduto,
+  calculaValorLucroProduto,
+  formataValorMoeda,
+  mascaraValorMoedaBrasileira,
+} from "../../controllers/NumeroController";
 
-export function Produto() {
+const Produtos = () => {
   const [listaProdutos, setarListaProdutos] = useState<produtoProps[]>([]);
-  const [carregandoListaProdutos, carregarListaProdutos] = useState(false);
-
-  const [listaCategorias, setarListaCategorias] = useState<categoriaProps[]>(
-    []
-  );
-  const [carregandoCategorias, carregarCategorias] = useState(false);
   const [listaFornecedores, setarListaFornecedor] = useState<fornecedorProps[]>(
     []
   );
-  const [carregandoFornecedores, carregarFornecedor] = useState(false);
-  const [categoriaSelecionado, selecionarOpcaoCategoria] = useState<string>("");
-  const [fornecedorSelecionado, selecionarOpcaoFornecedor] =
-    useState<string>("");
+  const [listaCategorias, setarListaCategorias] = useState<categoriaProps[]>(
+    []
+  );
+  const [listaHistoricoProduto, setarListaHistoricoProduto] = useState<
+    historicoProdutoEstoqueProps[]
+  >([]);
+  const [listaCodigoBarras, setarListaCodigoBarras] = useState<
+    codigoBarrasProps[]
+  >([]);
 
   const [tokenProduto, setarTokenProduto] = useState<string | null>(null);
-
   const [nomeProduto, setarNomeProduto] = useState<string | null>(null);
   const [descricaoProduto, setarDescricaoProduto] = useState<string | null>(
     null
   );
-
-  const [qtdAtualProduto, setarQtdAtual] = useState<number>(0);
-  const [qtdMinimaProduto, setarQtdMinima] = useState<number>(0);
-
-  const [precoVendaProduto, setarPrecoVenda] = useState<string>("");
-  const [valorCustoProduto, setarValorCustoProduto] = useState<string>("");
-  const [valorLucro, setarValorLucroProduto] = useState<string>("0.00");
-  const [porcentagemLucro, setarPorcentagemLucroProduto] = useState<string>("0.00");
-
-  const [listaCodigoBarras, setarListaCodigoBarras] = useState<
-    codigoBarrasProps[]
-  >([]);
-  const [carregandoListaCodigosBarras, carregarListaCodigosBarras] =
-    useState(false);
-  const [codigoBarraProduto, setarCodigoBarraProduto] = useState<string | null>(
+  const [qtdAtualProduto, setarQtdAtual] = useState<string | null>(null);
+  const [qtdMinimaProduto, setarQtdMinima] = useState<string | null>(null);
+  const [precoVendaProduto, setarPrecoVenda] = useState<string | null>(null);
+  const [valorCustoProduto, setarValorCustoProduto] = useState<string | null>(
     null
   );
+  const [valorLucro, setarValorLucroProduto] = useState<string | null>(null);
+  const [porcentagemLucro, setarPorcentagemLucroProduto] = useState<
+    string | null
+  >(null);
+
+  const [categoriaSelecionado, selecionarOpcaoCategoria] = useState<string>("");
+  const [fornecedorSelecionado, selecionarOpcaoFornecedor] =
+    useState<string>("");
+
+  const [carregandoFornecedores, carregarFornecedor] = useState(false);
+  const [carregandoCategorias, carregarCategorias] = useState(false);
+  const [carregandoListaProdutos, carregarListaProdutos] = useState(false);
+  const [carregandoListaHistorico, carregarListaHistoricoProduto] =
+    useState(false);
+  const [carregandoListaCodigosBarras, carregarListaCodigosBarras] =
+    useState(false);
 
   const [processandoRequisicao, processarRequisicao] = useState(false);
   const [processandoFormulario, processarFormulario] = useState(false);
@@ -76,13 +81,10 @@ export function Produto() {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
   const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
 
-  const [listaHistoricoProduto, setarListaHistoricoProduto] = useState<
-    historicoProdutoEstoqueProps[]
-  >([]);
-  const [carregandoListaHistorico, carregarListaHistoricoProduto] =
-    useState(false);
+  const codigoBarraProdutoCadastroRef = useRef<HTMLInputElement>(null);
+  const codigoBarraProdutoEdicaoRef = useRef<HTMLInputElement>(null);
 
-  function editarProduto(
+  const editarProduto = (
     idProduto: string,
     nomeProduto: string,
     descricaoProduto: string | null,
@@ -92,7 +94,7 @@ export function Produto() {
     tokenFornecedor: string,
     estoqueAtual: number,
     estoqueMinimo: number
-  ) {
+  ) => {
     setarTokenProduto(idProduto);
     setarNomeProduto(nomeProduto);
     setarDescricaoProduto(descricaoProduto);
@@ -100,15 +102,51 @@ export function Produto() {
     setarValorCustoProduto(Number(valorCompra).toFixed(2));
     selecionarOpcaoCategoria(tokenCategoria);
     selecionarOpcaoFornecedor(tokenFornecedor);
-    setarQtdAtual(estoqueAtual);
-    setarQtdMinima(estoqueMinimo);
-  }
+    setarQtdAtual(estoqueAtual.toString());
+    setarQtdMinima(estoqueMinimo.toString());
+  };
 
-  function calculaPorcentagemLucroProduto(
-    precoVenda: number = 0,
-    valorCompra: number = 0
-  ): number {
-    return (precoVenda > 0 && valorCompra > 0) ? (((precoVenda - valorCompra) / precoVenda) * 100) : 0;
+  const limparListaCodigoBarras = () => setarListaCodigoBarras([]);
+
+  const limparCamposProdutos = () => {
+    setarTokenProduto(null);
+    setarNomeProduto(null);
+    setarDescricaoProduto(null);
+    setarPrecoVenda(null);
+    setarValorCustoProduto(null);
+    setarValorLucroProduto(null);
+    setarPorcentagemLucroProduto(null);
+    setarQtdAtual(null);
+    setarQtdMinima(null);
+    selecionarOpcaoCategoria("");
+    selecionarOpcaoFornecedor("");
+  };
+
+  const calculaLucrosProduto = () => {
+    setarValorLucroProduto(
+      mascaraValorMoedaBrasileira(
+        calculaValorLucroProduto(
+          Number(precoVendaProduto),
+          Number(valorCustoProduto)
+        )
+      )
+    );
+
+    setarPorcentagemLucroProduto(
+      calculaPorcentagemLucroProduto(
+        Number(precoVendaProduto),
+        Number(valorCustoProduto)
+      ).toFixed(2)
+    );
+  };
+
+  function alertarMensagemSistema(tipo: string, mensagem: string) {
+    adicionarTipoAlerta(tipo);
+    alertarMensagem(mensagem);
+
+    setTimeout(() => {
+      alertarMensagem(null);
+    }, 10000);
   }
 
   async function buscaListaProdutos() {
@@ -117,6 +155,22 @@ export function Produto() {
     setarListaProdutos(await buscarListaTodosProdutos());
 
     carregarListaProdutos(false);
+  }
+
+  async function listarFornecedores() {
+    carregarFornecedor(true);
+
+    setarListaFornecedor(await buscarListaFornecedores());
+
+    carregarFornecedor(false);
+  }
+
+  async function listarCategorias() {
+    carregarCategorias(true);
+
+    setarListaCategorias(await buscarListaCategoria());
+
+    carregarCategorias(false);
   }
 
   async function buscarListaCodigosBarras(idProduto: string) {
@@ -141,39 +195,39 @@ export function Produto() {
     } else {
       processarRequisicao(true);
 
-      let status: retornoRequisicaoProps = await deletarCodigoBarrasProduto(
+      const status: retornoRequisicaoProps = await deletarCodigoBarrasProduto(
         codigoId
       );
 
-      if (status.status) {
-        alertarMensagemSistema("success", status.msg);
-      } else {
-        alertarMensagemSistema("warning", status.msg);
-      }
-
+      alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
       processarRequisicao(false);
+
       if (tokenProduto) buscarListaCodigosBarras(tokenProduto);
     }
   }
 
   async function adicionarCodigoBarras(cadastrar: boolean = false) {
+    const codigoBarraProduto =
+      (codigoBarraProdutoCadastroRef.current?.value ||
+        codigoBarraProdutoEdicaoRef.current?.value) ??
+      null;
+
     if (!codigoBarraProduto) {
       document.getElementById("pcb_codigo")?.focus();
     } else if (cadastrar) {
       processarRequisicao(true);
 
       if (tokenProduto) {
-        let status: retornoRequisicaoProps =
+        const status: retornoRequisicaoProps =
           await adicionarNovoCodigoBarrasProduto(
             tokenProduto,
             codigoBarraProduto
           );
 
-        if (status.status) {
-          alertarMensagemSistema("success", status.msg);
-        } else {
-          alertarMensagemSistema("warning", status.msg);
-        }
+        alertarMensagemSistema(
+          status.status ? "success" : "warning",
+          status.msg
+        );
       }
       processarRequisicao(false);
 
@@ -184,112 +238,52 @@ export function Produto() {
         { pcb_codigo: codigoBarraProduto },
       ]);
     }
-    setarCodigoBarraProduto(null);
-  }
 
-  function limparListaCodigoBarras() {
-    setarListaCodigoBarras([]);
-  }
+    if (codigoBarraProdutoCadastroRef.current)
+      codigoBarraProdutoCadastroRef.current.value = "";
 
-  function calculaLucroProduto(
-    precoVenda: number = 0,
-    valorCompra: number = 0
-  ): number {
-    if (precoVenda > 0 && valorCompra > 0) {
-      return precoVenda - valorCompra;
-    } else {
-      return 0;
-    }
-  }
-
-  async function listarFornecedores() {
-    carregarFornecedor(true);
-
-    setarListaFornecedor(await buscarListaFornecedores());
-
-    carregarFornecedor(false);
-  }
-
-  async function listarCategorias() {
-    carregarCategorias(true);
-
-    setarListaCategorias(await buscarListaCategoria());
-
-    carregarCategorias(false);
-  }
-
-  useEffect(() => {
-    buscaListaProdutos();
-    listarCategorias();
-    listarFornecedores();
-  }, []);
-
-  function limparCamposProdutos() {
-    setarTokenProduto(null);
-    setarNomeProduto(null);
-    setarDescricaoProduto(null);
-    setarPrecoVenda("");
-    setarValorCustoProduto("");
-    setarValorLucroProduto("");
-    setarQtdAtual(0);
-    setarQtdMinima(0);
-    selecionarOpcaoCategoria("");
-    selecionarOpcaoFornecedor("");
+    if (codigoBarraProdutoEdicaoRef.current)
+      codigoBarraProdutoEdicaoRef.current.value = "";
   }
 
   async function salvar(event: FormEvent) {
     event.preventDefault();
 
-    let status: retornoRequisicaoProps;
+    processarFormulario(true);
+    const status: retornoRequisicaoProps = !tokenProduto
+      ? await cadastrarProduto(
+          JSON.stringify({
+            nomeProduto: nomeProduto,
+            precoVendaProduto: precoVendaProduto,
+            precoCompraProduto: valorCustoProduto,
+            descricaoProduto: descricaoProduto,
+            tokenCategoria: categoriaSelecionado,
+            tokenFornecedor: fornecedorSelecionado,
+            codigoBarrasProduto: listaCodigoBarras,
+            estoqueAtualProduto: qtdAtualProduto,
+            estoqueMinimoProduto: qtdMinimaProduto,
+            margemLucro: porcentagemLucro,
+          })
+        )
+      : await alterarProduto(
+          JSON.stringify({
+            tokenProduto: tokenProduto,
+            nomeProduto: nomeProduto,
+            precoVendaProduto: precoVendaProduto,
+            precoCompraProduto: valorCustoProduto,
+            descricaoProduto: descricaoProduto,
+            tokenCategoria: categoriaSelecionado,
+            tokenFornecedor: fornecedorSelecionado,
+            estoqueAtualProduto: qtdAtualProduto,
+            estoqueMinimoProduto: qtdMinimaProduto,
+            margemLucro: porcentagemLucro,
+          })
+        );
 
-    if (!tokenProduto) {
-      processarFormulario(true);
-
-      status = await cadastrarProduto(
-        JSON.stringify({
-          nomeProduto: nomeProduto,
-          precoVendaProduto: precoVendaProduto,
-          precoCompraProduto: valorCustoProduto,
-          descricaoProduto: descricaoProduto,
-          tokenCategoria: categoriaSelecionado,
-          tokenFornecedor: fornecedorSelecionado,
-          codigoBarrasProduto: listaCodigoBarras,
-          estoqueAtualProduto: qtdAtualProduto,
-          estoqueMinimoProduto: qtdMinimaProduto,
-          margemLucro: porcentagemLucro
-        })
-      );
-
-      limparListaCodigoBarras();
-      processarFormulario(false);
-    } else {
-      processarRequisicao(true);
-
-      status = await alterarProduto(
-        JSON.stringify({
-          tokenProduto: tokenProduto,
-          nomeProduto: nomeProduto,
-          precoVendaProduto: precoVendaProduto,
-          precoCompraProduto: valorCustoProduto,
-          descricaoProduto: descricaoProduto,
-          tokenCategoria: categoriaSelecionado,
-          tokenFornecedor: fornecedorSelecionado,
-          estoqueAtualProduto: qtdAtualProduto,
-          estoqueMinimoProduto: qtdMinimaProduto,
-          margemLucro: porcentagemLucro
-        })
-      );
-      processarRequisicao(false);
-    }
-
-    if (status.status) {
-      alertarMensagemSistema("success", status.msg);
-    } else {
-      alertarMensagemSistema("warning", status.msg);
-    }
-
+    processarFormulario(false);
+    alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
+    limparListaCodigoBarras();
     buscaListaProdutos();
-    limparCamposProdutos();
   }
 
   async function ativarProdutoEstoque(pro_id: string) {
@@ -318,52 +312,31 @@ export function Produto() {
     carregarListaHistoricoProduto(false);
   }
 
-  function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
-
-    setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
-  }
-
   useEffect(() => {
-    setarValorLucroProduto(
-      mascaraValorMoedaBrasileira(
-        calculaLucroProduto(
-          Number(precoVendaProduto),
-          Number(valorCustoProduto)
-        )
-      )
-    );
-
-    setarPorcentagemLucroProduto(
-      calculaPorcentagemLucroProduto(
-        Number(precoVendaProduto),
-        Number(valorCustoProduto)
-      ).toFixed(2)
-    );
-  }, [precoVendaProduto, valorCustoProduto]);
+    buscaListaProdutos();
+    listarCategorias();
+    listarFornecedores();
+  }, []);
 
   return (
     <>
-      <div className="row d-flex justify-content-center mt-3">
-        {processandoRequisicao || processandoFormulario ? (
-          <div className="row">
-            <Spinner />
+      {processandoRequisicao || processandoFormulario ? (
+        <div className="row">
+          <Spinner />
+        </div>
+      ) : (
+        <></>
+      )}
+      {mensagemAlerta !== null ? (
+        <div className="row">
+          <div className="col-12">
+            <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
           </div>
-        ) : (
-          <></>
-        )}
-        {mensagemAlerta !== null ? (
-          <div className="row">
-            <div className="col-12">
-              <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+        </div>
+      ) : (
+        <></>
+      )}
+      <div className="row d-flex justify-content-center mt-5">
         <div className="col-auto">
           <button
             className="btn btn-secondary btn-lg shadow"
@@ -375,44 +348,16 @@ export function Produto() {
         </div>
       </div>
       <hr />
-      <div className="row">
-        <TabelaProdutos
-          listaProdutos={listaProdutos}
-          carregandoListaProdutos={carregandoListaProdutos}
-          processandoRequisicao={processandoRequisicao}
-          editarProduto={(
-            idProduto: string,
-            nomeProduto: string,
-            descricaoProduto: string | null,
-            precoProduto: number,
-            valorCompra: number,
-            tokenCategoria: string,
-            tokenFornecedor: string,
-            estoqueAtual: number,
-            estoqueMinimo: number
-          ) => {
-            editarProduto(
-              idProduto,
-              nomeProduto,
-              descricaoProduto,
-              precoProduto,
-              valorCompra,
-              tokenCategoria,
-              tokenFornecedor,
-              estoqueAtual,
-              estoqueMinimo
-            );
-          }}
-          ativarProduto={(idProduto) => ativarProdutoEstoque(idProduto)}
-          desativarProduto={(idProduto) => desativarProdutoEstoque(idProduto)}
-          visualizarCodigosBarrasProduto={(idProduto) =>
-            buscarListaCodigosBarras(idProduto)
-          }
-          visualizarHistoricoEstoqueProduto={(idProduto) => {
-            buscarListaHistoricoEstoqueProduto(idProduto);
-          }}
-        />
-      </div>
+      <TabelaProdutos
+        listaProdutos={listaProdutos}
+        carregandoListaProdutos={carregandoListaProdutos}
+        processandoRequisicao={processandoRequisicao}
+        editarProduto={editarProduto}
+        ativarProduto={ativarProdutoEstoque}
+        desativarProduto={desativarProdutoEstoque}
+        visualizarCodigosBarrasProduto={buscarListaCodigosBarras}
+        visualizarHistoricoEstoqueProduto={buscarListaHistoricoEstoqueProduto}
+      />
 
       {/* <!-- Modal cadastro produtos --> */}
       <div
@@ -444,9 +389,9 @@ export function Produto() {
             </div>
             <div className="modal-body">
               <form onSubmit={salvar}>
-                <div className="row">
-                  <div className="col-12 mb-3">
-                    <div className="form-floating">
+                <div className="row gap-2 gap-lg-0">
+                  <div className="col-12">
+                    <div className="form-floating mb-2">
                       <input
                         type="text"
                         name="pro_nome"
@@ -468,15 +413,13 @@ export function Produto() {
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
-                        type="number"
+                        type="text"
                         name="pro_qtd_atual"
                         id="pro_qtd_atual"
                         className="form-control"
                         placeholder="Qtd. Atual"
-                        value={qtdAtualProduto ?? 0}
-                        onChange={(event) =>
-                          setarQtdAtual(event.target.valueAsNumber)
-                        }
+                        value={formataValorMoeda(qtdAtualProduto ?? "0")}
+                        onChange={(event) => setarQtdAtual(event.target.value)}
                         required
                       />
                       <label htmlFor="pro_qtd_atual">Qtd. Atual</label>
@@ -485,15 +428,14 @@ export function Produto() {
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
-                        type="number"
+                        type="text"
                         name="pro_qtd_minimo"
                         id="pro_qtd_minimo"
-                        min={0}
                         className="form-control"
                         placeholder="Qtd. Mínimo"
-                        value={qtdMinimaProduto ?? 0}
+                        value={formataValorMoeda(qtdMinimaProduto ?? "0")}
                         onChange={(event) => {
-                          setarQtdMinima(event.target.valueAsNumber);
+                          setarQtdMinima(event.target.value);
                         }}
                         required
                       />
@@ -511,8 +453,9 @@ export function Produto() {
                         value={precoVendaProduto ?? "0.00"}
                         onChange={(event) => {
                           setarPrecoVenda(
-                            formatarValorMoeda(event.target.value)
+                            formataValorMoeda(event.target.value)
                           );
+                          calculaLucrosProduto();
                         }}
                         required
                       />
@@ -530,8 +473,9 @@ export function Produto() {
                         value={valorCustoProduto ?? "0.00"}
                         onChange={(event) => {
                           setarValorCustoProduto(
-                            formatarValorMoeda(event.target.value)
+                            formataValorMoeda(event.target.value)
                           );
+                          calculaLucrosProduto();
                         }}
                       />
                       <label htmlFor="pro_preco_custo">Preço de custo</label>
@@ -559,7 +503,7 @@ export function Produto() {
                         id="pro_porcentagem_lucro"
                         className="form-control"
                         placeholder="Margem de lucro"
-                        value={porcentagemLucro}
+                        value={porcentagemLucro ?? "0"}
                         disabled
                       />
                       <label htmlFor="pro_porcentagem_lucro">
@@ -567,7 +511,7 @@ export function Produto() {
                       </label>
                     </div>
                   </div>
-                  <div className="col-sm-12 col-lg-6 col-md-6 mt-3">
+                  <div className="col-sm-12 col-lg-6 col-md-6 mt-2">
                     <OpcaoCategoria
                       listaCategoria={listaCategorias}
                       carregandoCategorias={carregandoCategorias}
@@ -576,7 +520,7 @@ export function Produto() {
                       selecionarOpcaoCategoria={selecionarOpcaoCategoria}
                     />
                   </div>
-                  <div className="col-sm-12 col-lg-6 col-md-6 mt-3">
+                  <div className="col-sm-12 col-lg-6 col-md-6 mt-2">
                     <OpcaoFornecedor
                       listaFornecedor={listaFornecedores}
                       carregandoFornecedores={carregandoFornecedores}
@@ -585,7 +529,7 @@ export function Produto() {
                       selecionarOpcaoFornecedor={selecionarOpcaoFornecedor}
                     />
                   </div>
-                  <div className="col-12 mb-3 mt-3">
+                  <div className="col-12 mb-3 mt-2">
                     <div className="form-floating">
                       <textarea
                         className="form-control"
@@ -614,16 +558,13 @@ export function Produto() {
                           id="pcb_codigo_cadastro_produto"
                           className="form-control"
                           placeholder="Codigo de barras"
-                          onChange={(event) =>
-                            setarCodigoBarraProduto(event.target.value)
-                          }
+                          ref={codigoBarraProdutoCadastroRef}
                           onKeyDown={(event) => {
                             if (event.key === "Enter") {
                               adicionarCodigoBarras(false);
                               event.preventDefault();
                             }
                           }}
-                          value={codigoBarraProduto ?? ""}
                         />
                         <label htmlFor="pcb_codigo_cadastro_produto">
                           Codigo de barras
@@ -753,15 +694,13 @@ export function Produto() {
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
-                        type="number"
+                        type="text"
                         name="pro_qtd_atual_edicao"
                         id="pro_qtd_atual_edicao"
                         className="form-control"
                         placeholder="Qtd. Atual"
-                        value={qtdAtualProduto ?? 0}
-                        onChange={(event) =>
-                          setarQtdAtual(event.target.valueAsNumber)
-                        }
+                        value={formataValorMoeda(qtdAtualProduto ?? "0")}
+                        onChange={(event) => setarQtdAtual(event.target.value)}
                         required
                       />
                       <label htmlFor="pro_qtd_atual_edicao">Qtd. Atual</label>
@@ -770,16 +709,13 @@ export function Produto() {
                   <div className="col-md-2 col-lg-2 col-sm-12">
                     <div className="form-floating">
                       <input
-                        type="number"
+                        type="text"
                         name="pro_qtd_minimo_edicao"
                         id="pro_qtd_minimo_edicao"
                         className="form-control"
                         placeholder="Qtd. Mínimo"
-                        min={0}
-                        value={qtdMinimaProduto ?? 0}
-                        onChange={(event) => {
-                          setarQtdMinima(event.target.valueAsNumber);
-                        }}
+                        value={formataValorMoeda(qtdMinimaProduto ?? "0")}
+                        onChange={(event) => setarQtdMinima(event.target.value)}
                         required
                       />
                       <label htmlFor="pro_qtd_minimo_edicao">Qtd. Mínimo</label>
@@ -796,8 +732,10 @@ export function Produto() {
                         value={precoVendaProduto ?? ""}
                         onChange={(event) => {
                           setarPrecoVenda(
-                            formatarValorMoeda(event.target.value)
+                            formataValorMoeda(event.target.value)
                           );
+
+                          calculaLucrosProduto();
                         }}
                         required
                       />
@@ -817,8 +755,10 @@ export function Produto() {
                         value={valorCustoProduto ?? ""}
                         onChange={(event) => {
                           setarValorCustoProduto(
-                            formatarValorMoeda(event.target.value)
+                            formataValorMoeda(event.target.value)
                           );
+
+                          calculaLucrosProduto();
                         }}
                       />
                       <label htmlFor="pro_preco_custo_edicao">
@@ -835,7 +775,7 @@ export function Produto() {
                         id="pro_lucro_produto_edicao"
                         className="form-control"
                         placeholder="Lucro produto"
-                        value={valorLucro}
+                        value={valorLucro ?? "0.00"}
                         disabled
                       />
                       <label htmlFor="pro_lucro_produto_edicao">
@@ -851,7 +791,7 @@ export function Produto() {
                         id="pro_porcentagem_lucro_edicao"
                         className="form-control"
                         placeholder="Margem de lucro"
-                        value={porcentagemLucro}
+                        value={porcentagemLucro ?? "0"}
                         disabled
                       />
                       <label htmlFor="pro_porcentagem_lucro_edicao">
@@ -992,16 +932,13 @@ export function Produto() {
                       className="form-control"
                       placeholder="Codigo de barras"
                       disabled={processandoRequisicao}
-                      onChange={(event) =>
-                        setarCodigoBarraProduto(event.target.value)
-                      }
+                      ref={codigoBarraProdutoEdicaoRef}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           adicionarCodigoBarras(true);
                           event.preventDefault();
                         }
                       }}
-                      value={codigoBarraProduto ?? ""}
                     />
                     <label htmlFor="pcb_codigo_cadastro_produto">
                       Codigo de barras
@@ -1095,4 +1032,6 @@ export function Produto() {
       </div>
     </>
   );
-}
+};
+
+export default Produtos;
