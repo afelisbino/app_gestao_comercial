@@ -8,24 +8,17 @@ import {
 import { produtoProps } from "../../interfaces/interfaceProdutos";
 import { Placeholder } from "../Loaders/Placeholder";
 import { ChangeEvent, useState } from "react";
-import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
+import {
+  adicionaMascaraValor,
+  formataValorMoedaBrasileira,
+} from "../../controllers/NumeroController";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
 interface tabelaProdutoProps {
   listaProdutos: produtoProps[];
   carregandoListaProdutos: boolean;
   processandoRequisicao: boolean;
-  editarProduto: (
-    idProduto: string,
-    nomeProduto: string,
-    descricaoProduto: string | null,
-    precoProduto: number,
-    valorCompra: number,
-    tokenCategoria: string,
-    tokenFornecedor: string,
-    estoqueAtual: number,
-    estoqueMinimo: number
-  ) => void;
+  editarProduto: (idProduto: string) => void;
   desativarProduto: (idProduto: string) => void;
   ativarProduto: (idProduto: string) => void;
   visualizarCodigosBarrasProduto: (idProduto: string) => void;
@@ -97,7 +90,7 @@ export function TabelaProdutos({
                       <PlaceholderButton />
                       <PlaceholderButton />
                     </th>
-                    <td className="w-50">
+                    <td className="w-75">
                       <Placeholder />
                     </td>
                     <td className="w-auto">
@@ -114,7 +107,7 @@ export function TabelaProdutos({
                       <PlaceholderButton />
                       <PlaceholderButton />
                     </th>
-                    <td className="w-50">
+                    <td className="w-75">
                       <Placeholder />
                     </td>
                     <td className="w-auto">
@@ -131,7 +124,7 @@ export function TabelaProdutos({
                       <PlaceholderButton />
                       <PlaceholderButton />
                     </th>
-                    <td className="w-50">
+                    <td className="w-75">
                       <Placeholder />
                     </td>
                     <td className="w-auto">
@@ -166,20 +159,10 @@ export function TabelaProdutos({
                               className="btn btn-warning shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                editarProduto(
-                                  produto.pro_id,
-                                  produto.pro_nome,
-                                  produto.pro_descricao,
-                                  produto.pro_valor_venda,
-                                  produto.pro_preco_custo,
-                                  produto.cat_token,
-                                  produto.frn_token,
-                                  produto.est_qtd_atual,
-                                  produto.est_qtd_minimo
-                                );
+                                editarProduto(produto.pro_id);
                               }}
                               data-bs-toggle="modal"
-                              data-bs-target="#produtoEdicaoModal"
+                              data-bs-target="#produtoModal"
                             >
                               <Pencil size={32} color="#ffffff" />
                             </button>
@@ -247,11 +230,15 @@ export function TabelaProdutos({
                         </th>
                         <td className="w-50">{produto.pro_nome}</td>
                         <td className="w-auto">
-                          {mascaraValorMoedaBrasileira(
+                          {formataValorMoedaBrasileira(
                             Number(produto.pro_valor_venda)
                           )}
                         </td>
-                        <td className="w-auto">{produto.est_qtd_atual}</td>
+                        <td className="w-auto">
+                          {adicionaMascaraValor(
+                            produto.est_qtd_atual.toString()
+                          )}
+                        </td>
                       </tr>
                     </>
                   );
@@ -270,20 +257,10 @@ export function TabelaProdutos({
                               className="btn btn-warning shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                editarProduto(
-                                  produto.pro_id,
-                                  produto.pro_nome,
-                                  produto.pro_descricao,
-                                  produto.pro_valor_venda,
-                                  produto.pro_preco_custo,
-                                  produto.cat_token,
-                                  produto.frn_token,
-                                  produto.est_qtd_atual,
-                                  produto.est_qtd_minimo
-                                );
+                                editarProduto(produto.pro_id);
                               }}
                               data-bs-toggle="modal"
-                              data-bs-target="#produtoEdicaoModal"
+                              data-bs-target="#produtoModal"
                             >
                               <Pencil size={32} color="#ffffff" />
                             </button>
@@ -351,11 +328,15 @@ export function TabelaProdutos({
                         </th>
                         <td className="w-50">{produto.pro_nome}</td>
                         <td className="w-auto">
-                          {mascaraValorMoedaBrasileira(
+                          {formataValorMoedaBrasileira(
                             Number(produto.pro_valor_venda)
                           )}
                         </td>
-                        <td className="w-auto">{produto.est_qtd_atual}</td>
+                        <td className="w-auto">
+                          {adicionaMascaraValor(
+                            produto.est_qtd_atual.toString()
+                          )}
+                        </td>
                       </tr>
                     </>
                   );
