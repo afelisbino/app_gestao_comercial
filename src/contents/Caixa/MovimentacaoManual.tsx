@@ -67,7 +67,7 @@ const MovimentacaoManual = () => {
       ) : (
         <></>
       )}
-      <form onSubmit={salvarMovimentacaoCaixa} className="mt-5">
+      <form onSubmit={salvarMovimentacaoCaixa}>
         <div className="row">
           <div className="col-lg-4 col-md-4 col-sm-12 gap-1">
             <div className="form-floating">

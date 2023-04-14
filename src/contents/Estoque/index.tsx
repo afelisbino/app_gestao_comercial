@@ -175,7 +175,7 @@ const Estoque = () => {
       ) : (
         <></>
       )}
-      <div className="row mt-4">
+      <div className="row">
         <div className="col-12">
           <div className="form-floating mb-3">
             <input
@@ -268,82 +268,84 @@ const Estoque = () => {
               aria-labelledby="visaoGeral-tab"
               tabIndex={0}
             >
-              <div className="row ">
-                <div className="d-flex flex-wrap justify-content-center overflow-auto gap-2">
-                  {carregandoListaProdutosEstoque ? (
-                    <>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                    </>
-                  ) : listaEstoqueFiltrado.length === 0 ? (
-                    listaEstoque.map((produto) => {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    })
-                  ) : (
-                    listaEstoqueFiltrado.map((produto) => {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    })
-                  )}
-                </div>
+              <div
+                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
+                style={{ maxHeight: "75vh" }}
+              >
+                {carregandoListaProdutosEstoque ? (
+                  <>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                  </>
+                ) : listaEstoqueFiltrado.length === 0 ? (
+                  listaEstoque.map((produto) => {
+                    return (
+                      <>
+                        <div className="col-auto mx-auto">
+                          <ItemEstoque
+                            pro_id={produto.pro_id}
+                            pro_nome={produto.pro_nome}
+                            pro_qtd_atual={produto.pro_qtd_atual}
+                            pro_qtd_minimo={produto.pro_qtd_minimo}
+                            pro_disponivel={produto.pro_disponivel}
+                            alterarEstoque={(pro_id) =>
+                              setarProdutoToken(pro_id)
+                            }
+                            alterandoQuantidadeEstoque={alterandoEstoque}
+                            alterandoStatusProduto={
+                              alterandoStatusProdutoEstoque
+                            }
+                            ativarProdutoEstoque={(pro_id) => {
+                              ativarProdutoEstoque(pro_id);
+                            }}
+                            desativarProdutoEstoque={(pro_id) => {
+                              desativarProdutoEstoque(pro_id);
+                            }}
+                          />
+                        </div>
+                      </>
+                    );
+                  })
+                ) : (
+                  listaEstoqueFiltrado.map((produto) => {
+                    return (
+                      <>
+                        <div className="col-auto mx-auto">
+                          <ItemEstoque
+                            pro_id={produto.pro_id}
+                            pro_nome={produto.pro_nome}
+                            pro_qtd_atual={produto.pro_qtd_atual}
+                            pro_qtd_minimo={produto.pro_qtd_minimo}
+                            pro_disponivel={produto.pro_disponivel}
+                            alterarEstoque={(pro_id) =>
+                              setarProdutoToken(pro_id)
+                            }
+                            alterandoQuantidadeEstoque={alterandoEstoque}
+                            alterandoStatusProduto={
+                              alterandoStatusProdutoEstoque
+                            }
+                            ativarProdutoEstoque={(pro_id) => {
+                              ativarProdutoEstoque(pro_id);
+                            }}
+                            desativarProdutoEstoque={(pro_id) => {
+                              desativarProdutoEstoque(pro_id);
+                            }}
+                          />
+                        </div>
+                      </>
+                    );
+                  })
+                )}
               </div>
             </div>
+
             <div
               className="tab-pane fade"
               id="minimo-tab-pane"
@@ -351,92 +353,94 @@ const Estoque = () => {
               aria-labelledby="minimo-tab"
               tabIndex={0}
             >
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center overflow-auto gap-2">
-                  {carregandoListaProdutosEstoque ? (
-                    <>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                    </>
-                  ) : listaEstoqueFiltrado.length === 0 ? (
-                    listaEstoque.map((produto) => {
-                      if (
-                        produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
-                        produto.pro_qtd_atual > 0
-                      ) {
-                        return (
-                          <>
-                            <div className="col-auto mx-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  ) : (
-                    listaEstoqueFiltrado.map((produto) => {
-                      if (
-                        produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
-                        produto.pro_qtd_atual > 0
-                      ) {
-                        return (
-                          <>
-                            <div className="col-auto mx-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  )}
-                </div>
+              <div
+                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
+                style={{ maxHeight: "75vh" }}
+              >
+                {carregandoListaProdutosEstoque ? (
+                  <>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                  </>
+                ) : listaEstoqueFiltrado.length === 0 ? (
+                  listaEstoque.map((produto) => {
+                    if (
+                      produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
+                      produto.pro_qtd_atual > 0
+                    ) {
+                      return (
+                        <>
+                          <div className="col-auto mx-auto">
+                            <ItemEstoque
+                              pro_id={produto.pro_id}
+                              pro_nome={produto.pro_nome}
+                              pro_qtd_atual={produto.pro_qtd_atual}
+                              pro_qtd_minimo={produto.pro_qtd_minimo}
+                              pro_disponivel={produto.pro_disponivel}
+                              alterarEstoque={(pro_id) =>
+                                setarProdutoToken(pro_id)
+                              }
+                              alterandoQuantidadeEstoque={alterandoEstoque}
+                              alterandoStatusProduto={
+                                alterandoStatusProdutoEstoque
+                              }
+                              ativarProdutoEstoque={(pro_id) => {
+                                ativarProdutoEstoque(pro_id);
+                              }}
+                              desativarProdutoEstoque={(pro_id) => {
+                                desativarProdutoEstoque(pro_id);
+                              }}
+                            />
+                          </div>
+                        </>
+                      );
+                    }
+                  })
+                ) : (
+                  listaEstoqueFiltrado.map((produto) => {
+                    if (
+                      produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
+                      produto.pro_qtd_atual > 0
+                    ) {
+                      return (
+                        <>
+                          <div className="col-auto mx-auto">
+                            <ItemEstoque
+                              pro_id={produto.pro_id}
+                              pro_nome={produto.pro_nome}
+                              pro_qtd_atual={produto.pro_qtd_atual}
+                              pro_qtd_minimo={produto.pro_qtd_minimo}
+                              pro_disponivel={produto.pro_disponivel}
+                              alterarEstoque={(pro_id) =>
+                                setarProdutoToken(pro_id)
+                              }
+                              alterandoQuantidadeEstoque={alterandoEstoque}
+                              alterandoStatusProduto={
+                                alterandoStatusProdutoEstoque
+                              }
+                              ativarProdutoEstoque={(pro_id) => {
+                                ativarProdutoEstoque(pro_id);
+                              }}
+                              desativarProdutoEstoque={(pro_id) => {
+                                desativarProdutoEstoque(pro_id);
+                              }}
+                            />
+                          </div>
+                        </>
+                      );
+                    }
+                  })
+                )}
               </div>
             </div>
+
             <div
               className="tab-pane fade"
               id="zerado-tab-pane"
@@ -444,86 +448,88 @@ const Estoque = () => {
               aria-labelledby="zerado-tab"
               tabIndex={0}
             >
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center overflow-auto gap-2">
-                  {carregandoListaProdutosEstoque ? (
-                    <>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                    </>
-                  ) : listaEstoqueFiltrado.length === 0 ? (
-                    listaEstoque.map((produto) => {
-                      if (produto.pro_qtd_atual === 0) {
-                        return (
-                          <>
-                            <div className="col-auto mx-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  ) : (
-                    listaEstoqueFiltrado.map((produto) => {
-                      if (produto.pro_qtd_atual === 0) {
-                        return (
-                          <>
-                            <div className="col-auto mx-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  )}
-                </div>
+              <div
+                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
+                style={{ maxHeight: "75vh" }}
+              >
+                {carregandoListaProdutosEstoque ? (
+                  <>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                    <div className="col-auto mx-auto">
+                      <PlaceholderCardItemEstoque />
+                    </div>
+                  </>
+                ) : listaEstoqueFiltrado.length === 0 ? (
+                  listaEstoque.map((produto) => {
+                    if (produto.pro_qtd_atual === 0) {
+                      return (
+                        <>
+                          <div className="col-auto mx-auto">
+                            <ItemEstoque
+                              pro_id={produto.pro_id}
+                              pro_nome={produto.pro_nome}
+                              pro_qtd_atual={produto.pro_qtd_atual}
+                              pro_qtd_minimo={produto.pro_qtd_minimo}
+                              pro_disponivel={produto.pro_disponivel}
+                              alterarEstoque={(pro_id) =>
+                                setarProdutoToken(pro_id)
+                              }
+                              alterandoQuantidadeEstoque={alterandoEstoque}
+                              alterandoStatusProduto={
+                                alterandoStatusProdutoEstoque
+                              }
+                              ativarProdutoEstoque={(pro_id) => {
+                                ativarProdutoEstoque(pro_id);
+                              }}
+                              desativarProdutoEstoque={(pro_id) => {
+                                desativarProdutoEstoque(pro_id);
+                              }}
+                            />
+                          </div>
+                        </>
+                      );
+                    }
+                  })
+                ) : (
+                  listaEstoqueFiltrado.map((produto) => {
+                    if (produto.pro_qtd_atual === 0) {
+                      return (
+                        <>
+                          <div className="col-auto mx-auto">
+                            <ItemEstoque
+                              pro_id={produto.pro_id}
+                              pro_nome={produto.pro_nome}
+                              pro_qtd_atual={produto.pro_qtd_atual}
+                              pro_qtd_minimo={produto.pro_qtd_minimo}
+                              pro_disponivel={produto.pro_disponivel}
+                              alterarEstoque={(pro_id) =>
+                                setarProdutoToken(pro_id)
+                              }
+                              alterandoQuantidadeEstoque={alterandoEstoque}
+                              alterandoStatusProduto={
+                                alterandoStatusProdutoEstoque
+                              }
+                              ativarProdutoEstoque={(pro_id) => {
+                                ativarProdutoEstoque(pro_id);
+                              }}
+                              desativarProdutoEstoque={(pro_id) => {
+                                desativarProdutoEstoque(pro_id);
+                              }}
+                            />
+                          </div>
+                        </>
+                      );
+                    }
+                  })
+                )}
               </div>
             </div>
+            
             <div
               className="tab-pane fade"
               id="desativado-tab-pane"

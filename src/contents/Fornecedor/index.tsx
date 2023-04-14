@@ -106,16 +106,16 @@ const Fornecedor = () => {
       ) : (
         <></>
       )}
-      <form onSubmit={salvar} className="row mt-5 g-2">
-        {mensagemAlerta !== null ? (
-          <div className="row">
-            <div className="col-12">
-              <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
-            </div>
+      {mensagemAlerta !== null ? (
+        <div className="row">
+          <div className="col-12">
+            <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
           </div>
-        ) : (
-          <></>
-        )}
+        </div>
+      ) : (
+        <></>
+      )}
+      <form onSubmit={salvar} className="row g-2">
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-6">
             <div className="form-floating mb-3">

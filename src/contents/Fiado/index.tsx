@@ -88,14 +88,14 @@ const Fiado = () => {
   return (
     <>
       {processandoPagamento ? (
-        <div className="row mt-3">
+        <div className="row">
           <Spinner />
         </div>
       ) : (
         <></>
       )}
       {mensagemAlerta !== null ? (
-        <div className="row mt-3">
+        <div className="row">
           <div className="col-12">
             <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
           </div>

@@ -74,7 +74,7 @@ const Categoria = () => {
       ) : (
         <></>
       )}
-      <div className="row mt-5">
+      <div className="row">
         <form onSubmit={salvar}>
           {mensagemAlerta !== null ? (
             <div className="row">
