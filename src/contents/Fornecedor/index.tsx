@@ -115,8 +115,8 @@ const Fornecedor = () => {
       ) : (
         <></>
       )}
-      <form onSubmit={salvar} className="row g-2">
-        <div className="row">
+      <form onSubmit={salvar}>
+        <div className="row g-2">
           <div className="col-sm-12 col-md-6 col-lg-6">
             <div className="form-floating mb-3">
               <input
