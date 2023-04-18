@@ -1,7 +1,7 @@
-import { AppHome } from "./components/AppHome";
+import Home from "./contents/Home";
 
 function App() {
-  return <AppHome />;
+  return <Home />;
 }
 
 export default App;
