@@ -3,7 +3,7 @@ import { Placeholder } from "../../Loaders/Placeholder";
 import { PlaceholderButton } from "../../Loaders/PlaceholderButton";
 import { vendaFiadoProps } from "../../../interfaces/interfaceVenda";
 import { CurrencyDollar, ListNumbers } from "phosphor-react";
-import { mascaraValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
 
 interface tabelaFiadoProps {
   listaVendasFiado: vendaFiadoProps[];
@@ -35,7 +35,7 @@ export function TabelaVendasFiadoAberto({
 
   return (
     <>
-      <div className="row mt-4">
+      <div className="row">
         <div className="col-12">
           <div className="form-floating mb-3">
             <input
@@ -155,7 +155,7 @@ export function TabelaVendasFiadoAberto({
                       <td className="w-50">{venda.ven_cliente}</td>
                       <td className="w-auto">{venda.ven_data}</td>
                       <td className="w-auto">
-                        {mascaraValorMoedaBrasileira(Number(venda.ven_total))}
+                        {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
                   );
@@ -195,7 +195,7 @@ export function TabelaVendasFiadoAberto({
                       <td className="w-50">{venda.ven_cliente}</td>
                       <td className="w-auto">{venda.ven_data}</td>
                       <td className="w-auto">
-                        {mascaraValorMoedaBrasileira(Number(venda.ven_total))}
+                        {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
                   );
