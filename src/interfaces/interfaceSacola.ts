@@ -1,4 +1,4 @@
-export interface sacolaProp {
+export interface itemSacolaProp {
   id: string;
   scl_qtd: number;
   scl_sub_total: number;

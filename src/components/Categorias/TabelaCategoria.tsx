@@ -1,6 +1,6 @@
 import { categoriaProps } from "../../interfaces/interfaceCategoria";
 import { Placeholder } from "../Loaders/Placeholder";
-import { Pencil, TrashSimple } from "phosphor-react";
+import { Pencil } from "phosphor-react";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
 
 interface tabelaProps {
@@ -17,7 +17,7 @@ export function TabelaCategoria({
   editar,
 }: tabelaProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "20rem" }}>
+    <div className="table-responsive mt-3 tabela-tela">
       <table className="table border rounded">
         <caption>Lista de categorias</caption>
         <thead>
@@ -33,7 +33,7 @@ export function TabelaCategoria({
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
-                <td className="w-75">
+                <td className="w-auto">
                   <Placeholder />
                 </td>
               </tr>
@@ -41,7 +41,7 @@ export function TabelaCategoria({
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
-                <td className="w-75">
+                <td className="w-50">
                   <Placeholder />
                 </td>
               </tr>
@@ -49,7 +49,7 @@ export function TabelaCategoria({
                 <th scope="row" className="w-auto">
                   <PlaceholderButton />
                 </th>
-                <td className="w-75">
+                <td className="w-50">
                   <Placeholder />
                 </td>
               </tr>
@@ -78,7 +78,7 @@ export function TabelaCategoria({
                         <Pencil size={32} color="#ffffff" />
                       </button>
                     </th>
-                    <td className="w-75">{categoria.cat_nome}</td>
+                    <td className="w-100">{categoria.cat_nome}</td>
                   </tr>
                 </>
               );

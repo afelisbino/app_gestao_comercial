@@ -28,8 +28,8 @@ export function ItemEstoque({
   return (
     <div
       key={pro_id}
-      className="card shadow border border-0 bg-light bg-gradient mt-3 mb-4"
-      style={{ width: "21rem", height: "auto" }}
+      className="card shadow border border-0 bg-light bg-gradient"
+      style={{ width: "18rem", height: "18rem" }}
     >
       <div className="card-header">
         <h5 className="card-title text-center text-wrap">

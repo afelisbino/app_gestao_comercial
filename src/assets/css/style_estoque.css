@@ -1,0 +1,9 @@
+.lista-pordutos-estoque{
+    max-height: 50vh;
+}
+
+@media screen and (min-height: 768px) {
+    .lista-pordutos-estoque {
+        max-height: 75vh;
+    }
+}

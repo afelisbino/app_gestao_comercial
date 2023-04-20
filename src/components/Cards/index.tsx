@@ -12,7 +12,7 @@ export function Cards({ nome, valor, cor }: infoProps) {
   return (
     <div
       key={idCard}
-      className={(cor ?? "text-bg-dark") + " card mx-1 mb-3 shadow"}
+      className={(cor ?? "text-bg-dark") + " card shadow-sm border-0"}
       style={{ width: "18rem" }}
     >
       <div className="card-header fw-bold">{nome}</div>
