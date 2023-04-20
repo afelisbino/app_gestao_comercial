@@ -1,0 +1,26 @@
+.lista-produtos{
+    max-height: 50vh;
+}
+
+.sacola-venda{
+    max-height: 30vh;
+}
+
+.sacola-venda ul{
+    max-height: 22vh;
+}
+
+@media screen and (min-height: 768px ) {
+    .lista-produtos{
+        max-height: 80.5vh;
+        padding-bottom: 1.5em;
+    }
+
+    .sacola-venda{
+        max-height: 80vh;
+    }
+
+    .sacola-venda ul{
+        max-height: 65vh;
+    }
+}
