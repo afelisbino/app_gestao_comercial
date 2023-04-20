@@ -9,7 +9,7 @@ function logout() {
 
 const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
   return (
-    <nav className="navbar bg-light fixed-top shadow">
+    <nav className="navbar bg-light fixed-top shadow ">
       <div className="container-fluid">
         <button
           className="navbar-toggler float-start"
@@ -39,28 +39,43 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 ">
-              {menuApp.map(({ id, categoria, itens, admin }) => {
-                if (itens === undefined) {
-                  return (
-                    <li key={id} className="nav-item">
-                      <a
-                        key={id + "-categoria"}
-                        className="nav-link"
-                        href="#"
-                        data-bs-dismiss="offcanvas"
-                        onClick={() => {
-                          selecionarOpcaoMenu(categoria);
-                        }}
-                      >
-                        {categoria}
-                      </a>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li key={id} className="nav-item dropdown">
-                      {localStorage.getItem("tipoUsuario") === "0" ? (
-                        !admin ? (
+              {menuApp.map(
+                ({ id, categoria, itens, admin, telaItemCategoria }) => {
+                  if (itens === undefined) {
+                    return (
+                      <li key={id} className="nav-item">
+                        <a
+                          key={id + "-categoria"}
+                          className="nav-link"
+                          href="#"
+                          data-bs-dismiss="offcanvas"
+                          onClick={() => {
+                            selecionarOpcaoMenu(telaItemCategoria);
+                          }}
+                        >
+                          {categoria}
+                        </a>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={id} className="nav-item dropdown">
+                        {localStorage.getItem("tipoUsuario") === "0" ? (
+                          !admin ? (
+                            <a
+                              key={id + "-categoria"}
+                              className="nav-link dropdown-toggle"
+                              href="#"
+                              role="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              {categoria}
+                            </a>
+                          ) : (
+                            <></>
+                          )
+                        ) : (
                           <a
                             key={id + "-categoria"}
                             className="nav-link dropdown-toggle"
@@ -71,25 +86,29 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
                           >
                             {categoria}
                           </a>
-                        ) : (
-                          <></>
-                        )
-                      ) : (
-                        <a
-                          key={id + "-categoria"}
-                          className="nav-link dropdown-toggle"
-                          href="#"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          {categoria}
-                        </a>
-                      )}
-                      <ul className="dropdown-menu">
-                        {localStorage.getItem("tipoUsuario") === "0"
-                          ? itens.map(({ id, telaItem, nome, admin }) => {
-                              if (!admin) {
+                        )}
+                        <ul className="dropdown-menu">
+                          {localStorage.getItem("tipoUsuario") === "0"
+                            ? itens.map(({ id, telaItem, nome, admin }) => {
+                                if (!admin) {
+                                  return (
+                                    <li key={id}>
+                                      <a
+                                        key={id + "-item"}
+                                        className="dropdown-item"
+                                        href="#"
+                                        data-bs-dismiss="offcanvas"
+                                        onClick={() => {
+                                          selecionarOpcaoMenu(telaItem);
+                                        }}
+                                      >
+                                        {nome}
+                                      </a>
+                                    </li>
+                                  );
+                                }
+                              })
+                            : itens.map(({ id, telaItem, nome }) => {
                                 return (
                                   <li key={id}>
                                     <a
@@ -105,30 +124,13 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
                                     </a>
                                   </li>
                                 );
-                              }
-                            })
-                          : itens.map(({ id, telaItem, nome }) => {
-                              return (
-                                <li key={id}>
-                                  <a
-                                    key={id + "-item"}
-                                    className="dropdown-item"
-                                    href="#"
-                                    data-bs-dismiss="offcanvas"
-                                    onClick={() => {
-                                      selecionarOpcaoMenu(telaItem);
-                                    }}
-                                  >
-                                    {nome}
-                                  </a>
-                                </li>
-                              );
-                            })}
-                      </ul>
-                    </li>
-                  );
+                              })}
+                        </ul>
+                      </li>
+                    );
+                  }
                 }
-              })}
+              )}
             </ul>
             <hr />
             <div className="dropdown">
