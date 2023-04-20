@@ -20,47 +20,40 @@ export function ListaProdutos({
   listaProdutos,
   adicionarItemSacola,
 }: listaProdutosProps) {
-  return (
-    <>
-      {!carregandoProdutos ? (
-        <div
-          className="d-flex justify-content-lg-center justify-content-start flex-wrap overflow-auto gap-2"
-          style={{ maxHeight: "80vh", width: "auto" }}
-        >
-          {listaProdutos.length > 0 ? (
-            listaProdutos.map((produto) => {
-              return (
-                <>
-                  <Produtos
-                    processandoVenda={processandoVenda}
-                    pro_id={produto.pro_id}
-                    pro_nome={produto.pro_nome}
-                    pro_qtd_atual_estoque={produto.est_qtd_atual}
-                    pro_valor={produto.pro_valor}
-                    adicionarProduto={adicionarItemSacola}
-                  />
-                </>
-              );
-            })
-          ) : (
-            <span className="h4 fw-semibold">
-              {"Nenhum produto encontrado!"}
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="d-flex justify-content-center flex-wrap gap-2">
-          <div className="col-auto ">
-            <ProdutosPlaceholder />
+  return carregandoProdutos ? (
+    <div className="d-flex flex-sm-row flex-lg-wrap justify-content-lg-center justify-content-start overflow-auto gap-3 lista-produtos">
+      <div className="col-auto ">
+        <ProdutosPlaceholder />
+      </div>
+      <div className="col-auto ">
+        <ProdutosPlaceholder />
+      </div>
+      <div className="col-auto ">
+        <ProdutosPlaceholder />
+      </div>
+    </div>
+  ) : listaProdutos.length > 0 ? (
+    <div className="d-flex flex-sm-row flex-lg-wrap justify-content-lg-center justify-content-start overflow-auto gap-3 lista-produtos">
+      {listaProdutos.map((produto) => {
+        return (
+          <div className="col-auto">
+            <Produtos
+              processandoVenda={processandoVenda}
+              pro_id={produto.pro_id}
+              pro_nome={produto.pro_nome}
+              pro_qtd_atual_estoque={produto.est_qtd_atual}
+              pro_valor={produto.pro_valor}
+              adicionarProduto={adicionarItemSacola}
+            />
           </div>
-          <div className="col-auto ">
-            <ProdutosPlaceholder />
-          </div>
-          <div className="col-auto ">
-            <ProdutosPlaceholder />
-          </div>
-        </div>
-      )}
-    </>
+        );
+      })}
+    </div>
+  ) : (
+    <div className="row">
+      <span className="h4 fw-semibold text-center">
+        {"Nenhum produto encontrado!"}
+      </span>
+    </div>
   );
 }

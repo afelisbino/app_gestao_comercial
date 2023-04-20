@@ -23,17 +23,14 @@ export function Sacola({
   );
 
   return (
-    <div key={idSacola} style={{ maxHeight: "80vh", width: "auto" }}>
+    <div key={idSacola} className="sacola-venda border rounded p-2">
       <h3 className="text-center mt-2">Itens do carrinho</h3>
       <div>
         <h1 id="venTotal" className="text-center border rounded py-3">
           {formataValorMoedaBrasileira(totalCompra)}
         </h1>
       </div>
-      <ul
-        className="list-group overflow-auto"
-        style={{ maxHeight: "65vh", width: "auto" }}
-      >
+      <ul className="list-group overflow-auto">
         {itensSacola.length === 0 ? (
           <>
             <hr />
