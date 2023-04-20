@@ -1,4 +1,3 @@
-import React from "react";
 import { itensVendaProps } from "../../interfaces/interfaceVenda";
 import { Placeholder } from "../Loaders/Placeholder";
 import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
@@ -13,8 +12,8 @@ export function TabelaItensVenda({
   carregandoListaItens,
 }: tabelaItensProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "20rem" }}>
-      <table className="table border rounded">
+    <div className="table-responsive mt-3 tabela-modal">
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">Produto</th>

@@ -57,7 +57,7 @@ export function TabelaVendasFiadoAberto({
         </div>
       </div>
       <div className="row">
-        <div className="table-responsive mt-3" style={{ maxHeight: "35rem" }}>
+        <div className="table-responsive mt-3">
           <table className="table border rounded">
             <caption>Lista de vendas em abertos</caption>
             <thead>

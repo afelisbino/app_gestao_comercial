@@ -18,7 +18,7 @@ export function TabelaVendasFinalizado({
   visualizarItensVenda,
 }: tabelaVendasFinalizadasProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "18rem" }}>
+    <div className="table-responsive mt-3 tabela-tela">
       <table className="table border rounded mb-5">
         <caption>Lista vendas finalizadas</caption>
         <thead>
