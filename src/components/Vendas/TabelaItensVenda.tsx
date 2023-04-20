@@ -1,7 +1,6 @@
-import React from "react";
 import { itensVendaProps } from "../../interfaces/interfaceVenda";
 import { Placeholder } from "../Loaders/Placeholder";
-import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 
 interface tabelaItensProps {
   listaItensVenda: itensVendaProps[];
@@ -13,8 +12,8 @@ export function TabelaItensVenda({
   carregandoListaItens,
 }: tabelaItensProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "20rem" }}>
-      <table className="table border rounded">
+    <div className="table-responsive mt-3 tabela-modal">
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">Produto</th>
@@ -83,11 +82,11 @@ export function TabelaItensVenda({
                     {item.pro_nome}
                   </td>
                   <td className="w-auto">
-                    {mascaraValorMoedaBrasileira(Number(item.pro_valor))}
+                    {formataValorMoedaBrasileira(Number(item.pro_valor))}
                   </td>
                   <td className="w-auto">{item.scl_qtd}</td>
                   <td className="w-auto">
-                    {mascaraValorMoedaBrasileira(Number(item.scl_sub_total))}
+                    {formataValorMoedaBrasileira(Number(item.scl_sub_total))}
                   </td>
                 </tr>
               );

@@ -1,7 +1,8 @@
-import { AppHome } from "./components/AppHome";
+import Home from "./contents/Home";
+import "./assets/css/style_app.css";
 
 function App() {
-  return <AppHome />;
+  return <Home />;
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { mascaraValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
 
 interface listaProdutoProps {
   pro_id: string;
@@ -26,16 +26,16 @@ export function Produtos({
   return (
     <div
       key={pro_id}
-      className="card shadow border border-0 bg-light bg-gradient"
-      style={{ width: "21rem", height: "auto" }}
+      className="card shadow border-0 bg-secondary bg-gradient text-bg-dark"
+      style={{ width: "18rem", height: "auto" }}
     >
-      <div className="card-body" style={{height: "10em"}}>
+      <div className="card-body" style={{ height: "10em" }}>
         <h5 className="card-title text-center text-wrap user-select-none mb-3">
           {pro_nome}
         </h5>
         <hr />
-        <h6 className="card-subtitle mb-4 text-muted text-center user-select-none">
-          {mascaraValorMoedaBrasileira(Number(pro_valor))}
+        <h6 className="card-subtitle mb-4  text-center user-select-none">
+          {formataValorMoedaBrasileira(Number(pro_valor))}
         </h6>
       </div>
       <div className="card-footer">
