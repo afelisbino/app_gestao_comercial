@@ -7,7 +7,7 @@ export function Alerta({ tipo, mensagem }: alertaProps) {
   return (
     <div
       className={
-        "alert alert-" + tipo + " alert-dismissible fade show text-center"
+        "alert alert-" + tipo + " alert-dismissible fade show text-center shadow"
       }
       role="alert"
       key={telaId}
