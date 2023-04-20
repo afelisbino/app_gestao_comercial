@@ -26,7 +26,7 @@ export function Produtos({
   return (
     <div
       key={pro_id}
-      className="card shadow border border-0 bg-light bg-gradient"
+      className="card shadow border-0 bg-secondary bg-gradient text-bg-dark"
       style={{ width: "18rem", height: "auto" }}
     >
       <div className="card-body" style={{ height: "10em" }}>
@@ -34,7 +34,7 @@ export function Produtos({
           {pro_nome}
         </h5>
         <hr />
-        <h6 className="card-subtitle mb-4 text-muted text-center user-select-none">
+        <h6 className="card-subtitle mb-4  text-center user-select-none">
           {formataValorMoedaBrasileira(Number(pro_valor))}
         </h6>
       </div>
