@@ -27,8 +27,8 @@ export function FormularioCodigoBarras({
 
   return (
     <>
-      <div className="row align-middle">
-        <div className="col">
+      <div className="row align-middle gap-2">
+        <div className="col-12 col-md-4 col-lg-4">
           <div className="form-floating">
             <input
               type="text"
@@ -50,7 +50,7 @@ export function FormularioCodigoBarras({
             </label>
           </div>
         </div>
-        <div className="col-auto">
+        <div className="col-12 col-md-4 col-lg-4 d-grid">
           <button
             type="button"
             className="btn btn-lg btn-success shadow"
@@ -61,7 +61,7 @@ export function FormularioCodigoBarras({
           </button>
         </div>
         {cadastroProduto ? (
-          <div className="col-auto">
+          <div className="col-12 col-md-4 col-lg-4 d-grid">
             <button
               type="button"
               className="btn btn-lg btn-danger shadow"
