@@ -21,7 +21,6 @@ export function calculaPorcentagemLucroProduto(
   precoVenda: number = 0,
   valorCompra: number = 0
 ): number {
-  console.log(precoVenda);
   return precoVenda > 0 && valorCompra > 0
     ? ((precoVenda - valorCompra) / precoVenda) * 100
     : 0;
