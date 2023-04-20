@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
+import { Minus, Plus } from "phosphor-react";
+import { useState, useEffect } from "react";
+import { NumericFormat } from "react-number-format";
 import { Alerta } from "../../components/Alerta";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { estoqueProps } from "../../interfaces/interfaceEstoque";
 import {
-  buscaListaProdutosEstoque,
   registraEntradaProdutoEstoque,
   registraSaidaProdutoEstoque,
+  buscaListaProdutosEstoque,
 } from "../../controllers/EstoqueController";
 import {
   ativarProduto,
   desativarProduto,
 } from "../../controllers/ProdutoController";
+import { estoqueProps } from "../../interfaces/interfaceEstoque";
+import { Spinner } from "../../components/Loaders/Spinner";
+import { ListaEstoque } from "../../components/Estoque/ListaEstoque";
 
-import { ItemEstoque } from "../../components/Estoque/ItemEstoque";
-import { PlaceholderCardItemEstoque } from "../../components/Loaders/PlaceholderCardItemEstoque";
-import { Minus, Plus } from "phosphor-react";
+import "../../assets/css/style_estoque.css";
 
 const Estoque = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
@@ -28,11 +29,19 @@ const Estoque = () => {
 
   const [produtoToken, setarProdutoToken] = useState<string | null>(null);
   const [novaQuantidadeEstoque, setarNovaQuantidade] = useState<number>(0);
+  const [filtroProdutoEstoque, setarFiltroProdutoEstoque] =
+    useState<string>("");
 
   const [listaEstoque, setarListaEstoque] = useState<estoqueProps[]>([]);
-  const [listaEstoqueFiltrado, setarFiltroEstoque] = useState<estoqueProps[]>(
-    []
-  );
+
+  const regexNumero = new RegExp("^[0-9]+$");
+
+  const listaProdutosEstoqueEmpresa =
+    filtroProdutoEstoque.length === 0
+      ? listaEstoque
+      : regexNumero.test(filtroProdutoEstoque)
+      ? filtraProdutoCodigoBarras(filtroProdutoEstoque)
+      : filtraProdutoNome(filtroProdutoEstoque);
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
     adicionarTipoAlerta(tipo);
@@ -44,11 +53,11 @@ const Estoque = () => {
   }
 
   function diminuiQuantidadeEstoque() {
-    setarNovaQuantidade((novaQuantidadeEstoque) => novaQuantidadeEstoque - 1);
+    setarNovaQuantidade(novaQuantidadeEstoque - 1);
   }
 
   function aumentaQuantidadeEstoque() {
-    setarNovaQuantidade((novaQuantidadeEstoque) => novaQuantidadeEstoque + 1);
+    setarNovaQuantidade(novaQuantidadeEstoque + 1);
   }
 
   function zeraQuantidadeEstoque() {
@@ -92,7 +101,7 @@ const Estoque = () => {
   async function salvaEntradaEstoque(pro_id: string, quantidade: number) {
     alterarQuantidadeEstoque(true);
 
-    const response = await registraEntradaProdutoEstoque(pro_id, quantidade);
+    let response = await registraEntradaProdutoEstoque(pro_id, quantidade);
 
     alterarQuantidadeEstoque(false);
     buscaListaProdutoEstoque();
@@ -106,7 +115,7 @@ const Estoque = () => {
   async function salvaSaidaEstoque(pro_id: string, quantidade: number) {
     alterarQuantidadeEstoque(true);
 
-    const response = await registraSaidaProdutoEstoque(pro_id, quantidade);
+    let response = await registraSaidaProdutoEstoque(pro_id, quantidade);
 
     alterarQuantidadeEstoque(false);
     buscaListaProdutoEstoque();
@@ -123,34 +132,18 @@ const Estoque = () => {
     carregarListaProdutosEstoque(false);
   }
 
-  function filtraProdutoCodigoBarras(filtro: string): estoqueProps | undefined {
-    return listaEstoque.find((produto: estoqueProps) =>
+  function filtraProdutoCodigoBarras(filtro: string): estoqueProps[] {
+    let produtoCodigoBarras = listaEstoque.find((produto: estoqueProps) =>
       produto.pro_codigos.some((codigoBarras) => codigoBarras === filtro)
     );
+
+    return produtoCodigoBarras ? [produtoCodigoBarras] : [];
   }
 
   function filtraProdutoNome(filtro: string): estoqueProps[] {
     return listaEstoque.filter((produto: estoqueProps) =>
       produto.pro_nome.toLowerCase().includes(filtro.toLowerCase())
     );
-  }
-
-  function buscaProdutoNomeOuCodigoBarras(filtro: string) {
-    const verificaTipoFiltro = new RegExp("^[0-9]+$");
-
-    if (filtro.length > 0) {
-      if (verificaTipoFiltro.test(filtro)) {
-        let produto = filtraProdutoCodigoBarras(filtro);
-
-        if (produto) {
-          setarFiltroEstoque([produto]);
-        }
-      } else {
-        setarFiltroEstoque(filtraProdutoNome(filtro));
-      }
-    } else {
-      setarFiltroEstoque([]);
-    }
   }
 
   useEffect(() => {
@@ -186,7 +179,7 @@ const Estoque = () => {
               key="produtoPesquisa"
               placeholder="Buscar por nome do produto ou codigo de barras"
               onChange={(event) => {
-                buscaProdutoNomeOuCodigoBarras(event.target.value);
+                setarFiltroProdutoEstoque(event.target.value);
               }}
             />
             <label htmlFor="produtoPesquisa">
@@ -214,7 +207,7 @@ const Estoque = () => {
                 aria-controls="visaoGeral-tab-pane"
                 aria-selected="true"
               >
-                Visão Geral
+                Todos
               </button>
             </li>
             <li className="nav-item" role="presentation">
@@ -268,82 +261,15 @@ const Estoque = () => {
               aria-labelledby="visaoGeral-tab"
               tabIndex={0}
             >
-              <div
-                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
-                style={{ maxHeight: "75vh" }}
-              >
-                {carregandoListaProdutosEstoque ? (
-                  <>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                  </>
-                ) : listaEstoqueFiltrado.length === 0 ? (
-                  listaEstoque.map((produto) => {
-                    return (
-                      <>
-                        <div className="col-auto mx-auto">
-                          <ItemEstoque
-                            pro_id={produto.pro_id}
-                            pro_nome={produto.pro_nome}
-                            pro_qtd_atual={produto.pro_qtd_atual}
-                            pro_qtd_minimo={produto.pro_qtd_minimo}
-                            pro_disponivel={produto.pro_disponivel}
-                            alterarEstoque={(pro_id) =>
-                              setarProdutoToken(pro_id)
-                            }
-                            alterandoQuantidadeEstoque={alterandoEstoque}
-                            alterandoStatusProduto={
-                              alterandoStatusProdutoEstoque
-                            }
-                            ativarProdutoEstoque={(pro_id) => {
-                              ativarProdutoEstoque(pro_id);
-                            }}
-                            desativarProdutoEstoque={(pro_id) => {
-                              desativarProdutoEstoque(pro_id);
-                            }}
-                          />
-                        </div>
-                      </>
-                    );
-                  })
-                ) : (
-                  listaEstoqueFiltrado.map((produto) => {
-                    return (
-                      <>
-                        <div className="col-auto mx-auto">
-                          <ItemEstoque
-                            pro_id={produto.pro_id}
-                            pro_nome={produto.pro_nome}
-                            pro_qtd_atual={produto.pro_qtd_atual}
-                            pro_qtd_minimo={produto.pro_qtd_minimo}
-                            pro_disponivel={produto.pro_disponivel}
-                            alterarEstoque={(pro_id) =>
-                              setarProdutoToken(pro_id)
-                            }
-                            alterandoQuantidadeEstoque={alterandoEstoque}
-                            alterandoStatusProduto={
-                              alterandoStatusProdutoEstoque
-                            }
-                            ativarProdutoEstoque={(pro_id) => {
-                              ativarProdutoEstoque(pro_id);
-                            }}
-                            desativarProdutoEstoque={(pro_id) => {
-                              desativarProdutoEstoque(pro_id);
-                            }}
-                          />
-                        </div>
-                      </>
-                    );
-                  })
-                )}
-              </div>
+              <ListaEstoque
+                listaProdutos={listaProdutosEstoqueEmpresa}
+                carregandoLista={carregandoListaProdutosEstoque}
+                alterandoQuantidadeEstoque={alterandoEstoque}
+                alterandoStatusProduto={alterandoStatusProdutoEstoque}
+                alterarQuantidade={setarProdutoToken}
+                ativarProdutoEstoque={ativarProdutoEstoque}
+                desativarProdutoEstoque={desativarProdutoEstoque}
+              />
             </div>
 
             <div
@@ -353,92 +279,19 @@ const Estoque = () => {
               aria-labelledby="minimo-tab"
               tabIndex={0}
             >
-              <div
-                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
-                style={{ maxHeight: "75vh" }}
-              >
-                {carregandoListaProdutosEstoque ? (
-                  <>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                  </>
-                ) : listaEstoqueFiltrado.length === 0 ? (
-                  listaEstoque.map((produto) => {
-                    if (
-                      produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
-                      produto.pro_qtd_atual > 0
-                    ) {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    }
-                  })
-                ) : (
-                  listaEstoqueFiltrado.map((produto) => {
-                    if (
-                      produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
-                      produto.pro_qtd_atual > 0
-                    ) {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    }
-                  })
+              <ListaEstoque
+                listaProdutos={listaProdutosEstoqueEmpresa.filter(
+                  (produto) =>
+                    produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
+                    produto.pro_qtd_atual > 0
                 )}
-              </div>
+                carregandoLista={carregandoListaProdutosEstoque}
+                alterandoQuantidadeEstoque={alterandoEstoque}
+                alterandoStatusProduto={alterandoStatusProdutoEstoque}
+                alterarQuantidade={setarProdutoToken}
+                ativarProdutoEstoque={ativarProdutoEstoque}
+                desativarProdutoEstoque={desativarProdutoEstoque}
+              />
             </div>
 
             <div
@@ -448,88 +301,19 @@ const Estoque = () => {
               aria-labelledby="zerado-tab"
               tabIndex={0}
             >
-              <div
-                className="d-flex flex-row flex-wrap justify-content-center overflow-auto gap-2 pt-3"
-                style={{ maxHeight: "75vh" }}
-              >
-                {carregandoListaProdutosEstoque ? (
-                  <>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                    <div className="col-auto mx-auto">
-                      <PlaceholderCardItemEstoque />
-                    </div>
-                  </>
-                ) : listaEstoqueFiltrado.length === 0 ? (
-                  listaEstoque.map((produto) => {
-                    if (produto.pro_qtd_atual === 0) {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    }
-                  })
-                ) : (
-                  listaEstoqueFiltrado.map((produto) => {
-                    if (produto.pro_qtd_atual === 0) {
-                      return (
-                        <>
-                          <div className="col-auto mx-auto">
-                            <ItemEstoque
-                              pro_id={produto.pro_id}
-                              pro_nome={produto.pro_nome}
-                              pro_qtd_atual={produto.pro_qtd_atual}
-                              pro_qtd_minimo={produto.pro_qtd_minimo}
-                              pro_disponivel={produto.pro_disponivel}
-                              alterarEstoque={(pro_id) =>
-                                setarProdutoToken(pro_id)
-                              }
-                              alterandoQuantidadeEstoque={alterandoEstoque}
-                              alterandoStatusProduto={
-                                alterandoStatusProdutoEstoque
-                              }
-                              ativarProdutoEstoque={(pro_id) => {
-                                ativarProdutoEstoque(pro_id);
-                              }}
-                              desativarProdutoEstoque={(pro_id) => {
-                                desativarProdutoEstoque(pro_id);
-                              }}
-                            />
-                          </div>
-                        </>
-                      );
-                    }
-                  })
+              <ListaEstoque
+                listaProdutos={listaProdutosEstoqueEmpresa.filter(
+                  (produto) => produto.pro_qtd_atual === 0
                 )}
-              </div>
+                carregandoLista={carregandoListaProdutosEstoque}
+                alterandoQuantidadeEstoque={alterandoEstoque}
+                alterandoStatusProduto={alterandoStatusProdutoEstoque}
+                alterarQuantidade={setarProdutoToken}
+                ativarProdutoEstoque={ativarProdutoEstoque}
+                desativarProdutoEstoque={desativarProdutoEstoque}
+              />
             </div>
-            
+
             <div
               className="tab-pane fade"
               id="desativado-tab-pane"
@@ -537,85 +321,17 @@ const Estoque = () => {
               aria-labelledby="desativado-tab"
               tabIndex={0}
             >
-              <div className="row">
-                <div className="d-flex flex-wrap justify-content-center overflow-auto gap-2">
-                  {carregandoListaProdutosEstoque ? (
-                    <>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                      <div className="col-auto mx-auto">
-                        <PlaceholderCardItemEstoque />
-                      </div>
-                    </>
-                  ) : listaEstoqueFiltrado.length === 0 ? (
-                    listaEstoque.map((produto) => {
-                      if (!produto.pro_disponivel) {
-                        return (
-                          <>
-                            <div className="col-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  ) : (
-                    listaEstoqueFiltrado.map((produto) => {
-                      if (!produto.pro_disponivel) {
-                        return (
-                          <>
-                            <div className="col-auto">
-                              <ItemEstoque
-                                pro_id={produto.pro_id}
-                                pro_nome={produto.pro_nome}
-                                pro_qtd_atual={produto.pro_qtd_atual}
-                                pro_qtd_minimo={produto.pro_qtd_minimo}
-                                pro_disponivel={produto.pro_disponivel}
-                                alterarEstoque={(pro_id) =>
-                                  setarProdutoToken(pro_id)
-                                }
-                                alterandoQuantidadeEstoque={alterandoEstoque}
-                                alterandoStatusProduto={
-                                  alterandoStatusProdutoEstoque
-                                }
-                                ativarProdutoEstoque={(pro_id) => {
-                                  ativarProdutoEstoque(pro_id);
-                                }}
-                                desativarProdutoEstoque={(pro_id) => {
-                                  desativarProdutoEstoque(pro_id);
-                                }}
-                              />
-                            </div>
-                          </>
-                        );
-                      }
-                    })
-                  )}
-                </div>
-              </div>
+              <ListaEstoque
+                listaProdutos={listaProdutosEstoqueEmpresa.filter(
+                  (produto) => !produto.pro_disponivel
+                )}
+                carregandoLista={carregandoListaProdutosEstoque}
+                alterandoQuantidadeEstoque={alterandoEstoque}
+                alterandoStatusProduto={alterandoStatusProdutoEstoque}
+                alterarQuantidade={setarProdutoToken}
+                ativarProdutoEstoque={ativarProdutoEstoque}
+                desativarProdutoEstoque={desativarProdutoEstoque}
+              />
             </div>
           </div>
         </div>
@@ -645,38 +361,42 @@ const Estoque = () => {
             </div>
             <div className="modal-body">
               <div className="row">
-                <div className="d-inline-flex justify-content-cente align-items-center">
-                  <div className="col-2">
-                    <button
-                      className="btn btn-danger btn-lg"
-                      disabled={alterandoEstoque}
-                      onClick={() => diminuiQuantidadeEstoque()}
-                    >
-                      <Minus size={32} color="#ffffff" />
-                    </button>
-                  </div>
-                  <div className="col-auto mx-auto">
-                    <input
-                      type="number"
-                      name="pro_qtd_atual"
-                      disabled={alterandoEstoque}
-                      id="pro_qtd_atual"
-                      className="form-control form-control-lg text-center"
-                      value={novaQuantidadeEstoque}
-                      onChange={(event) =>
-                        setarNovaQuantidade(event.target.valueAsNumber)
-                      }
-                    />
-                  </div>
-                  <div className="col-2">
-                    <button
-                      className="btn btn-success btn-lg"
-                      disabled={alterandoEstoque}
-                      onClick={() => aumentaQuantidadeEstoque()}
-                    >
-                      <Plus size={32} color="#ffffff" />
-                    </button>
-                  </div>
+                <div className="col-12">
+                  <NumericFormat
+                    className="form-control form-control-lg text-center"
+                    displayType="input"
+                    decimalSeparator={","}
+                    thousandSeparator={"."}
+                    allowLeadingZeros={true}
+                    decimalScale={2}
+                    fixedDecimalScale
+                    allowNegative={false}
+                    value={novaQuantidadeEstoque}
+                    onValueChange={(value) => {
+                      setarNovaQuantidade(parseFloat(value.value) ?? 0);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="row d-flex justify-content-center mt-2">
+                <div className="col-auto">
+                  <button
+                    className="btn btn-danger btn-lg"
+                    disabled={alterandoEstoque}
+                    onClick={() => diminuiQuantidadeEstoque()}
+                  >
+                    <Minus size={32} color="#ffffff" />
+                  </button>
+                </div>
+
+                <div className="col-auto">
+                  <button
+                    className="btn btn-success btn-lg"
+                    disabled={alterandoEstoque}
+                    onClick={() => aumentaQuantidadeEstoque()}
+                  >
+                    <Plus size={32} color="#ffffff" />
+                  </button>
                 </div>
               </div>
             </div>

@@ -15,6 +15,8 @@ import {
 import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
 
+import "../../assets/css/style_venda.css";
+
 const Venda = () => {
   const [carregandoProdutos, carregarProdutos] = useState(false);
   const [processandoVenda, processarVenda] = useState(false);
@@ -261,7 +263,7 @@ const Venda = () => {
       ) : (
         <></>
       )}
-      <div className="row align-middle gap-2 gap-lg-0">
+      <div className="row align-middle gap-2 gap-lg-0 overflow-hidden">
         <div className="col-12 col-md-2 col-lg-4">
           <div className="form-floating">
             <NumericFormat
@@ -322,8 +324,8 @@ const Venda = () => {
           </button>
         </div>
       </div>
-      <div className="row row-cols-2">
-        <div className="col-9 col-md-8 col-xl-10 mt-4">
+      <div className="row row-cols-auto row-cols-md-2 row-cols-lg-2">
+        <div className="col-12 col-md-7 col-lg-8 col-xl-9 mt-4">
           <ListaProdutos
             carregandoProdutos={carregandoProdutos}
             processandoVenda={false}
@@ -331,7 +333,7 @@ const Venda = () => {
             adicionarItemSacola={adicionaItemSacola}
           />
         </div>
-        <div className="col-3 col-md-4 col-xl-2 mt-4">
+        <div className="col-12 col-md-4 col-lg-4 col-xl-3 mt-4">
           <Sacola
             itensSacola={itensSacola}
             processandoVenda={false}

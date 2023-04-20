@@ -14,6 +14,7 @@ import {
   cadastraFornecedor,
 } from "../../controllers/FornecedorController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+import "../../assets/css/style_tabelas.css";
 
 const Fornecedor = () => {
   const [processandoRequisicao, processarRequisicao] = useState(false);

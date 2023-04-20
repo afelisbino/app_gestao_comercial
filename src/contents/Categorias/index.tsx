@@ -9,6 +9,7 @@ import {
   cadastrarCategoria,
 } from "../../controllers/CategoriaController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+import "../../assets/css/style_tabelas.css";
 
 const Categoria = () => {
   const [carregandoCategorias, carregarCategorias] = useState(false);
@@ -104,7 +105,7 @@ const Categoria = () => {
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="row gap-2">
             <div className="col-sm-12 col-md-2 col-lg-2">
               <div className="d-grid gap-2 mx-auto">
                 {processandoFormulario ? (
