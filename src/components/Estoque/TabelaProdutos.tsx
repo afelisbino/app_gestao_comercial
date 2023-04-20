@@ -69,7 +69,7 @@ export function TabelaProdutos({
         </div>
       </div>
       <div className="row">
-        <div className="table-responsive" style={{ maxHeight: "60vh" }}>
+        <div className="table-responsive tabela-tela">
           <table className="table border rounded">
             <caption>Lista de produtos</caption>
             <thead>
@@ -80,7 +80,7 @@ export function TabelaProdutos({
                 <th scope="col">Estoque Atual</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="overflow-auto">
               {carregandoListaProdutos ? (
                 <>
                   <tr key={self.crypto.randomUUID()}>
@@ -90,24 +90,7 @@ export function TabelaProdutos({
                       <PlaceholderButton />
                       <PlaceholderButton />
                     </th>
-                    <td className="w-75">
-                      <Placeholder />
-                    </td>
                     <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
-                  <tr key={self.crypto.randomUUID()}>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-75">
                       <Placeholder />
                     </td>
                     <td className="w-auto">
@@ -124,7 +107,24 @@ export function TabelaProdutos({
                       <PlaceholderButton />
                       <PlaceholderButton />
                     </th>
-                    <td className="w-75">
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                    <td className="w-auto">
+                      <Placeholder />
+                    </td>
+                  </tr>
+                  <tr key={self.crypto.randomUUID()}>
+                    <th className="w-auto" scope="row">
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                      <PlaceholderButton />
+                    </th>
+                    <td className="w-auto">
                       <Placeholder />
                     </td>
                     <td className="w-auto">
@@ -228,7 +228,7 @@ export function TabelaProdutos({
                             </button>
                           </div>
                         </th>
-                        <td className="w-50">{produto.pro_nome}</td>
+                        <td className="w-auto">{produto.pro_nome}</td>
                         <td className="w-auto">
                           {formataValorMoedaBrasileira(
                             Number(produto.pro_valor_venda)
@@ -326,7 +326,7 @@ export function TabelaProdutos({
                             </button>
                           </div>
                         </th>
-                        <td className="w-50">{produto.pro_nome}</td>
+                        <td className="w-auto">{produto.pro_nome}</td>
                         <td className="w-auto">
                           {formataValorMoedaBrasileira(
                             Number(produto.pro_valor_venda)

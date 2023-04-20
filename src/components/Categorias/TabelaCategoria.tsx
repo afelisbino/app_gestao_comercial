@@ -17,7 +17,7 @@ export function TabelaCategoria({
   editar,
 }: tabelaProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "30rem" }}>
+    <div className="table-responsive mt-3 tabela-tela">
       <table className="table border rounded">
         <caption>Lista de categorias</caption>
         <thead>
@@ -26,7 +26,7 @@ export function TabelaCategoria({
             <th scope="col">Nome</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="overflow-auto">
           {carregandoCategoria ? (
             <>
               <tr>

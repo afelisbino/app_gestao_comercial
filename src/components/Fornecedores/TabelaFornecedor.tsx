@@ -17,7 +17,7 @@ export function TabelaFornecedor({
   editar,
 }: tabelaProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "30rem" }}>
+    <div className="table-responsive mt-3 tabela-tela">
       <table className="table border rounded">
         <caption>Lista de Fornecedores</caption>
         <thead>
@@ -27,7 +27,7 @@ export function TabelaFornecedor({
             <th scope="col">Documento</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="overflow-auto">
           {carregandoLista ? (
             <>
               <tr key={self.crypto.randomUUID()}>

@@ -16,7 +16,7 @@ export function TabelaCodigoBarras({
   removerCodigoBarras,
 }: tabelaCodigoBarrasProps) {
   return (
-    <div className="table-responsive">
+    <div className="table-responsive tabela-modal">
       <table className="table border rounded">
         <thead>
           <tr>
@@ -24,7 +24,7 @@ export function TabelaCodigoBarras({
             <th scope="col">Código de barras</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="overflow-auto">
           {buscandoListaCodigoBarras ? (
             <>
               <tr>
