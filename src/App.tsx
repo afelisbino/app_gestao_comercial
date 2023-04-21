@@ -1,5 +1,5 @@
-import Home from "./contents/Home";
-import "./assets/css/style_app.css";
+import Home from "./views/Home";
+
 
 function App() {
   return <Home />;
