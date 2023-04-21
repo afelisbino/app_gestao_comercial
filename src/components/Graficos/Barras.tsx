@@ -49,5 +49,12 @@ export function Barras({
     datasets: datasets,
   };
 
-  return <Bar options={options} data={dataChart} />;
+  return (
+    <Bar
+      redraw={true}
+      options={options}
+      data={dataChart}
+      updateMode={"resize"}
+    />
+  );
 }
