@@ -32,3 +32,72 @@
   background: var(--cor-barra-rolagem);
   border-radius: var(--borda-barra-rolagem);
 }
+
+.lista-pordutos-estoque {
+  max-height: 50vh;
+}
+
+.lista-produtos {
+  max-height: 50vh;
+}
+
+.sacola-venda {
+  max-height: 30vh;
+}
+
+.sacola-venda ul {
+  max-height: 22vh;
+}
+.tabela-tela {
+  max-height: 80vh;
+}
+
+.tabela-modal {
+  max-height: 40vh;
+}
+
+.imagem-vazio {
+  width: 15rem;
+  height: auto;
+}
+
+.imagem-carrinho-vazio {
+  width: 12rem;
+  height: auto;
+}
+
+@media screen and (min-height: 768px) {
+  .lista-pordutos-estoque {
+    max-height: 75vh;
+  }
+  .lista-produtos {
+    max-height: 80.5vh;
+    padding-bottom: 1.5em;
+  }
+
+  .sacola-venda {
+    max-height: 80vh;
+  }
+
+  .sacola-venda ul {
+    max-height: 65vh;
+  }
+  .tabela-tela {
+    max-height: 71vh;
+  }
+  .tabela-modal {
+    max-height: 60vh;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .imagem-vazio {
+    width: 25em;
+    height: auto;
+  }
+  .imagem-carrinho-vazio {
+    width: 18rem;
+    height: auto;
+    margin: 1%;
+  }
+}
