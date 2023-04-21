@@ -1,11 +1,10 @@
-import { lazy } from "react";
 import { menuPrincipalProps } from "../interfaces/interfaceMenu";
 
 export const menuApp: menuPrincipalProps[] = [
   {
     id: self.crypto.randomUUID(),
     categoria: "Home",
-    telaItemCategoria: "Venda/index.tsx",
+    telaItemCategoria: import("../views/Venda"),
     admin: false,
   },
   {
@@ -16,43 +15,39 @@ export const menuApp: menuPrincipalProps[] = [
       {
         id: self.crypto.randomUUID(),
         nome: "Categorias",
-        telaItem: "Categorias/index.tsx",
+        telaItem: import("../views/Categorias"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Fornecedores",
-        telaItem: "Fornecedor/index.tsx",
+        telaItem: import("../views/Fornecedor"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Produtos",
-        telaItem: "Produtos/index.tsx",
+        telaItem: import("../views/Produtos"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Estoque",
-        telaItem: "Estoque/index.tsx",
+        telaItem: import("../views/Estoque"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Movimentação de caixa",
-        telaItem: "Caixa/MovimentacaoManual.tsx",
+        telaItem: import("../views/Caixa/MovimentacaoManual"),
         admin: false,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Vendas fiado",
-        telaItem: "Fiado/index.tsx",
+        telaItem: import("../views/Fiado"),
         admin: false,
       },
-      // {
-      //   nome: "Usuários",
-      //   telaItem: "Usuario",
-      // },
     ],
   },
   {
@@ -63,19 +58,19 @@ export const menuApp: menuPrincipalProps[] = [
       {
         id: self.crypto.randomUUID(),
         nome: "Vendas",
-        telaItem: "Relatorios/Vendas.tsx",
+        telaItem: import("../views/Relatorios/Vendas"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Caixa",
-        telaItem: "Relatorios/Caixa.tsx",
+        telaItem: import("../views/Relatorios/Caixa"),
         admin: true,
       },
       {
         id: self.crypto.randomUUID(),
         nome: "Estoque",
-        telaItem: "Relatorios/Estoque.tsx",
+        telaItem: import("../views/Relatorios/Estoque"),
         admin: true,
       },
     ],
