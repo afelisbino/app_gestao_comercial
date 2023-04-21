@@ -11,6 +11,7 @@ import {
   buscaEstatisticasCaixaMensal,
   buscaEstatisticasCaixaPeriodo,
 } from "../../controllers/RelatorioCaixaController";
+import { LoaderImage } from "../../components/Loaders/LoaderImage";
 
 const Caixa = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
@@ -243,9 +244,7 @@ const Caixa = () => {
               />
               <hr />
               {buscandoEstatisticasPeriodo ? (
-                <div className="row mt-2">
-                  <Spinner />
-                </div>
+                <LoaderImage />
               ) : (
                 <EstatisticasCaixaEmpresa
                   dados={dadosEstatisticaCaixaPeriodo}

@@ -20,8 +20,6 @@ import { TabelaHistoricoEstoqueProduto } from "../../components/Estoque/TabelaHi
 import { FormularioProduto } from "../../components/Estoque/FormularioProduto";
 import { FormularioCodigoBarras } from "../../components/Estoque/FormularioCodigoBarras";
 
-import "../../assets/css/style_tabelas.css";
-
 const Produtos = () => {
   const [listaProdutos, setarListaProdutos] = useState<produtoProps[]>([]);
   const [listaHistoricoProduto, setarListaHistoricoProduto] = useState<

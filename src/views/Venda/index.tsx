@@ -15,8 +15,6 @@ import {
 import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
 
-import "../../assets/css/style_venda.css";
-
 const Venda = () => {
   const [carregandoProdutos, carregarProdutos] = useState(false);
   const [processandoVenda, processarVenda] = useState(false);
@@ -63,9 +61,11 @@ const Venda = () => {
 
   const valorTrocoCompra: number =
     valorPago > 0
-      ? totalCompraComDesconto > 0
+      ? totalCompraComDesconto > 0 && valorPago > totalCompraComDesconto
         ? valorPago - totalCompraComDesconto
-        : valorPago - totalCompra
+        : valorPago > totalCompra
+        ? valorPago - totalCompra
+        : 0
       : 0;
 
   function limpaCampos() {
@@ -315,7 +315,7 @@ const Venda = () => {
           <button
             key={self.crypto.randomUUID()}
             type="button"
-            className="btn btn-secondary btn-lg shadow"
+            className="btn btn-success btn-lg shadow"
             disabled={itensSacola.length === 0}
             data-bs-toggle="modal"
             data-bs-target="#finalizaVenda"
@@ -561,7 +561,7 @@ const Venda = () => {
                 disabled={processandoVenda}
                 data-bs-dismiss="modal"
               >
-                Registrar
+                Registrar venda
               </button>
             </div>
           </div>

@@ -26,10 +26,11 @@ import { itensVendaProps } from "../../interfaces/interfaceVenda";
 import { TabelaVendasFinalizado } from "../../components/Vendas/TabelaVendasFinalizado";
 import { listaItensVenda } from "../../controllers/VendaController";
 
-import "../../assets/css/style_tabelas.css";
 import { TabelaItensVenda } from "../../components/Vendas/TabelaItensVenda";
 import { Alerta } from "../../components/Alerta";
 import { FormularioFiltroDiarioRelatorio } from "../../components/Relatorio/FormularioFiltroDiarioRelatorio";
+import { LoaderImage } from "../../components/Loaders/LoaderImage";
+import imgNenhumDado from "../../assets/images/empty-data.svg";
 
 const Vendas = () => {
   const [buscandoEstatisticasAtuais, buscarEstatisticasAtuais] =
@@ -371,10 +372,7 @@ const Vendas = () => {
     dataFim: string
   ) {
     setarListaVendas(
-      await buscaListaVendasLocalFinalizadasPeriodo(
-        dataInicio,
-        dataFim
-      )
+      await buscaListaVendasLocalFinalizadasPeriodo(dataInicio, dataFim)
     );
   }
 
@@ -511,36 +509,40 @@ const Vendas = () => {
                   </>
                 )}
               </div>
-              <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
-                <div className="col-12 col-md-6 col-lg-6">
-                  <Barras
-                    tituloGrafico="Quantidade vendas dos ultimos sete dias"
-                    labels={labelsGrafico}
-                    datasets={dadosGraficoQtdVendas}
-                  />
+              {buscandoEstatisticasAtuais ? (
+                <LoaderImage />
+              ) : (
+                <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
+                  <div className="col-12 col-md-6 col-lg-6">
+                    <Barras
+                      tituloGrafico="Quantidade vendas dos ultimos sete dias"
+                      labels={labelsGrafico}
+                      datasets={dadosGraficoQtdVendas}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 col-lg-6">
+                    <Linha
+                      tituloGrafico="Comparativos de valores de vendas e ganhos dos ultimos sete dias"
+                      labels={labelsGrafico}
+                      datasets={dadosGraficoValoresVendas}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 col-lg-6">
+                    <Barras
+                      tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                      labels={labelsGrafico}
+                      datasets={dadosGraficoQtdFormaPagamentos}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 col-lg-6">
+                    <Linha
+                      tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                      labels={labelsGrafico}
+                      datasets={dadosGraficoValoresFormaPagamento}
+                    />
+                  </div>
                 </div>
-                <div className="col-12 col-md-6 col-lg-6">
-                  <Linha
-                    tituloGrafico="Comparativos de valores de vendas e ganhos dos ultimos sete dias"
-                    labels={labelsGrafico}
-                    datasets={dadosGraficoValoresVendas}
-                  />
-                </div>
-                <div className="col-12 col-md-6 col-lg-6">
-                  <Barras
-                    tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
-                    labels={labelsGrafico}
-                    datasets={dadosGraficoQtdFormaPagamentos}
-                  />
-                </div>
-                <div className="col-12 col-md-6 col-lg-6">
-                  <Linha
-                    tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
-                    labels={labelsGrafico}
-                    datasets={dadosGraficoValoresFormaPagamento}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </div>
           <div
@@ -656,36 +658,55 @@ const Vendas = () => {
                     aria-labelledby="visao-geral-tab"
                     tabIndex={0}
                   >
-                    <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Barras
-                          tituloGrafico="Quantidade de vendas por tipo"
-                          labels={labelsGraficoPeriodo}
-                          datasets={dadosGraficoQtdVendasPeriodo}
-                        />
+                    {buscandoEstatisticasPeriodo ? (
+                      <div className="mt-3">
+                        <LoaderImage />
                       </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Linha
-                          tituloGrafico="Comparativos de valores de vendas e ganhos"
-                          labels={labelsGraficoPeriodo}
-                          datasets={dadosGraficoValoresVendasPeriodo}
-                        />
+                    ) : !dadosVendasPeriodo ? (
+                      <div className="d-flex flex-column gap-3 p-3">
+                        <strong className="h4 text-center">
+                          Nenhuma informação pesquisado!
+                        </strong>
+                        <div className="d-flex justify-content-center">
+                          <img
+                            src={imgNenhumDado}
+                            alt="Nenhuma informação encontrado"
+                            className="img-thumbnail border-0 imagem-vazio"
+                          />
+                        </div>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Barras
-                          tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
-                          labels={labelsGraficoPeriodo}
-                          datasets={dadosGraficoQtdFormaPagamentosPeriodo}
-                        />
+                    ) : (
+                      <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
+                        <div className="col-12 col-md-6 col-lg-6">
+                          <Barras
+                            tituloGrafico="Quantidade de vendas por tipo"
+                            labels={labelsGraficoPeriodo}
+                            datasets={dadosGraficoQtdVendasPeriodo}
+                          />
+                        </div>
+                        <div className="col-12 col-md-6 col-lg-6">
+                          <Linha
+                            tituloGrafico="Comparativos de valores de vendas e ganhos"
+                            labels={labelsGraficoPeriodo}
+                            datasets={dadosGraficoValoresVendasPeriodo}
+                          />
+                        </div>
+                        <div className="col-12 col-md-6 col-lg-6">
+                          <Barras
+                            tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                            labels={labelsGraficoPeriodo}
+                            datasets={dadosGraficoQtdFormaPagamentosPeriodo}
+                          />
+                        </div>
+                        <div className="col-12 col-md-6 col-lg-6">
+                          <Linha
+                            tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                            labels={labelsGraficoPeriodo}
+                            datasets={dadosGraficoValoresFormaPagamentoPeriodo}
+                          />
+                        </div>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-6">
-                        <Linha
-                          tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
-                          labels={labelsGraficoPeriodo}
-                          datasets={dadosGraficoValoresFormaPagamentoPeriodo}
-                        />
-                      </div>
-                    </div>
+                    )}
                   </div>
                   <div
                     className="tab-pane fade"

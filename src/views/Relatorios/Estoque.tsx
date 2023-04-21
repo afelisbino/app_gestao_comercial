@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../../assets/css/style_tabelas.css";
 import { Alerta } from "../../components/Alerta";
 import { Cards } from "../../components/Cards";
 import {
@@ -17,6 +16,7 @@ import { buscaEstatisticasEstoque } from "../../controllers/EstoqueController";
 import { Spinner } from "../../components/Loaders/Spinner";
 import { adicionaMascaraValor } from "../../controllers/NumeroController";
 import { FormularioFiltroDiarioRelatorio } from "../../components/Relatorio/FormularioFiltroDiarioRelatorio";
+import { LoaderImage } from "../../components/Loaders/LoaderImage";
 
 const Estoque = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
@@ -191,31 +191,27 @@ const Estoque = () => {
           alertarMensagem={alertarMensagemSistema}
         />
         <hr />
-        <div className="d-flex justify-content-start justify-content-md-center justify-content-lg-center justify-content-xl-center overflow-auto gap-3 py-3 px-xl-0">
-          <div className="col-12 col-md-auto col-lg-auto col-xl-auto">
-            {carregandoInformacoesEstoque ? (
-              <Spinner />
-            ) : (
+        {carregandoInformacoesEstoque ? (
+          <LoaderImage />
+        ) : (
+          <div className="d-flex justify-content-start justify-content-md-center justify-content-lg-center justify-content-xl-center overflow-auto gap-3 py-3 px-xl-0">
+            <div className="col-12 col-md-auto col-lg-auto col-xl-auto">
               <Rosca
                 tituloGrafico="Produtos mais vendidos"
                 labels={labelsGraficoProdutosVendidos}
                 datasets={dadosGraficoProdutosVendidos}
               />
-            )}
-          </div>
+            </div>
 
-          <div className="col-12 col-md-auto col-lg-auto col-xl-auto">
-            {carregandoInformacoesEstoque ? (
-              <Spinner />
-            ) : (
+            <div className="col-12 col-md-auto col-lg-auto col-xl-auto">
               <Rosca
                 tituloGrafico="Movimentações do estoque"
                 labels={labelsGraficoMovimentacaoEstoque}
                 datasets={dadosGraficoMovimentacaoEstoque}
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
         <hr />
         <div>
           <TabelaHistoricoEstoque

@@ -13,7 +13,6 @@ import {
 import { Spinner } from "../../components/Loaders/Spinner";
 import { Alerta } from "../../components/Alerta";
 import { TabelaVendasFiadoAberto } from "../../components/Vendas/Fiado/TabelaVendasFiadoAberto";
-import "../../assets/css/style_tabelas.css";
 
 const Fiado = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
