@@ -13,6 +13,8 @@ import {
 import { Linha } from "../Graficos/Linha";
 import { Barras } from "../Graficos/Barras";
 
+import imgNenhumDado from "../../assets/images/empty-data.svg";
+
 interface estatisticaCaixaEmpresaProps {
   dados: relatorioCaixa;
 }
@@ -52,7 +54,7 @@ export function EstatisticasCaixaEmpresa({
 
   return (
     <>
-      <div className="d-flex flex-column">
+      <div key={idEstatisticas} className="d-flex flex-column">
         <div className="d-flex justify-content-start justify-content-xxl-center overflow-auto gap-2 py-3 px-3 px-xl-0">
           <div className="col-auto">
             <Cards
@@ -100,59 +102,80 @@ export function EstatisticasCaixaEmpresa({
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-12 col-md-6 col-lg-6 col-xxl-4">
-            <Linha
-              tituloGrafico="Valores fechamento de caixa"
-              labels={labelFechamentoCaixa}
-              datasets={[
-                {
-                  label: "Total em caixa (R$)",
-                  data: dadosGraficoFechamentoCaixa,
-                  backgroundColor: "rgb(72,61,139)",
-                  borderColor: "rgb(72,61,139)",
-                },
-              ]}
-            />
-          </div>
-          <div className="col-12 col-md-6 col-lg-6 col-xxl-4">
-            <Linha
-              tituloGrafico="Receita x Lucro"
-              labels={labelReceitasLucros}
-              datasets={[
-                {
-                  label: "Receita (R$)",
-                  data: dadosGraficoReceita,
-                  backgroundColor: "rgb(46,139,87)",
-                  borderColor: "rgb(46,139,87)",
-                },
-                {
-                  label: "Lucro (R$)",
-                  data: dadosGraficoLucro,
-                  backgroundColor: "rgb(152,251,152)",
-                  borderColor: "rgb(152,251,152)",
-                },
-              ]}
-            />
-          </div>
-          <div className="col-12 col-xxl-4">
-            <Barras
-              tituloGrafico="Entrada x Saídas manual do caixa"
-              labels={labelMovimentacaoCaixa}
-              datasets={[
-                {
-                  label: "Entrada (R$)",
-                  data: dadosGraficoEntradaManualCaixa,
-                  backgroundColor: "rgb(60,179,113)",
-                },
-                {
-                  label: "Saida (R$)",
-                  data: dadosGraficoSaidaManualCaixa,
-                  backgroundColor: "rgb(178,34,34)",
-                },
-              ]}
-            />
-          </div>
+        <div className="row mt-3">
+          {dados.resumo.valorTotalReceita === 0 &&
+          dados.resumo.valorTotalSaida === 0 &&
+          dados.resumo.valorTotalEntrada === 0 &&
+          dados.resumo.valorTotalLucro === 0 &&
+          dados.resumo.porcentagemTotalLucro === 0 ? (
+            <div className="d-flex flex-column gap-3 p-3">
+              <strong className="h4 text-center">
+                Nenhuma informação pesquisado!
+              </strong>
+              <div className="d-flex justify-content-center">
+                <img
+                  src={imgNenhumDado}
+                  alt="Nenhuma informação encontrado"
+                  className="img-thumbnail border-0 imagem-vazio"
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="col-12 col-md-6 col-lg-6 col-xxl-4">
+                <Linha
+                  tituloGrafico="Fechamentos"
+                  labels={labelFechamentoCaixa}
+                  datasets={[
+                    {
+                      label: "Total em caixa (R$)",
+                      data: dadosGraficoFechamentoCaixa,
+                      backgroundColor: "rgb(72,61,139)",
+                      borderColor: "rgb(72,61,139)",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="col-12 col-md-6 col-lg-6 col-xxl-4">
+                <Linha
+                  tituloGrafico="Ganhos"
+                  labels={labelReceitasLucros}
+                  datasets={[
+                    {
+                      label: "Receita (R$)",
+                      data: dadosGraficoReceita,
+                      backgroundColor: "rgb(46,139,87)",
+                      borderColor: "rgb(46,139,87)",
+                    },
+                    {
+                      label: "Lucro (R$)",
+                      data: dadosGraficoLucro,
+                      backgroundColor: "rgb(152,251,152)",
+                      borderColor: "rgb(152,251,152)",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="col-12 col-xxl-4">
+                <Barras
+                  tituloGrafico="Movimentações manuais"
+                  labels={labelMovimentacaoCaixa}
+                  datasets={[
+                    {
+                      label: "Entrada (R$)",
+                      data: dadosGraficoEntradaManualCaixa,
+                      backgroundColor: "rgb(60,179,113)",
+                    },
+                    {
+                      label: "Saida (R$)",
+                      data: dadosGraficoSaidaManualCaixa,
+                      backgroundColor: "rgb(178,34,34)",
+                    },
+                  ]}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
