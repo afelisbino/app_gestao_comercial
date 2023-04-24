@@ -33,6 +33,7 @@ const Venda = () => {
   const [quantidadeItem, setarQuantidadeItemSacola] = useState<number>(1);
   const [filtroProduto, setarFiltro] = useState<string>("");
 
+  const quantidadeItemRef = useRef<HTMLInputElement>(null);
   const filtroProdutoRef = useRef<HTMLInputElement>(null);
   const tipoPagamentoRef = useRef<HTMLSelectElement>(null);
   const nomeClienteFiadoRef = useRef<HTMLInputElement>(null);
@@ -151,7 +152,14 @@ const Venda = () => {
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
+    } else if (isNaN(quantidadeItem) || quantidadeItem == 0) {
+      quantidadeItemRef?.current?.classList.add("border-danger");
+      alertarMensagemSistema(
+        "warning",
+        "A quantidade do item não pode ser em branco ou zerado!"
+      );
     } else {
+      quantidadeItemRef?.current?.classList.remove("border-danger");
       setarItensSacola(
         [
           ...itensSacola,
@@ -274,6 +282,7 @@ const Venda = () => {
               allowLeadingZeros={true}
               decimalScale={2}
               fixedDecimalScale
+              getInputRef={quantidadeItemRef}
               disabled={carregandoProdutos}
               allowNegative={false}
               value={quantidadeItem}
