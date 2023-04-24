@@ -47,5 +47,5 @@ export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
     datasets: datasets,
   };
 
-  return <Line options={options} data={dataChart} />;
+  return <Line redraw={true} updateMode={"resize"} options={options} data={dataChart} />;
 }

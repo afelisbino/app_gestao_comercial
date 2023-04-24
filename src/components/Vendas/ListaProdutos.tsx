@@ -1,6 +1,8 @@
 import { produtoAtivosProps } from "../../interfaces/interfaceProdutosAtivos";
-import { Produtos } from "../ItensVenda/Produtos";
 import { ProdutosPlaceholder } from "../Loaders/ProdutosPlaceholder";
+import { ItemProduto } from "./ItemProduto";
+
+import imgProdutoNaoEncontrado from "../../assets/images/not-found.svg";
 
 interface listaProdutosProps {
   carregandoProdutos: boolean;
@@ -37,7 +39,7 @@ export function ListaProdutos({
       {listaProdutos.map((produto) => {
         return (
           <div className="col-auto">
-            <Produtos
+            <ItemProduto
               processandoVenda={processandoVenda}
               pro_id={produto.pro_id}
               pro_nome={produto.pro_nome}
@@ -50,10 +52,19 @@ export function ListaProdutos({
       })}
     </div>
   ) : (
-    <div className="row">
-      <span className="h4 fw-semibold text-center">
-        {"Nenhum produto encontrado!"}
-      </span>
+    <div className="d-flex flex-column gap-3 p-3">
+      <div className="row border rounded mx-auto py-3">
+        <strong className="h4 text-center">
+          {"Nenhum produto encontrado!"}
+        </strong>
+      </div>
+      <div className="d-flex justify-content-center">
+        <img
+          src={imgProdutoNaoEncontrado}
+          alt="Nenhuma produto encontrado"
+          className="img-thumbnail border-0 imagem-vazio"
+        />
+      </div>
     </div>
   );
 }
