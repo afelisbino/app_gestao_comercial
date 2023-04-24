@@ -13,10 +13,10 @@ import { TabelaHistoricoEstoque } from "../../components/Estoque/TabelaHistorico
 import { historicoEstoqueEmpresaProps } from "../../interfaces/interfaceHistoricoEstoqueEmpresa";
 import { buscarListaHistoricoEstoque } from "../../controllers/ProdutoController";
 import { buscaEstatisticasEstoque } from "../../controllers/EstoqueController";
-import { Spinner } from "../../components/Loaders/Spinner";
 import { adicionaMascaraValor } from "../../controllers/NumeroController";
 import { FormularioFiltroDiarioRelatorio } from "../../components/Relatorio/FormularioFiltroDiarioRelatorio";
 import { LoaderImage } from "../../components/Loaders/LoaderImage";
+import imgNenhumDado from "../../assets/images/empty-data.svg";
 
 const Estoque = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
@@ -193,6 +193,20 @@ const Estoque = () => {
         <hr />
         {carregandoInformacoesEstoque ? (
           <LoaderImage />
+        ) : labelsGraficoMovimentacaoEstoque.length === 0 &&
+          labelsGraficoProdutosVendidos.length === 0 ? (
+          <div className="d-flex flex-column gap-3 p-3">
+            <strong className="h4 text-center">
+              Nenhuma informação encontrada!
+            </strong>
+            <div className="d-flex justify-content-center">
+              <img
+                src={imgNenhumDado}
+                alt="Nenhuma informação encontrado"
+                className="img-thumbnail border-0 imagem-vazio"
+              />
+            </div>
+          </div>
         ) : (
           <div className="d-flex justify-content-start justify-content-md-center justify-content-lg-center justify-content-xl-center overflow-auto gap-3 py-3 px-xl-0">
             <div className="col-12 col-md-auto col-lg-auto col-xl-auto">
