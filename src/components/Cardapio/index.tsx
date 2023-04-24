@@ -6,7 +6,7 @@ import { TabelaCardapio } from "./TabelaCardapio";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
 import { Spinner } from "../Loaders/Spinner";
 import { Alerta } from "../Alerta";
-import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 import { buscarListaCategoria } from "../../controllers/CategoriaController";
 import { categoriaProps } from "../../interfaces/interfaceCategoria";
 

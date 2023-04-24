@@ -1,3 +1,3 @@
 export interface opcaoMenuProps {
-    selecionarOpcaoMenu: (opcao: string) => void;
+    selecionarOpcaoMenu: (opcao: any) => void;
 }

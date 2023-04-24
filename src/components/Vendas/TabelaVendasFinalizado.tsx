@@ -2,7 +2,7 @@ import { ListNumbers } from "phosphor-react";
 import { vendasFinalizadaProps } from "../../interfaces/interfaceRelatorioVendas";
 import { Placeholder } from "../Loaders/Placeholder";
 import { PlaceholderButton } from "../Loaders/PlaceholderButton";
-import { mascaraValorMoedaBrasileira } from "../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 
 interface tabelaVendasFinalizadasProps {
   listaVendas: vendasFinalizadaProps[];
@@ -18,7 +18,7 @@ export function TabelaVendasFinalizado({
   visualizarItensVenda,
 }: tabelaVendasFinalizadasProps) {
   return (
-    <div className="table-responsive mt-3" style={{ maxHeight: "18rem" }}>
+    <div className="table-responsive mt-3 tabela-tela">
       <table className="table border rounded mb-5">
         <caption>Lista vendas finalizadas</caption>
         <thead>
@@ -151,15 +151,15 @@ export function TabelaVendasFinalizado({
                   <td className="w-auto">{venda.ven_tipo}</td>
                   <td className="w-auto">{venda.ven_pagamento}</td>
                   <td className="w-auto">
-                    {mascaraValorMoedaBrasileira(
+                    {formataValorMoedaBrasileira(
                       Number(venda.ven_valor_compra)
                     )}
                   </td>
                   <td className="w-auto">
-                    {mascaraValorMoedaBrasileira(Number(venda.ven_desconto))}
+                    {formataValorMoedaBrasileira(Number(venda.ven_desconto))}
                   </td>
                   <td className="w-auto">
-                    {mascaraValorMoedaBrasileira(Number(venda.ven_total))}
+                    {formataValorMoedaBrasileira(Number(venda.ven_total))}
                   </td>
                   <td
                     className={
@@ -167,7 +167,7 @@ export function TabelaVendasFinalizado({
                       (venda.ven_lucro < 0 ? "text-danger" : "text-success")
                     }
                   >
-                    {mascaraValorMoedaBrasileira(Number(venda.ven_lucro))}
+                    {formataValorMoedaBrasileira(Number(venda.ven_lucro))}
                   </td>
                   <td
                     className={
