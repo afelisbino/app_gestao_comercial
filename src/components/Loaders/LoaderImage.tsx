@@ -10,7 +10,7 @@ export function LoaderImage() {
         <img
           src={imgLoader}
           alt="Carregando dados..."
-          className="img-thumbnail border-0 w-25 h-auto m-2"
+          className="img-thumbnail border-0 imagem-carregamento"
         />
       </div>
     </>
