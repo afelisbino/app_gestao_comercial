@@ -133,7 +133,7 @@ const Vendas = () => {
 
     setarDadosGraficoValoresVendas([
       {
-        label: "Valor total de vendas (R$)",
+        label: "Receita (R$)",
         data: estatisticasVendas
           .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
             return valoresVendas.valorTotalVendas;
@@ -143,7 +143,7 @@ const Vendas = () => {
         borderColor: "rgb(152,251,152)",
       },
       {
-        label: "Valor total de ganhos (R$)",
+        label: "Ganhos (R$)",
         data: estatisticasVendas
           .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
             return valoresLucros.valorTotalGanhos;
@@ -156,7 +156,7 @@ const Vendas = () => {
 
     setarDadosGraficoFormaPagamentos([
       {
-        label: "Vendas cartão",
+        label: "Qtd. cartão",
         data: estatisticasVendas
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -166,7 +166,7 @@ const Vendas = () => {
         backgroundColor: "rgb(240,230,140)",
       },
       {
-        label: "Vendas dinheiro",
+        label: "Qtd. dinheiro",
         data: estatisticasVendas
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -176,7 +176,7 @@ const Vendas = () => {
         backgroundColor: "rgb(255,140,0)",
       },
       {
-        label: "Vendas Pix",
+        label: "Qtd. Pix",
         data: estatisticasVendas
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -189,7 +189,7 @@ const Vendas = () => {
 
     setarDadosGraficoValoresFormaPagamento([
       {
-        label: "Valor total no cartão (R$)",
+        label: "Total no cartão (R$)",
         data: estatisticasVendas
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -200,7 +200,7 @@ const Vendas = () => {
         borderColor: "rgb(75,0,130)",
       },
       {
-        label: "Valor total no dinheiro (R$)",
+        label: "Total no dinheiro (R$)",
         data: estatisticasVendas
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -211,7 +211,7 @@ const Vendas = () => {
         borderColor: "rgb(147,112,219)",
       },
       {
-        label: "Valor total no Pix (R$)",
+        label: "Total no Pix (R$)",
         data: estatisticasVendas
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -268,7 +268,7 @@ const Vendas = () => {
 
     setarDadosGraficoValoresVendasPeriodo([
       {
-        label: "Valor total de vendas (R$)",
+        label: "Receitas (R$)",
         data: dadosEstatisticas.estatisticasVenda
           .map((valoresVendas: estatisticaVendasUltimosSeteDias) => {
             return valoresVendas.valorTotalVendas;
@@ -278,7 +278,7 @@ const Vendas = () => {
         borderColor: "rgb(152,251,152)",
       },
       {
-        label: "Valor total de ganhos (R$)",
+        label: "Ganhos (R$)",
         data: dadosEstatisticas.estatisticasVenda
           .map((valoresLucros: estatisticaVendasUltimosSeteDias) => {
             return valoresLucros.valorTotalGanhos;
@@ -291,7 +291,7 @@ const Vendas = () => {
 
     setarDadosGraficoFormaPagamentosPeriodo([
       {
-        label: "Vendas cartão",
+        label: "Qtd. cartão",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -301,7 +301,7 @@ const Vendas = () => {
         backgroundColor: "rgb(240,230,140)",
       },
       {
-        label: "Vendas dinheiro",
+        label: "Qtd. dinheiro",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -311,7 +311,7 @@ const Vendas = () => {
         backgroundColor: "rgb(255,140,0)",
       },
       {
-        label: "Vendas Pix",
+        label: "Qtd. Pix",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (qtdFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -324,7 +324,7 @@ const Vendas = () => {
 
     setarDadosGraficoValoresFormaPagamentoPeriodo([
       {
-        label: "Valor total no cartão (R$)",
+        label: "Total no cartão (R$)",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -335,7 +335,7 @@ const Vendas = () => {
         borderColor: "rgb(75,0,130)",
       },
       {
-        label: "Valor total no dinheiro (R$)",
+        label: "Total no dinheiro (R$)",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -346,7 +346,7 @@ const Vendas = () => {
         borderColor: "rgb(147,112,219)",
       },
       {
-        label: "Valor total no Pix (R$)",
+        label: "Total no Pix (R$)",
         data: dadosEstatisticas.estatisticasVenda
           .map(
             (valorFormasPagamento: estatisticaVendasUltimosSeteDias) =>
@@ -515,28 +515,28 @@ const Vendas = () => {
                 <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
                   <div className="col-12 col-md-6 col-lg-6">
                     <Barras
-                      tituloGrafico="Quantidade vendas dos ultimos sete dias"
+                      tituloGrafico="Vendas dos últimos sete dias"
                       labels={labelsGrafico}
                       datasets={dadosGraficoQtdVendas}
                     />
                   </div>
                   <div className="col-12 col-md-6 col-lg-6">
                     <Linha
-                      tituloGrafico="Comparativos de valores de vendas e ganhos dos ultimos sete dias"
+                      tituloGrafico="Receitas e ganhos dos últimos sete dias"
                       labels={labelsGrafico}
                       datasets={dadosGraficoValoresVendas}
                     />
                   </div>
                   <div className="col-12 col-md-6 col-lg-6">
                     <Barras
-                      tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                      tituloGrafico="Vendas de Cartão, Dinheiro e Pix"
                       labels={labelsGrafico}
                       datasets={dadosGraficoQtdFormaPagamentos}
                     />
                   </div>
                   <div className="col-12 col-md-6 col-lg-6">
                     <Linha
-                      tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                      tituloGrafico="Vendas de Cartão, Dinheiro e Pix"
                       labels={labelsGrafico}
                       datasets={dadosGraficoValoresFormaPagamento}
                     />
@@ -679,28 +679,28 @@ const Vendas = () => {
                       <div className="row row-cols-1 row-cols-lg-2 mt-2 mb-2">
                         <div className="col-12 col-md-6 col-lg-6">
                           <Barras
-                            tituloGrafico="Quantidade de vendas por tipo"
+                            tituloGrafico="Quantidade de vendas"
                             labels={labelsGraficoPeriodo}
                             datasets={dadosGraficoQtdVendasPeriodo}
                           />
                         </div>
                         <div className="col-12 col-md-6 col-lg-6">
                           <Linha
-                            tituloGrafico="Comparativos de valores de vendas e ganhos"
+                            tituloGrafico="Valores de receitas e ganhos"
                             labels={labelsGraficoPeriodo}
                             datasets={dadosGraficoValoresVendasPeriodo}
                           />
                         </div>
                         <div className="col-12 col-md-6 col-lg-6">
                           <Barras
-                            tituloGrafico="Comparativos de quantidade de Cartão, Dinheiro e Pix"
+                            tituloGrafico="Vendas de Cartão, Dinheiro e Pix"
                             labels={labelsGraficoPeriodo}
                             datasets={dadosGraficoQtdFormaPagamentosPeriodo}
                           />
                         </div>
                         <div className="col-12 col-md-6 col-lg-6">
                           <Linha
-                            tituloGrafico="Comparativos de valores de Cartão, Dinheiro e Pix"
+                            tituloGrafico="Vendas de Cartão, Dinheiro e Pix"
                             labels={labelsGraficoPeriodo}
                             datasets={dadosGraficoValoresFormaPagamentoPeriodo}
                           />
