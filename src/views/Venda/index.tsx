@@ -33,6 +33,7 @@ const Venda = () => {
   const [quantidadeItem, setarQuantidadeItemSacola] = useState<number>(1);
   const [filtroProduto, setarFiltro] = useState<string>("");
 
+  const quantidadeItemRef = useRef<HTMLInputElement>(null);
   const filtroProdutoRef = useRef<HTMLInputElement>(null);
   const tipoPagamentoRef = useRef<HTMLSelectElement>(null);
   const nomeClienteFiadoRef = useRef<HTMLInputElement>(null);
@@ -84,24 +85,14 @@ const Venda = () => {
     );
   }
 
-  function filtraProdutoCodigoBarras(
-    filtro: string
-  ): Array<produtoAtivosProps> {
+  function filtraProdutoCodigoBarras(filtro: string): produtoAtivosProps[] {
     let produtoCodigoBarras = listaProduto.find((produto: produtoAtivosProps) =>
       produto.pro_codigos.some(
         (codigoBarras) => codigoBarras.pcb_codigo === filtro
       )
     );
 
-    if (produtoCodigoBarras)
-      adicionaItemSacola(
-        produtoCodigoBarras?.est_qtd_atual,
-        produtoCodigoBarras?.pro_id,
-        produtoCodigoBarras?.pro_nome,
-        produtoCodigoBarras?.pro_valor
-      );
-
-    return [];
+    return produtoCodigoBarras ? [produtoCodigoBarras] : [];
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
@@ -135,6 +126,22 @@ const Venda = () => {
     filtroProdutoRef.current?.focus();
   }
 
+  function adicionaItemSacolaCodigoBarras(codigoBarrasProduto: string){
+
+    if(regexNumero.test(codigoBarrasProduto)){
+      let produto = filtraProdutoCodigoBarras(codigoBarrasProduto);
+
+      if (codigoBarrasProduto.length !== 0)
+        adicionaItemSacola(
+          produto[0].est_qtd_atual,
+          produto[0].pro_id,
+          produto[0].pro_nome,
+          produto[0].pro_valor
+        );
+    }
+    
+  }
+
   function adicionaItemSacola(
     qtdAtualEstoque: number,
     idProduto: string,
@@ -151,7 +158,14 @@ const Venda = () => {
         "warning",
         "Não possuímos essa quantidade de produto no estoque!"
       );
+    } else if (isNaN(quantidadeItem) || quantidadeItem == 0) {
+      quantidadeItemRef?.current?.classList.add("border-danger");
+      alertarMensagemSistema(
+        "warning",
+        "A quantidade do item não pode ser em branco ou zerado!"
+      );
     } else {
+      quantidadeItemRef?.current?.classList.remove("border-danger");
       setarItensSacola(
         [
           ...itensSacola,
@@ -273,7 +287,7 @@ const Venda = () => {
               thousandSeparator={"."}
               allowLeadingZeros={true}
               decimalScale={2}
-              fixedDecimalScale
+              getInputRef={quantidadeItemRef}
               disabled={carregandoProdutos}
               allowNegative={false}
               value={quantidadeItem}
@@ -302,6 +316,12 @@ const Venda = () => {
               key="produtoPesquisa"
               placeholder="Buscar por nome do produto ou codigo de barras"
               value={filtroProduto}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  adicionaItemSacolaCodigoBarras(filtroProduto)                    
+                }
+              }}
               onChange={(event) => {
                 setarFiltro(event.target.value);
               }}
