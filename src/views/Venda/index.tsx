@@ -85,24 +85,14 @@ const Venda = () => {
     );
   }
 
-  function filtraProdutoCodigoBarras(
-    filtro: string
-  ): Array<produtoAtivosProps> {
+  function filtraProdutoCodigoBarras(filtro: string): produtoAtivosProps[] {
     let produtoCodigoBarras = listaProduto.find((produto: produtoAtivosProps) =>
       produto.pro_codigos.some(
         (codigoBarras) => codigoBarras.pcb_codigo === filtro
       )
     );
 
-    if (produtoCodigoBarras)
-      adicionaItemSacola(
-        produtoCodigoBarras?.est_qtd_atual,
-        produtoCodigoBarras?.pro_id,
-        produtoCodigoBarras?.pro_nome,
-        produtoCodigoBarras?.pro_valor
-      );
-
-    return [];
+    return produtoCodigoBarras ? [produtoCodigoBarras] : [];
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
@@ -134,6 +124,22 @@ const Venda = () => {
   function excluirItem(id: string) {
     setarItensSacola(itensSacola.filter((item) => item.id !== id));
     filtroProdutoRef.current?.focus();
+  }
+
+  function adicionaItemSacolaCodigoBarras(codigoBarrasProduto: string){
+
+    if(regexNumero.test(codigoBarrasProduto)){
+      let produto = filtraProdutoCodigoBarras(codigoBarrasProduto);
+
+      if (codigoBarrasProduto.length !== 0)
+        adicionaItemSacola(
+          produto[0].est_qtd_atual,
+          produto[0].pro_id,
+          produto[0].pro_nome,
+          produto[0].pro_valor
+        );
+    }
+    
   }
 
   function adicionaItemSacola(
@@ -281,7 +287,6 @@ const Venda = () => {
               thousandSeparator={"."}
               allowLeadingZeros={true}
               decimalScale={2}
-              fixedDecimalScale
               getInputRef={quantidadeItemRef}
               disabled={carregandoProdutos}
               allowNegative={false}
@@ -311,6 +316,12 @@ const Venda = () => {
               key="produtoPesquisa"
               placeholder="Buscar por nome do produto ou codigo de barras"
               value={filtroProduto}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  adicionaItemSacolaCodigoBarras(filtroProduto)                    
+                }
+              }}
               onChange={(event) => {
                 setarFiltro(event.target.value);
               }}
