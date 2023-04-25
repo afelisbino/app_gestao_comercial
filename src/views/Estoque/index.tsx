@@ -15,8 +15,6 @@ import { estoqueProps } from "../../interfaces/interfaceEstoque";
 import { Spinner } from "../../components/Loaders/Spinner";
 import { ListaEstoque } from "../../components/Estoque/ListaEstoque";
 
-import "../../assets/css/style_estoque.css";
-
 const Estoque = () => {
   const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
   const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");

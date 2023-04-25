@@ -3,11 +3,7 @@ import instanciaAxios from "../../libraries/AxiosInstance";
 import { usuarioProps } from "../../interfaces/interfaceUsuario";
 import { Alerta } from "../../components/Alerta";
 
-interface loginProps {
-  autenticarUsuarioSistema: (validado: boolean) => void;
-}
-
-export function Login({ autenticarUsuarioSistema }: loginProps) {
+export function Login() {
   const [nomeUsuario, setarNomeUsuario] = useState<string>("");
   const [senhaUsuario, setarSenhaUsuario] = useState<string>("");
   const [autenticandoUsuario, carregarAutenticacaoUsuario] = useState(false);
@@ -34,16 +30,13 @@ export function Login({ autenticarUsuarioSistema }: loginProps) {
             localStorage.setItem("tipoUsuario", "0");
           }
 
-          autenticarUsuarioSistema(true);
+          carregarAutenticacaoUsuario(false);
+          window.location.reload();
         } else {
           setarMensagemAlerta(data.msg);
           dispararAlerta(true);
-          autenticarUsuarioSistema(false);
+          carregarAutenticacaoUsuario(false);
         }
-      })
-      .finally(() => {
-        carregarAutenticacaoUsuario(false);
-        window.location.reload();
       });
   };
 

@@ -3,6 +3,8 @@ import { itemSacolaProp } from "../../../interfaces/interfaceSacola";
 import { ItemSacola } from "./ItemSacola";
 import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
 
+import imgCarrinhoVazio from "../../../assets/images/empty-cart.svg";
+
 interface sacolaVendaProps {
   itensSacola: itemSacolaProp[];
   processandoVenda: boolean;
@@ -33,8 +35,18 @@ export function Sacola({
       <ul className="list-group overflow-auto">
         {itensSacola.length === 0 ? (
           <>
-            <hr />
-            <h5 className="text-center">Nenhum item adicionado!</h5>
+            <div className="d-flex flex-column gap-3 p-3">
+              <strong className="h4 text-center">
+                Nenhum item adicionado!
+              </strong>
+              <div className="d-flex justify-content-center">
+                <img
+                  src={imgCarrinhoVazio}
+                  alt="Nenhuma informação encontrado"
+                  className="img-thumbnail border-0 imagem-carrinho-vazio"
+                />
+              </div>
+            </div>
           </>
         ) : (
           itensSacola.map((item: itemSacolaProp) => {

@@ -1,13 +1,11 @@
-import { Suspense, lazy, useState } from "react";
+import React, { Suspense, useState } from "react";
 import Menu from "../../components/Menu";
 import { Spinner } from "../../components/Loaders/Spinner";
 
 const Home = () => {
-  const [menuSelecionado, selecionarMenu] = useState<string>("Venda/index.tsx");
+  const [menuSelecionado, selecionarMenu] = useState<any>(import("../Venda"));
 
-  const Tela = lazy(
-    async () => await import(`../${menuSelecionado}`)
-  );
+  const Tela = React.lazy(async () => menuSelecionado);
 
   return (
     <>

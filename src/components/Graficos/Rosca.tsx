@@ -19,6 +19,8 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
 
   return (
     <Doughnut
+      redraw={true}
+      updateMode={"resize"}
       options={{
         responsive: true,
         plugins: {

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
 
 interface listaProdutoProps {
   pro_id: string;
@@ -15,7 +14,7 @@ interface listaProdutoProps {
   ) => void;
 }
 
-export function Produtos({
+export function ItemProduto({
   pro_id,
   pro_nome,
   pro_valor,
@@ -26,7 +25,7 @@ export function Produtos({
   return (
     <div
       key={pro_id}
-      className="card shadow border-0 bg-secondary bg-gradient text-bg-dark"
+      className="card shadow border-0 text-bg-light bg-gradient"
       style={{ width: "18rem", height: "auto" }}
     >
       <div className="card-body" style={{ height: "10em" }}>

@@ -9,7 +9,6 @@ import {
   cadastrarCategoria,
 } from "../../controllers/CategoriaController";
 import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
-import "../../assets/css/style_tabelas.css";
 
 const Categoria = () => {
   const [carregandoCategorias, carregarCategorias] = useState(false);
