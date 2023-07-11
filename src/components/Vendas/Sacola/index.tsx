@@ -1,14 +1,14 @@
-import { useId } from "react";
-import { itemSacolaProp } from "../../../interfaces/interfaceSacola";
-import { ItemSacola } from "./ItemSacola";
-import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { useId } from 'react'
+import { itemSacolaProp } from '../../../interfaces/interfaceSacola'
+import { ItemSacola } from './ItemSacola'
+import { formataValorMoedaBrasileira } from '../../../controllers/NumeroController'
 
-import imgCarrinhoVazio from "../../../assets/images/empty-cart.svg";
+import imgCarrinhoVazio from '../../../assets/images/empty-cart.svg'
 
 interface sacolaVendaProps {
-  itensSacola: itemSacolaProp[];
-  processandoVenda: boolean;
-  excluirItemSacola: (idItem: string) => void;
+  itensSacola: itemSacolaProp[]
+  processandoVenda: boolean
+  excluirItemSacola: (idItem: string) => void
 }
 
 export function Sacola({
@@ -16,13 +16,13 @@ export function Sacola({
   processandoVenda,
   excluirItemSacola,
 }: sacolaVendaProps) {
-  const idSacola = useId();
+  const idSacola = useId()
   const totalCompra = itensSacola.reduce(
     (total: number, produto: itemSacolaProp) => {
-      return (total += produto.scl_sub_total);
+      return (total += produto.scl_sub_total)
     },
-    0
-  );
+    0,
+  )
 
   return (
     <div key={idSacola} className="sacola-venda border rounded p-2">
@@ -52,6 +52,7 @@ export function Sacola({
           itensSacola.map((item: itemSacolaProp) => {
             return (
               <ItemSacola
+                key={item.id}
                 processandoVenda={processandoVenda}
                 id={item.id}
                 scl_qtd={item.scl_qtd}
@@ -59,10 +60,10 @@ export function Sacola({
                 pro_nome={item.pro_nome}
                 excluirItem={excluirItemSacola}
               />
-            );
+            )
           })
         )}
       </ul>
     </div>
-  );
+  )
 }

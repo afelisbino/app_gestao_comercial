@@ -1,32 +1,32 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from 'react'
 import {
   adicionaMascaraValor,
   calculaPorcentagemLucroProduto,
   calculaValorLucroProduto,
   formataValorMoedaBrasileira,
   removeFormatoMoedaBrasileira,
-} from "../../controllers/NumeroController";
-import { OpcaoCategoria } from "../Categorias/OpcaoCategoria";
-import { OpcaoFornecedor } from "../Fornecedores/OpcaoFornecedor";
-import { produtoProps } from "../../interfaces/interfaceProdutos";
-import { fornecedorProps } from "../../interfaces/interfaceFornecedor";
-import { categoriaProps } from "../../interfaces/interfaceCategoria";
-import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+} from '../../controllers/NumeroController'
+import { OpcaoCategoria } from '../Categorias/OpcaoCategoria'
+import { OpcaoFornecedor } from '../Fornecedores/OpcaoFornecedor'
+import { produtoProps } from '../../interfaces/interfaceProdutos'
+import { fornecedorProps } from '../../interfaces/interfaceFornecedor'
+import { categoriaProps } from '../../interfaces/interfaceCategoria'
+import { retornoRequisicaoProps } from '../../interfaces/interfaceReturnoRequisicao'
 import {
   alterarProduto,
   cadastrarProduto,
-} from "../../controllers/ProdutoController";
-import { buscarListaFornecedores } from "../../controllers/FornecedorController";
-import { buscarListaCategoria } from "../../controllers/CategoriaController";
-import { FormularioCodigoBarras } from "./FormularioCodigoBarras";
-import { TabelaCodigoBarras } from "./TabelaCodigoBarras";
-import { codigoBarrasProps } from "../../interfaces/interfaceCodigoBarrasProduto";
+} from '../../controllers/ProdutoController'
+import { buscarListaFornecedores } from '../../controllers/FornecedorController'
+import { buscarListaCategoria } from '../../controllers/CategoriaController'
+import { FormularioCodigoBarras } from './FormularioCodigoBarras'
+import { TabelaCodigoBarras } from './TabelaCodigoBarras'
+import { codigoBarrasProps } from '../../interfaces/interfaceCodigoBarrasProduto'
 
 interface formularioProdutoProps {
-  alertarMensagem: (tipo: string, mensagem: string) => void;
-  atualizarListaProdutos: () => void;
-  processandoFormulario: (processando: boolean) => void;
-  dadosProduto?: produtoProps | null;
+  alertarMensagem: (tipo: string, mensagem: string) => void
+  atualizarListaProdutos: () => void
+  processandoFormulario: (processando: boolean) => void
+  dadosProduto?: produtoProps | null
 }
 
 export function FormularioProduto({
@@ -35,170 +35,168 @@ export function FormularioProduto({
   alertarMensagem,
   atualizarListaProdutos,
 }: formularioProdutoProps) {
-  const [nomeProduto, setarNomeProduto] = useState<string | null>(null);
+  const [nomeProduto, setarNomeProduto] = useState<string | null>(null)
   const [descricaoProduto, setarDescricaoProduto] = useState<string | null>(
-    null
-  );
+    null,
+  )
 
-  const [categoriaSelecionado, selecionarOpcaoCategoria] = useState<string>("");
+  const [categoriaSelecionado, selecionarOpcaoCategoria] = useState<string>('')
   const [fornecedorSelecionado, selecionarOpcaoFornecedor] =
-    useState<string>("");
+    useState<string>('')
 
   const [listaFornecedores, setarListaFornecedor] = useState<fornecedorProps[]>(
-    []
-  );
-  const [listaCategorias, setarListaCategorias] = useState<categoriaProps[]>(
-    []
-  );
+    [],
+  )
+  const [listaCategorias, setarListaCategorias] = useState<categoriaProps[]>([])
 
-  const [carregandoFornecedores, carregarFornecedor] = useState(false);
-  const [carregandoCategorias, carregarCategorias] = useState(false);
+  const [carregandoFornecedores, carregarFornecedor] = useState(false)
+  const [carregandoCategorias, carregarCategorias] = useState(false)
 
-  const [precoVendaProduto, setarPrecoVenda] = useState<string | null>(null);
+  const [precoVendaProduto, setarPrecoVenda] = useState<string | null>(null)
   const [valorCustoProduto, setarValorCustoProduto] = useState<string | null>(
-    null
-  );
+    null,
+  )
 
-  const [qtdAtualEstoque, setarQtdAtualEstoque] = useState<string | null>(null);
+  const [qtdAtualEstoque, setarQtdAtualEstoque] = useState<string | null>(null)
   const [qtdMinimaEstoque, setarQtdMinimaEstoque] = useState<string | null>(
-    null
-  );
+    null,
+  )
 
   const [listaCodigoBarras, setarListaCodigoBarras] = useState<
     codigoBarrasProps[]
-  >([]);
-  const [enviandoDados, enviarDados] = useState<boolean>(false);
+  >([])
+  const [enviandoDados, enviarDados] = useState<boolean>(false)
 
   const percentualLucro =
     precoVendaProduto || valorCustoProduto
       ? adicionaMascaraValor(
           calculaPorcentagemLucroProduto(
-            removeFormatoMoedaBrasileira(precoVendaProduto ?? "0"),
-            removeFormatoMoedaBrasileira(valorCustoProduto ?? "0")
-          ).toString()
+            removeFormatoMoedaBrasileira(precoVendaProduto ?? '0'),
+            removeFormatoMoedaBrasileira(valorCustoProduto ?? '0'),
+          ).toString(),
         )
       : adicionaMascaraValor(
           calculaPorcentagemLucroProduto(
             dadosProduto?.pro_valor_venda ?? 0,
-            dadosProduto?.pro_preco_custo ?? 0
-          ).toString()
-        );
+            dadosProduto?.pro_preco_custo ?? 0,
+          ).toString(),
+        )
 
   const valorLucro =
     precoVendaProduto || valorCustoProduto
       ? formataValorMoedaBrasileira(
           calculaValorLucroProduto(
-            removeFormatoMoedaBrasileira(precoVendaProduto ?? "0"),
-            removeFormatoMoedaBrasileira(valorCustoProduto ?? "0")
-          )
+            removeFormatoMoedaBrasileira(precoVendaProduto ?? '0'),
+            removeFormatoMoedaBrasileira(valorCustoProduto ?? '0'),
+          ),
         )
       : formataValorMoedaBrasileira(
           calculaValorLucroProduto(
             dadosProduto?.pro_valor_venda ?? 0,
-            dadosProduto?.pro_preco_custo ?? 0
-          )
-        );
+            dadosProduto?.pro_preco_custo ?? 0,
+          ),
+        )
 
   const salvar = async (event: FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    enviarDados(true);
-    processandoFormulario(true);
+    enviarDados(true)
+    processandoFormulario(true)
 
     const status: retornoRequisicaoProps = !dadosProduto?.pro_id
       ? await cadastrarProduto(
           JSON.stringify({
-            nomeProduto: nomeProduto,
+            nomeProduto,
             precoVendaProduto: removeFormatoMoedaBrasileira(
-              precoVendaProduto ?? "0,00"
+              precoVendaProduto ?? '0,00',
             ),
             precoCompraProduto: removeFormatoMoedaBrasileira(
-              valorCustoProduto ?? "0,00"
+              valorCustoProduto ?? '0,00',
             ),
-            descricaoProduto: descricaoProduto,
+            descricaoProduto,
             tokenCategoria: categoriaSelecionado,
             tokenFornecedor: fornecedorSelecionado,
             estoqueAtualProduto: removeFormatoMoedaBrasileira(
-              qtdAtualEstoque ?? "0,00"
+              qtdAtualEstoque ?? '0,00',
             ),
             estoqueMinimoProduto: removeFormatoMoedaBrasileira(
-              qtdMinimaEstoque ?? "0,00"
+              qtdMinimaEstoque ?? '0,00',
             ),
             codigoBarrasProduto: listaCodigoBarras,
-          })
+          }),
         )
       : await alterarProduto(
           JSON.stringify({
             tokenProduto: dadosProduto?.pro_id,
-            nomeProduto: (nomeProduto || dadosProduto.pro_nome) ?? "",
+            nomeProduto: (nomeProduto || dadosProduto.pro_nome) ?? '',
             precoVendaProduto: removeFormatoMoedaBrasileira(
               (precoVendaProduto ||
                 adicionaMascaraValor(
-                  dadosProduto.pro_valor_venda.toString()
+                  dadosProduto.pro_valor_venda.toString(),
                 )) ??
-                "0,00"
+                '0,00',
             ),
             precoCompraProduto: removeFormatoMoedaBrasileira(
               (valorCustoProduto ||
                 adicionaMascaraValor(
-                  dadosProduto.pro_preco_custo.toString()
+                  dadosProduto.pro_preco_custo.toString(),
                 )) ??
-                "0,00"
+                '0,00',
             ),
             descricaoProduto:
-              (descricaoProduto || dadosProduto?.pro_descricao) ?? "",
+              (descricaoProduto || dadosProduto?.pro_descricao) ?? '',
             tokenCategoria:
-              (categoriaSelecionado || dadosProduto?.cat_token) ?? "",
+              (categoriaSelecionado || dadosProduto?.cat_token) ?? '',
             tokenFornecedor:
-              (fornecedorSelecionado || dadosProduto?.frn_token) ?? "",
+              (fornecedorSelecionado || dadosProduto?.frn_token) ?? '',
             estoqueAtualProduto: removeFormatoMoedaBrasileira(
               (qtdAtualEstoque ||
                 adicionaMascaraValor(dadosProduto.est_qtd_atual.toString())) ??
-                "0,00"
+                '0,00',
             ),
             estoqueMinimoProduto: removeFormatoMoedaBrasileira(
               (qtdMinimaEstoque ||
                 adicionaMascaraValor(dadosProduto.est_qtd_minimo.toString())) ??
-                "0,00"
+                '0,00',
             ),
-          })
-        );
-    alertarMensagem(status.status ? "success" : "warning", status.msg);
-    limpaFormulario();
-    processandoFormulario(false);
-    enviarDados(false);
-    atualizarListaProdutos();
-  };
+          }),
+        )
+    alertarMensagem(status.status ? 'success' : 'warning', status.msg)
+    limpaFormulario()
+    processandoFormulario(false)
+    enviarDados(false)
+    atualizarListaProdutos()
+  }
 
   const limpaFormulario = () => {
-    setarNomeProduto(null);
-    setarDescricaoProduto(null);
-    setarPrecoVenda(null);
-    setarValorCustoProduto(null);
-    setarQtdAtualEstoque(null);
-    setarQtdMinimaEstoque(null);
-  };
+    setarNomeProduto(null)
+    setarDescricaoProduto(null)
+    setarPrecoVenda(null)
+    setarValorCustoProduto(null)
+    setarQtdAtualEstoque(null)
+    setarQtdMinimaEstoque(null)
+  }
 
   async function listarFornecedores() {
-    carregarFornecedor(true);
+    carregarFornecedor(true)
 
-    setarListaFornecedor(await buscarListaFornecedores());
+    setarListaFornecedor(await buscarListaFornecedores())
 
-    carregarFornecedor(false);
+    carregarFornecedor(false)
   }
 
   async function listarCategorias() {
-    carregarCategorias(true);
+    carregarCategorias(true)
 
-    setarListaCategorias(await buscarListaCategoria());
+    setarListaCategorias(await buscarListaCategoria())
 
-    carregarCategorias(false);
+    carregarCategorias(false)
   }
 
   useEffect(() => {
-    listarCategorias();
-    listarFornecedores();
-  }, []);
+    listarCategorias()
+    listarFornecedores()
+  }, [])
 
   return (
     <form onSubmit={salvar}>
@@ -211,7 +209,7 @@ export function FormularioProduto({
               id="pro_nome"
               className="form-control"
               placeholder="Nome do produto"
-              value={(nomeProduto || dadosProduto?.pro_nome) ?? ""}
+              value={(nomeProduto || dadosProduto?.pro_nome) ?? ''}
               onChange={(event) => setarNomeProduto(event.target.value)}
               required
             />
@@ -226,16 +224,16 @@ export function FormularioProduto({
               id="pro_qtd_atual"
               className="form-control"
               placeholder="Qtd. Atual"
-              value={(qtdAtualEstoque || dadosProduto?.est_qtd_atual) ?? "0"}
+              value={(qtdAtualEstoque || dadosProduto?.est_qtd_atual) ?? '0'}
               onChange={(event) => setarQtdAtualEstoque(event.target.value)}
               onBlur={() => {
                 setarQtdAtualEstoque(
                   adicionaMascaraValor(
                     (qtdAtualEstoque ||
                       dadosProduto?.est_qtd_atual.toString()) ??
-                      "0"
-                  )
-                );
+                      '0',
+                  ),
+                )
               }}
               required
             />
@@ -250,16 +248,16 @@ export function FormularioProduto({
               id="pro_qtd_minimo"
               className="form-control"
               placeholder="Qtd. Mínimo"
-              value={(qtdMinimaEstoque || dadosProduto?.est_qtd_minimo) ?? "0"}
+              value={(qtdMinimaEstoque || dadosProduto?.est_qtd_minimo) ?? '0'}
               onChange={(event) => setarQtdMinimaEstoque(event.target.value)}
               onBlur={() => {
                 setarQtdMinimaEstoque(
                   adicionaMascaraValor(
                     (qtdMinimaEstoque ||
                       dadosProduto?.est_qtd_minimo.toString()) ??
-                      "0"
-                  )
-                );
+                      '0',
+                  ),
+                )
               }}
               required
             />
@@ -277,19 +275,19 @@ export function FormularioProduto({
               value={
                 valorCustoProduto ||
                 adicionaMascaraValor(
-                  dadosProduto?.pro_preco_custo.toString() ?? "0"
+                  dadosProduto?.pro_preco_custo.toString() ?? '0',
                 )
               }
               onChange={(event) => {
-                setarValorCustoProduto(event.target.value);
+                setarValorCustoProduto(event.target.value)
               }}
               onBlur={() =>
                 setarValorCustoProduto(
                   adicionaMascaraValor(
                     (valorCustoProduto ||
                       dadosProduto?.pro_preco_custo.toString()) ??
-                      "0"
-                  )
+                      '0',
+                  ),
                 )
               }
             />
@@ -307,20 +305,20 @@ export function FormularioProduto({
               value={
                 precoVendaProduto ||
                 adicionaMascaraValor(
-                  dadosProduto?.pro_valor_venda.toString() ?? "0"
+                  dadosProduto?.pro_valor_venda.toString() ?? '0',
                 )
               }
               onChange={(event) => {
-                setarPrecoVenda(event.target.value);
+                setarPrecoVenda(event.target.value)
               }}
               onBlur={() => {
                 setarPrecoVenda(
                   adicionaMascaraValor(
                     (precoVendaProduto ||
                       dadosProduto?.pro_valor_venda.toString()) ??
-                      "0"
-                  )
-                );
+                      '0',
+                  ),
+                )
               }}
               required
             />
@@ -362,7 +360,7 @@ export function FormularioProduto({
             carregandoCategorias={carregandoCategorias}
             nomeSelect="cat_id_produto_estoque"
             categoriaEscolhida={
-              (categoriaSelecionado || dadosProduto?.cat_token) ?? ""
+              (categoriaSelecionado || dadosProduto?.cat_token) ?? ''
             }
             selecionarOpcaoCategoria={selecionarOpcaoCategoria}
           />
@@ -373,7 +371,7 @@ export function FormularioProduto({
             carregandoFornecedores={carregandoFornecedores}
             nomeSelect="frn_id_produto_estoque"
             fornecedorSelecionado={
-              (dadosProduto?.frn_token || fornecedorSelecionado) ?? ""
+              (dadosProduto?.frn_token || fornecedorSelecionado) ?? ''
             }
             selecionarOpcaoFornecedor={selecionarOpcaoFornecedor}
           />
@@ -384,8 +382,8 @@ export function FormularioProduto({
               className="form-control"
               placeholder="Descrição do produto"
               id="pro_descricao"
-              style={{ height: "5rem" }}
-              value={(descricaoProduto || dadosProduto?.pro_descricao) ?? ""}
+              style={{ height: '5rem' }}
+              value={(descricaoProduto || dadosProduto?.pro_descricao) ?? ''}
               onChange={(event) => setarDescricaoProduto(event.target.value)}
             ></textarea>
             <label htmlFor="pro_descricao">Descrição</label>
@@ -404,7 +402,7 @@ export function FormularioProduto({
               setarListaCodigoBarras([
                 ...listaCodigoBarras,
                 { pcb_codigo: codigoBarras },
-              ]);
+              ])
             }}
           />
           <div className="row mt-2 ">
@@ -417,7 +415,7 @@ export function FormularioProduto({
                   setarListaCodigoBarras([
                     ...listaCodigoBarras.slice(0, item),
                     ...listaCodigoBarras.slice(item + 1),
-                  ]);
+                  ])
                 }}
               />
             </div>
@@ -434,7 +432,7 @@ export function FormularioProduto({
               data-bs-dismiss="modal"
               disabled={enviandoDados}
             >
-              {enviandoDados ? "Salvando ..." : "Salvar"}
+              {enviandoDados ? 'Salvando ...' : 'Salvar'}
             </button>
           </div>
         </div>
@@ -454,5 +452,5 @@ export function FormularioProduto({
         </div>
       </div>
     </form>
-  );
+  )
 }

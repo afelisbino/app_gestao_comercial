@@ -1,10 +1,10 @@
-import { useRef } from "react";
+import { useRef } from 'react'
 
 interface formularioCodigoBarrasProps {
-  adicionaCodigoBarras: (codigoBarras: string) => void;
-  limparListaCodigoBarras: () => void;
-  cadastroProduto: boolean;
-  cadastrandoCodigo: boolean;
+  adicionaCodigoBarras: (codigoBarras: string) => void
+  limparListaCodigoBarras: () => void
+  cadastroProduto: boolean
+  cadastrandoCodigo: boolean
 }
 
 export function FormularioCodigoBarras({
@@ -13,16 +13,16 @@ export function FormularioCodigoBarras({
   cadastroProduto,
   cadastrandoCodigo,
 }: formularioCodigoBarrasProps) {
-  const codigoBarraProdutoRef = useRef<HTMLInputElement>(null);
+  const codigoBarraProdutoRef = useRef<HTMLInputElement>(null)
 
   function adicionar() {
-    const codigoBarraProduto = codigoBarraProdutoRef.current?.value ?? null;
+    const codigoBarraProduto = codigoBarraProdutoRef.current?.value ?? null
 
-    if (codigoBarraProduto) adicionaCodigoBarras(codigoBarraProduto);
+    if (codigoBarraProduto) adicionaCodigoBarras(codigoBarraProduto)
 
-    if (codigoBarraProdutoRef.current) codigoBarraProdutoRef.current.value = "";
+    if (codigoBarraProdutoRef.current) codigoBarraProdutoRef.current.value = ''
 
-    if (codigoBarraProdutoRef.current) codigoBarraProdutoRef.current.focus();
+    if (codigoBarraProdutoRef.current) codigoBarraProdutoRef.current.focus()
   }
 
   return (
@@ -38,10 +38,10 @@ export function FormularioCodigoBarras({
               placeholder="Codigo de barras"
               ref={codigoBarraProdutoRef}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
+                if (event.key === 'Enter') {
+                  event.preventDefault()
 
-                  adicionar();
+                  adicionar()
                 }
               }}
             />
@@ -57,7 +57,7 @@ export function FormularioCodigoBarras({
             disabled={cadastrandoCodigo && !cadastroProduto}
             onClick={() => adicionar()}
           >
-            {cadastrandoCodigo ? "Adicionando..." : "Adicionar"}
+            {cadastrandoCodigo ? 'Adicionando...' : 'Adicionar'}
           </button>
         </div>
         {cadastroProduto ? (
@@ -75,5 +75,5 @@ export function FormularioCodigoBarras({
         )}
       </div>
     </>
-  );
+  )
 }

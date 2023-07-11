@@ -1,101 +1,98 @@
-import { FormEvent, useEffect, useState } from "react";
-import { fornecedorProps } from "../../interfaces/interfaceFornecedor";
-import { TabelaFornecedor } from "../../components/Fornecedores/TabelaFornecedor";
-import {
-  mascararCnpj,
-  validaCNPJ,
-} from "../../controllers/DocumentoController";
-import { Alerta } from "../../components/Alerta";
-import { Spinner } from "../../components/Loaders/Spinner";
+import { FormEvent, useEffect, useState } from 'react'
+import { fornecedorProps } from '../../interfaces/interfaceFornecedor'
+import { TabelaFornecedor } from '../../components/Fornecedores/TabelaFornecedor'
+import { mascararCnpj, validaCNPJ } from '../../controllers/DocumentoController'
+import { Alerta } from '../../components/Alerta'
+import { Spinner } from '../../components/Loaders/Spinner'
 import {
   atualizaDadosFornecedor,
   buscaDadosFornecedor,
   buscarListaFornecedores,
   cadastraFornecedor,
-} from "../../controllers/FornecedorController";
-import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+} from '../../controllers/FornecedorController'
+import { retornoRequisicaoProps } from '../../interfaces/interfaceReturnoRequisicao'
 
 const Fornecedor = () => {
-  const [processandoRequisicao, processarRequisicao] = useState(false);
-  const [carregandoFornecedor, carregarFornecedores] = useState(false);
-  const [processandoFormulario, processarFormulario] = useState(false);
+  const [processandoRequisicao, processarRequisicao] = useState(false)
+  const [carregandoFornecedor, carregarFornecedores] = useState(false)
+  const [processandoFormulario, processarFormulario] = useState(false)
 
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
-  const [nomeFornecedor, setarNomeFornecedor] = useState<string>("");
+  const [nomeFornecedor, setarNomeFornecedor] = useState<string>('')
   const [documentoFornecedor, setarDocumentoFornecedor] = useState<
     string | null
-  >(null);
-  const [tokenFornecedor, setarTokenFornecedor] = useState<string | null>(null);
+  >(null)
+  const [tokenFornecedor, setarTokenFornecedor] = useState<string | null>(null)
 
   const [listaFornecedores, setarListaFornecedores] = useState<
     fornecedorProps[]
-  >([]);
+  >([])
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
   }
 
   function limparCampos() {
-    setarTokenFornecedor(null);
-    setarNomeFornecedor("");
-    setarDocumentoFornecedor(null);
+    setarTokenFornecedor(null)
+    setarNomeFornecedor('')
+    setarDocumentoFornecedor(null)
   }
 
   async function listarFornecedores() {
-    processarRequisicao(true);
+    processarRequisicao(true)
 
-    setarListaFornecedores(await buscarListaFornecedores());
+    setarListaFornecedores(await buscarListaFornecedores())
 
-    processarRequisicao(false);
+    processarRequisicao(false)
   }
 
   async function editarFornecedor(idFornecedor: string) {
-    carregarFornecedores(true);
+    carregarFornecedores(true)
 
-    const dadosFornecedor = await buscaDadosFornecedor(idFornecedor);
+    const dadosFornecedor = await buscaDadosFornecedor(idFornecedor)
 
-    setarTokenFornecedor(idFornecedor);
-    setarNomeFornecedor(dadosFornecedor.frn_nome);
-    setarDocumentoFornecedor(dadosFornecedor.frn_doc ?? null);
+    setarTokenFornecedor(idFornecedor)
+    setarNomeFornecedor(dadosFornecedor.frn_nome)
+    setarDocumentoFornecedor(dadosFornecedor.frn_doc ?? null)
 
-    carregarFornecedores(false);
+    carregarFornecedores(false)
   }
 
   const salvar = async (event: FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
     if (documentoFornecedor !== null && !validaCNPJ(documentoFornecedor)) {
-      alertarMensagemSistema("warning", "Documento do fornecedor é invalido!");
-      document.getElementById("frn_doc")?.focus();
-      return;
+      alertarMensagemSistema('warning', 'Documento do fornecedor é invalido!')
+      document.getElementById('frn_doc')?.focus()
+      return
     }
 
-    processarFormulario(true);
+    processarFormulario(true)
 
     const status: retornoRequisicaoProps = tokenFornecedor
       ? await atualizaDadosFornecedor(
           nomeFornecedor,
           tokenFornecedor,
-          documentoFornecedor
+          documentoFornecedor,
         )
-      : await cadastraFornecedor(nomeFornecedor, documentoFornecedor);
+      : await cadastraFornecedor(nomeFornecedor, documentoFornecedor)
 
-    alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
-    limparCampos();
-    processarFormulario(false);
-    listarFornecedores();
-  };
+    alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
+    limparCampos()
+    processarFormulario(false)
+    listarFornecedores()
+  }
 
   useEffect(() => {
-    listarFornecedores();
-  }, []);
+    listarFornecedores()
+  }, [])
 
   return (
     <>
@@ -125,10 +122,10 @@ const Fornecedor = () => {
                 id="frn_nome"
                 placeholder="Nome ou Razão Social"
                 disabled={processandoFormulario}
-                value={nomeFornecedor ?? ""}
+                value={nomeFornecedor ?? ''}
                 required
                 onChange={(event) => {
-                  setarNomeFornecedor(event.target.value);
+                  setarNomeFornecedor(event.target.value)
                 }}
               />
               <label htmlFor="frn_nome">Nome do fornecedor</label>
@@ -142,10 +139,10 @@ const Fornecedor = () => {
                 id="frn_doc"
                 placeholder="Documento fornecedor"
                 disabled={processandoFormulario}
-                value={documentoFornecedor ?? ""}
+                value={documentoFornecedor ?? ''}
                 maxLength={18}
                 onChange={(event) => {
-                  mascararCnpj(event.target.value);
+                  mascararCnpj(event.target.value)
                 }}
               />
               <label htmlFor="frn_doc">CNPJ do fornecedor</label>
@@ -201,7 +198,7 @@ const Fornecedor = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Fornecedor;
+export default Fornecedor

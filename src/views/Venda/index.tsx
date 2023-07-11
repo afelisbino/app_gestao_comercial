@@ -1,171 +1,201 @@
-import { useEffect, useRef, useState } from "react";
-import { ListaProdutos } from "../../components/Vendas/ListaProdutos";
-import { produtoAtivosProps } from "../../interfaces/interfaceProdutosAtivos";
-import { buscarListaProdutoAtivo } from "../../controllers/ProdutoController";
-import { Sacola } from "../../components/Vendas/Sacola";
-import { itemSacolaProp } from "../../interfaces/interfaceSacola";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { Alerta } from "../../components/Alerta";
-import { NumericFormat } from "react-number-format";
+import { useEffect, useRef, useState } from 'react'
+import { ListaProdutos } from '../../components/Vendas/ListaProdutos'
+import { produtoAtivosProps } from '../../interfaces/interfaceProdutosAtivos'
+import { buscarListaProdutoAtivo } from '../../controllers/ProdutoController'
+import { Sacola } from '../../components/Vendas/Sacola'
+import { itemSacolaProp } from '../../interfaces/interfaceSacola'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { Alerta } from '../../components/Alerta'
+import { NumericFormat } from 'react-number-format'
 import {
   finalizarVendaLocalFiado,
   finalizarVendaLocalNormal,
-  tiposPagamentos,
-} from "../../controllers/VendaController";
-import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
-import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+} from '../../controllers/VendaController'
+import { formataValorMoedaBrasileira } from '../../controllers/NumeroController'
+import { retornoRequisicaoProps } from '../../interfaces/interfaceReturnoRequisicao'
+import { pagamentoVenda } from '../../interfaces/interfaceVenda'
+import { ListaPagamentos } from '../../components/Vendas/ListaPagamentos'
+import { PagamentoVenda } from '../../components/Vendas/PagamentoVenda'
 
 const Venda = () => {
-  const [carregandoProdutos, carregarProdutos] = useState(false);
-  const [processandoVenda, processarVenda] = useState(false);
-  const [vendaFiado, setarVendaFiado] = useState(false);
+  const [carregandoProdutos, carregarProdutos] = useState(false)
+  const [processandoVenda, processarVenda] = useState(false)
+  const [vendaFiado, setarVendaFiado] = useState(false)
 
-  const [listaProduto, setarListaProduto] = useState<produtoAtivosProps[]>([]);
-  const [itensSacola, setarItensSacola] = useState<itemSacolaProp[]>([]);
+  const [listaProduto, setarListaProduto] = useState<produtoAtivosProps[]>([])
+  const [itensSacola, setarItensSacola] = useState<itemSacolaProp[]>([])
 
-  const [valorPago, setarValorPago] = useState<number>(0);
-  const [valorDesconto, setarValorDesconto] = useState<number>(0);
-  const [tipoPagamento, selecionarTipoPagamento] = useState<string>("");
+  const [listaPagamento, setarListaPagamento] = useState<pagamentoVenda[]>([])
+
+  const [valorDesconto, setarValorDesconto] = useState<number>(0)
   const [nomeClienteFiado, setarNomeClienteFiado] = useState<string | null>(
-    null
-  );
+    null,
+  )
 
-  const [quantidadeItem, setarQuantidadeItemSacola] = useState<number>(1);
-  const [filtroProduto, setarFiltro] = useState<string>("");
+  const [quantidadeItem, setarQuantidadeItemSacola] = useState<number>(1)
+  const [filtroProduto, setarFiltro] = useState<string>('')
 
-  const quantidadeItemRef = useRef<HTMLInputElement>(null);
-  const filtroProdutoRef = useRef<HTMLInputElement>(null);
-  const tipoPagamentoRef = useRef<HTMLSelectElement>(null);
-  const nomeClienteFiadoRef = useRef<HTMLInputElement>(null);
+  const quantidadeItemRef = useRef<HTMLInputElement>(null)
+  const filtroProdutoRef = useRef<HTMLInputElement>(null)
+  const nomeClienteFiadoRef = useRef<HTMLInputElement>(null)
 
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
-  const regexNumero = new RegExp("^[0-9]+$");
+  const regexNumero = /^[0-9]+$/
 
   const listaProdutosEmpresa =
     filtroProduto.length === 0
       ? listaProduto
       : regexNumero.test(filtroProduto)
       ? filtraProdutoCodigoBarras(filtroProduto)
-      : filtraProdutoNome(filtroProduto);
+      : filtraProdutoNome(filtroProduto)
 
   const totalCompra: number = itensSacola.reduce(
     (total: number, produto: itemSacolaProp) => {
-      return (total += produto.scl_sub_total);
+      return (total += produto.scl_sub_total)
     },
-    0
-  );
+    0,
+  )
 
   const totalCompraComDesconto: number =
-    valorDesconto > 0 ? totalCompra - valorDesconto : 0;
+    valorDesconto > 0 ? totalCompra - valorDesconto : 0
 
+  const totalPago: number = listaPagamento.reduce(
+    (total: number, pagamento: pagamentoVenda) => {
+      return (total += pagamento.valorPago)
+    },
+    0,
+  )
   const valorTrocoCompra: number =
-    valorPago > 0
-      ? totalCompraComDesconto > 0 && valorPago > totalCompraComDesconto
-        ? valorPago - totalCompraComDesconto
-        : valorPago > totalCompra
-        ? valorPago - totalCompra
+    totalPago > 0
+      ? totalCompraComDesconto > 0 && totalPago > totalCompraComDesconto
+        ? totalPago - totalCompraComDesconto
+        : totalPago > totalCompra
+        ? totalPago - totalCompra
         : 0
-      : 0;
+      : 0
 
   function limpaCampos() {
-    setarItensSacola([]);
-    setarValorDesconto(0);
-    setarValorPago(0);
-    setarVendaFiado(false);
-    setarNomeClienteFiado(null);
-    setarQuantidadeItemSacola(1);
-    selecionarTipoPagamento("");
+    setarItensSacola([])
+    setarValorDesconto(0)
+    setarVendaFiado(false)
+    setarNomeClienteFiado(null)
+    setarQuantidadeItemSacola(1)
+    setarListaPagamento([])
+  }
+
+  function adicionarPagamento(
+    valorPago: number,
+    formaPagamentoSelecionado: string,
+    formaPagamentoNome: string,
+  ) {
+    setarListaPagamento([
+      ...listaPagamento,
+      {
+        formaPagamentoNome,
+        formaPagamentoToken: formaPagamentoSelecionado,
+        valorPago,
+        pagamentoId: self.crypto.randomUUID(),
+      },
+    ])
   }
 
   function filtraProdutoNome(filtro: string): produtoAtivosProps[] {
     return listaProduto.filter((produto) =>
-      produto.pro_nome.toLowerCase().includes(filtro.toLowerCase())
-    );
+      produto.pro_nome.toLowerCase().includes(filtro.toLowerCase()),
+    )
   }
 
   function filtraProdutoCodigoBarras(filtro: string): produtoAtivosProps[] {
-    let produtoCodigoBarras = listaProduto.find((produto: produtoAtivosProps) =>
-      produto.pro_codigos.some(
-        (codigoBarras) => codigoBarras.pcb_codigo === filtro
-      )
-    );
+    const produtoCodigoBarras = listaProduto.find(
+      (produto: produtoAtivosProps) =>
+        produto.pro_codigos.some(
+          (codigoBarras) => codigoBarras.pcb_codigo === filtro,
+        ),
+    )
 
-    return produtoCodigoBarras ? [produtoCodigoBarras] : [];
+    return produtoCodigoBarras ? [produtoCodigoBarras] : []
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
   }
 
   function verificaDisponibilidadeProdutoEstoque(
     qtdAtualEstoque: number,
-    tokenProduto: string
+    tokenProduto: string,
   ): boolean {
-    let somaItensProdutoAdicionado = itensSacola.reduce(
+    const somaItensProdutoAdicionado = itensSacola.reduce(
       (somatoriaQtd, produto) => {
         if (produto.pro_id === tokenProduto)
-          return somatoriaQtd + produto.scl_qtd;
+          return somatoriaQtd + produto.scl_qtd
 
-        return 0;
+        return 0
       },
-      0
-    );
+      0,
+    )
 
-    return somaItensProdutoAdicionado >= qtdAtualEstoque;
+    return somaItensProdutoAdicionado >= qtdAtualEstoque
   }
 
   function excluirItem(id: string) {
-    setarItensSacola(itensSacola.filter((item) => item.id !== id));
-    filtroProdutoRef.current?.focus();
+    setarItensSacola(itensSacola.filter((item) => item.id !== id))
+    filtroProdutoRef.current?.focus()
   }
 
-  function adicionaItemSacolaCodigoBarras(codigoBarrasProduto: string){
-
-    if(regexNumero.test(codigoBarrasProduto)){
-      let produto = filtraProdutoCodigoBarras(codigoBarrasProduto);
+  function adicionaItemSacolaCodigoBarras(codigoBarrasProduto: string) {
+    if (regexNumero.test(codigoBarrasProduto)) {
+      const produto = filtraProdutoCodigoBarras(codigoBarrasProduto)
 
       if (codigoBarrasProduto.length !== 0)
         adicionaItemSacola(
           produto[0].est_qtd_atual,
           produto[0].pro_id,
           produto[0].pro_nome,
-          produto[0].pro_valor
-        );
+          produto[0].pro_valor,
+        )
     }
-    
   }
 
   function adicionaItemSacola(
     qtdAtualEstoque: number,
     idProduto: string,
     nomeProduto: string,
-    valorProduto: number
+    valorProduto: number,
   ) {
     if (verificaDisponibilidadeProdutoEstoque(qtdAtualEstoque, idProduto)) {
       alertarMensagemSistema(
-        "warning",
-        "Não possuímos essa quantidade de produto no estoque!"
-      );
+        'warning',
+        'Não possuímos essa quantidade de produto no estoque!',
+      )
     } else if (quantidadeItem > qtdAtualEstoque) {
       alertarMensagemSistema(
-        "warning",
-        "Não possuímos essa quantidade de produto no estoque!"
-      );
-    } else if (isNaN(quantidadeItem) || quantidadeItem == 0) {
-      quantidadeItemRef?.current?.classList.add("border-danger");
-      alertarMensagemSistema(
-        "warning",
-        "A quantidade do item não pode ser em branco ou zerado!"
-      );
+        'warning',
+        'Não possuímos essa quantidade de produto no estoque!',
+      )
+      return
+    } else if (isNaN(quantidadeItem) || quantidadeItem === 0) {
+      quantidadeItemRef?.current?.classList.remove('border-danger')
+      setarItensSacola(
+        [
+          ...itensSacola,
+          {
+            id: self.crypto.randomUUID(),
+            pro_id: idProduto,
+            scl_qtd: 1,
+            scl_sub_total: valorProduto * 1,
+            pro_nome: nomeProduto,
+          },
+        ].reverse(),
+      )
     } else {
-      quantidadeItemRef?.current?.classList.remove("border-danger");
+      quantidadeItemRef?.current?.classList.remove('border-danger')
       setarItensSacola(
         [
           ...itensSacola,
@@ -176,88 +206,93 @@ const Venda = () => {
             scl_sub_total: valorProduto * quantidadeItem,
             pro_nome: nomeProduto,
           },
-        ].reverse()
-      );
-
-      setarFiltro("");
-      setarQuantidadeItemSacola(1);
-      filtroProdutoRef.current?.focus();
+        ].reverse(),
+      )
     }
+
+    setarFiltro('')
+    setarQuantidadeItemSacola(1)
+    filtroProdutoRef.current?.focus()
   }
 
   async function buscaListaProdutoAtivos() {
-    carregarProdutos(true);
+    carregarProdutos(true)
 
-    setarListaProduto(await buscarListaProdutoAtivo());
+    setarListaProduto(await buscarListaProdutoAtivo())
 
-    carregarProdutos(false);
-    filtroProdutoRef.current?.focus();
+    carregarProdutos(false)
+    filtroProdutoRef.current?.focus()
   }
 
   async function registraVendaNormal(): Promise<retornoRequisicaoProps> {
-    if (tipoPagamento !== "") {
-      if (tipoPagamentoRef.current?.classList.contains("border-danger"))
-        tipoPagamentoRef.current?.classList.remove("border-danger");
-
-      return await finalizarVendaLocalNormal(
-        totalCompra,
-        valorDesconto,
-        itensSacola,
-        tipoPagamento
-      );
+    if (listaPagamento.length === 0) {
+      return {
+        status: false,
+        msg: 'Nenhuma forma de pagamento informado!',
+      }
     }
 
-    tipoPagamentoRef.current?.classList.add("border-danger");
+    const total =
+      totalCompraComDesconto > 0 ? totalCompraComDesconto : totalCompra
 
-    return {
-      status: false,
-      msg: "Tipo de pagamento não informado",
-    };
+    if (totalPago < total) {
+      return {
+        status: false,
+        msg: 'Valor pago está inferior ao valor da compra!',
+      }
+    }
+
+    return await finalizarVendaLocalNormal(
+      totalCompra,
+      valorDesconto ?? 0,
+      itensSacola,
+      listaPagamento,
+    )
   }
 
   async function registraVendaFiado(): Promise<retornoRequisicaoProps> {
-    if (nomeClienteFiado !== null || nomeClienteFiado !== "") {
-      if (nomeClienteFiadoRef.current?.classList.contains("border-danger"))
-        nomeClienteFiadoRef.current?.classList.remove("border-danger");
+    if (vendaFiado && (nomeClienteFiado !== null || nomeClienteFiado !== '')) {
+      if (nomeClienteFiadoRef.current?.classList.contains('border-danger'))
+        nomeClienteFiadoRef.current?.classList.remove('border-danger')
 
       return await finalizarVendaLocalFiado(
         totalCompra,
-        nomeClienteFiado ?? "",
-        itensSacola
-      );
+        nomeClienteFiado ?? '',
+        itensSacola,
+      )
     }
 
-    nomeClienteFiadoRef.current?.classList.add("border-danger");
+    nomeClienteFiadoRef.current?.classList.add('border-danger')
 
     return {
       status: false,
-      msg: "Nome do cliente não informado",
-    };
+      msg: 'Nome do cliente não informado',
+    }
   }
 
   async function registraVenda() {
-    processarVenda(true);
+    processarVenda(true)
 
-    let statusRegistro = vendaFiado
+    const statusRegistro = vendaFiado
       ? await registraVendaFiado()
-      : await registraVendaNormal();
+      : await registraVendaNormal()
 
     alertarMensagemSistema(
-      statusRegistro.status ? "success" : "warning",
-      statusRegistro.msg
-    );
+      statusRegistro.status ? 'success' : 'warning',
+      statusRegistro.msg,
+    )
 
-    processarVenda(false);
+    processarVenda(false)
 
     if (statusRegistro.status) {
-      limpaCampos();
-      filtroProdutoRef.current?.focus();
+      limpaCampos()
+      filtroProdutoRef.current?.focus()
     }
   }
 
   useEffect(() => {
-    buscaListaProdutoAtivos();
-  }, []);
+    buscaListaProdutoAtivos()
+  }, [])
 
   return (
     <>
@@ -283,8 +318,8 @@ const Venda = () => {
             <NumericFormat
               className="form-control"
               displayType="input"
-              decimalSeparator={","}
-              thousandSeparator={"."}
+              decimalSeparator={','}
+              thousandSeparator={'.'}
               allowLeadingZeros={true}
               decimalScale={2}
               getInputRef={quantidadeItemRef}
@@ -292,13 +327,13 @@ const Venda = () => {
               allowNegative={false}
               value={quantidadeItem}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  filtroProdutoRef.current?.focus();
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  filtroProdutoRef.current?.focus()
                 }
               }}
               onValueChange={(value) => {
-                setarQuantidadeItemSacola(parseFloat(value.value) ?? 0);
+                setarQuantidadeItemSacola(parseFloat(value.value) ?? 0)
               }}
             />
             <label htmlFor="qtdAdicionarProduto">Quantidade de itens</label>
@@ -317,13 +352,13 @@ const Venda = () => {
               placeholder="Buscar por nome do produto ou codigo de barras"
               value={filtroProduto}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  adicionaItemSacolaCodigoBarras(filtroProduto)                    
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  adicionaItemSacolaCodigoBarras(filtroProduto)
                 }
               }}
               onChange={(event) => {
-                setarFiltro(event.target.value);
+                setarFiltro(event.target.value)
               }}
             />
             <label htmlFor="produtoPesquisa">
@@ -385,18 +420,34 @@ const Venda = () => {
                 aria-label="Close"
               ></button>
             </div>
+            <div className="modal-head m-2">
+              {mensagemAlerta !== null ? (
+                <div className="row ">
+                  <div className="col-12">
+                    <Alerta tipo={tipoAlerta} mensagem={mensagemAlerta} />
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
             <div className="modal-body">
-              <div className="row">
-                <div className="col-12 mb-3">
-                  <h1
-                    className="text-center text-muted border rounded p-2 mt-1"
-                    id="valorTotalVenda"
-                  >
-                    {"Total " +
+              <div className="row border rounded py-2 m-2">
+                <div className="col-12 col-lg-6">
+                  <h4 className="text-center text-muted" id="valorTotalVenda">
+                    {'Total da venda ' +
                       (totalCompraComDesconto > 0
                         ? formataValorMoedaBrasileira(totalCompraComDesconto)
                         : formataValorMoedaBrasileira(totalCompra))}
-                  </h1>
+                  </h4>
+                </div>
+                <div className="col-12 col-lg-6">
+                  <h4
+                    className="text-center text-muted"
+                    id="valorTotalVendaPago"
+                  >
+                    {'Total pago ' + formataValorMoedaBrasileira(totalPago)}
+                  </h4>
                 </div>
               </div>
               <div className="row">
@@ -408,7 +459,11 @@ const Venda = () => {
                   >
                     <li className="nav-item" role="presentation">
                       <button
-                        className="nav-link text-bg-light active"
+                        className={
+                          !vendaFiado
+                            ? 'nav-link text-bg-light active'
+                            : 'nav-link text-bg-light'
+                        }
                         id="normal-tab"
                         onClick={() => setarVendaFiado(false)}
                         data-bs-toggle="tab"
@@ -423,7 +478,11 @@ const Venda = () => {
                     </li>
                     <li className="nav-item" role="presentation">
                       <button
-                        className="nav-link text-bg-light"
+                        className={
+                          vendaFiado
+                            ? 'nav-link text-bg-light active'
+                            : 'nav-link text-bg-light'
+                        }
                         id="fiado-tab"
                         onClick={() => setarVendaFiado(true)}
                         data-bs-toggle="tab"
@@ -439,7 +498,11 @@ const Venda = () => {
                   </ul>
                   <div className="tab-content" id="myTabContent">
                     <div
-                      className="tab-pane fade show active"
+                      className={
+                        !vendaFiado
+                          ? 'tab-pane fade show active'
+                          : 'tab-pane fade'
+                      }
                       id="normal-tab-pane"
                       role="tabpanel"
                       aria-labelledby="normal-tab"
@@ -448,92 +511,62 @@ const Venda = () => {
                       <div className="row mt-3">
                         <div className="col-12">
                           <div className="form-floating mb-3">
-                            <select
-                              className="form-select"
-                              ref={tipoPagamentoRef}
-                              id="tipoPagamento"
-                              value={tipoPagamento}
-                              onChange={(event) => {
-                                selecionarTipoPagamento(event.target.value);
-                              }}
-                              aria-label="Tipo de pagamento"
-                            >
-                              <option
-                                key={self.crypto.randomUUID()}
-                                disabled
-                                value={""}
-                              >
-                                Selecione
-                              </option>
-                              {tiposPagamentos.map((tipo) => {
-                                return (
-                                  <option
-                                    key={self.crypto.randomUUID()}
-                                    value={tipo.valor}
-                                  >
-                                    {tipo.nome}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                            <label htmlFor="tipoPagamento">
-                              Tipo de pagamento
-                            </label>
-                          </div>
-                        </div>
-                        <div className="col-sm-12 col-lg-6 col-md-6">
-                          <div className="form-floating mb-3">
                             <NumericFormat
                               className="form-control"
                               displayType="input"
-                              decimalSeparator={","}
-                              thousandSeparator={"."}
+                              decimalSeparator={','}
+                              thousandSeparator={'.'}
                               allowLeadingZeros={true}
                               decimalScale={2}
-                              fixedDecimalScale
                               allowNegative={false}
                               value={valorDesconto}
                               onValueChange={(value) => {
-                                setarValorDesconto(
-                                  parseFloat(value.value) ?? 0
-                                );
+                                setarValorDesconto(parseFloat(value.value) ?? 0)
                               }}
                             />
-                            <label htmlFor="descontoVenda">Desconto</label>
+                            <label htmlFor="descontoVenda">
+                              Desconto sob o total da compra
+                            </label>
                           </div>
                         </div>
-                        <div className="col-sm-12 col-lg-6 col-md-6">
-                          <div className="form-floating mb-3">
-                            <NumericFormat
-                              className="form-control"
-                              displayType="input"
-                              decimalSeparator={","}
-                              thousandSeparator={"."}
-                              allowLeadingZeros={true}
-                              decimalScale={2}
-                              fixedDecimalScale
-                              allowNegative={false}
-                              value={valorPago}
-                              onValueChange={(value) => {
-                                setarValorPago(parseFloat(value.value) ?? 0);
-                              }}
-                            />
-                            <label htmlFor="valorPago">Valor pago</label>
-                          </div>
+                      </div>
+                      <PagamentoVenda
+                        alertarMensagem={alertarMensagemSistema}
+                        adicionaPagamentoVenda={adicionarPagamento}
+                      />
+                      <div className="row">
+                        <div className="col-12">
+                          <ListaPagamentos
+                            listaPagamentoVenda={listaPagamento}
+                            excluirPagamento={(pagamentoId) => {
+                              setarListaPagamento(
+                                listaPagamento.filter(
+                                  (pagamento) =>
+                                    pagamento.pagamentoId !== pagamentoId,
+                                ),
+                              )
+                            }}
+                          />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col-12">
                           <h1
                             id="valorTotalTroco"
                             className="text-danger text-center border rounded p-2 mt-1"
                           >
-                            {"Troco: " +
+                            {'Troco: ' +
                               formataValorMoedaBrasileira(valorTrocoCompra)}
                           </h1>
                         </div>
                       </div>
                     </div>
                     <div
-                      className="tab-pane fade"
+                      className={
+                        vendaFiado
+                          ? 'tab-pane fade show active'
+                          : 'tab-pane fade'
+                      }
                       id="fiado-tab-pane"
                       role="tabpanel"
                       aria-labelledby="fiado-tab"
@@ -549,9 +582,9 @@ const Venda = () => {
                               ref={nomeClienteFiadoRef}
                               className="form-control"
                               placeholder="Nome do cliente"
-                              value={nomeClienteFiado ?? ""}
+                              value={nomeClienteFiado ?? ''}
                               onChange={(event) => {
-                                setarNomeClienteFiado(event.target.value);
+                                setarNomeClienteFiado(event.target.value)
                               }}
                             />
                             <label htmlFor="nomeClienteFiado">
@@ -588,7 +621,7 @@ const Venda = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Venda;
+export default Venda

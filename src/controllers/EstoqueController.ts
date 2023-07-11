@@ -1,97 +1,97 @@
 import {
   estatisticasEstoqueProps,
   estoqueProps,
-} from "../interfaces/interfaceEstoque";
-import { retornoRequisicaoProps } from "../interfaces/interfaceReturnoRequisicao";
+} from '../interfaces/interfaceEstoque'
+import { retornoRequisicaoProps } from '../interfaces/interfaceReturnoRequisicao'
 
-import instanciaAxios from "../libraries/AxiosInstance";
+import instanciaAxios from '../libraries/AxiosInstance'
 
 export async function buscaListaProdutosEstoque(): Promise<estoqueProps[]> {
   return await instanciaAxios
-    .get<estoqueProps[]>("relatorio/estoque/listar")
+    .get<estoqueProps[]>('relatorio/estoque/listar')
     .then(({ data }) => {
-      return data;
+      return data
     })
     .catch((error) => {
-      console.log(error);
-      return [];
-    });
+      console.log(error)
+      return []
+    })
 }
 
 export async function registraSaidaProdutoEstoque(
   pro_id: string,
-  quantidade: number
+  quantidade: number,
 ): Promise<retornoRequisicaoProps> {
   return await instanciaAxios
     .patch<retornoRequisicaoProps>(
-      "estoque/saida",
+      'estoque/saida',
       {
         tokenProduto: pro_id,
         quantidadeSaida: quantidade * -1,
       },
       {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
+      },
     )
     .then(({ data }) => {
-      return data;
+      return data
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
       return {
         status: false,
-        msg: "Falha ao processar o registro de saida de estoque",
-      };
-    });
+        msg: 'Falha ao processar o registro de saida de estoque',
+      }
+    })
 }
 
 export async function registraEntradaProdutoEstoque(
   pro_id: string,
-  quantidade: number
+  quantidade: number,
 ): Promise<retornoRequisicaoProps> {
   return await instanciaAxios
     .patch<retornoRequisicaoProps>(
-      "estoque/entrada",
+      'estoque/entrada',
       {
         tokenProduto: pro_id,
         quantidadeEntrada: quantidade,
       },
       {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
+      },
     )
     .then(({ data }) => {
-      return data;
+      return data
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
       return {
         status: false,
-        msg: "Falha ao processar o registro de entrada de estoque",
-      };
-    });
+        msg: 'Falha ao processar o registro de entrada de estoque',
+      }
+    })
 }
 
 export async function buscaEstatisticasEstoque(
   dataInicio: string | null,
-  dataFim: string | null
+  dataFim: string | null,
 ): Promise<estatisticasEstoqueProps> {
   return instanciaAxios
-    .get<estatisticasEstoqueProps>("relatorio/estoque/estatisticas", {
+    .get<estatisticasEstoqueProps>('relatorio/estoque/estatisticas', {
       params: {
-        dataInicio: dataInicio,
-        dataFim: dataFim,
+        dataInicio,
+        dataFim,
       },
     })
     .then(({ data }) => {
-      return data;
+      return data
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
       return {
         estatistica_estoque: {
           quantidade_estoque: 0,
@@ -101,6 +101,6 @@ export async function buscaEstatisticasEstoque(
         },
         produtos_mais_vendidos: [],
         quantidade_movimentacoes: [],
-      };
-    });
+      }
+    })
 }
