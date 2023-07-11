@@ -1,69 +1,68 @@
-import { FormEvent, useEffect, useState } from "react";
-import { categoriaProps } from "../../interfaces/interfaceCategoria";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { Alerta } from "../../components/Alerta";
-import { TabelaCategoria } from "../../components/Categorias/TabelaCategoria";
+import { FormEvent, useEffect, useState } from 'react'
+import { categoriaProps } from '../../interfaces/interfaceCategoria'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { Alerta } from '../../components/Alerta'
+import { TabelaCategoria } from '../../components/Categorias/TabelaCategoria'
 import {
   atualizarCategoria,
   buscarListaCategoria,
   cadastrarCategoria,
-} from "../../controllers/CategoriaController";
-import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
+} from '../../controllers/CategoriaController'
+import { retornoRequisicaoProps } from '../../interfaces/interfaceReturnoRequisicao'
 
 const Categoria = () => {
-  const [carregandoCategorias, carregarCategorias] = useState(false);
-  const [listaCategoria, setarListaCategoria] = useState<categoriaProps[]>([]);
-  const [processandoRequisicao, processarRequisicao] = useState(false);
-  const [processandoFormulario, processarFormulario] = useState(false);
+  const [carregandoCategorias, carregarCategorias] = useState(false)
+  const [listaCategoria, setarListaCategoria] = useState<categoriaProps[]>([])
+  const [processandoRequisicao, processarRequisicao] = useState(false)
 
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
-  const [nomeCategoria, setarNomeCategoria] = useState<string>("");
-  const [tokenCategoria, setarTokenCategoria] = useState<string | null>(null);
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
+  const [nomeCategoria, setarNomeCategoria] = useState<string>('')
+  const [tokenCategoria, setarTokenCategoria] = useState<string | null>(null)
 
-  const editarCategoria = (cat_id: string, cat_nome: string) => {
-    setarNomeCategoria(cat_nome);
-    setarTokenCategoria(cat_id);
-  };
+  const editarCategoria = (catId: string, catNome: string) => {
+    setarNomeCategoria(catNome)
+    setarTokenCategoria(catId)
+  }
 
   async function listarCategoriaEmpresa() {
-    carregarCategorias(true);
-    setarListaCategoria(await buscarListaCategoria());
-    carregarCategorias(false);
+    carregarCategorias(true)
+    setarListaCategoria(await buscarListaCategoria())
+    carregarCategorias(false)
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
   }
 
   function limparCampos() {
-    setarNomeCategoria("");
-    setarTokenCategoria(null);
+    setarNomeCategoria('')
+    setarTokenCategoria(null)
   }
 
   const salvar = async (event: FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    processarFormulario(true);
+    processarRequisicao(true)
 
     const status: retornoRequisicaoProps = tokenCategoria
       ? await atualizarCategoria(nomeCategoria, tokenCategoria)
-      : await cadastrarCategoria(nomeCategoria);
+      : await cadastrarCategoria(nomeCategoria)
 
-    alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
-    limparCampos();
-    processarFormulario(false);
-    listarCategoriaEmpresa();
-  };
+    alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
+    limparCampos()
+    processarRequisicao(false)
+    listarCategoriaEmpresa()
+  }
 
   useEffect(() => {
-    listarCategoriaEmpresa();
-  }, []);
+    listarCategoriaEmpresa()
+  }, [])
 
   return (
     <>
@@ -93,11 +92,11 @@ const Categoria = () => {
                   className="form-control"
                   id="cat_nome"
                   placeholder="Categoria"
-                  disabled={processandoFormulario}
+                  disabled={processandoRequisicao}
                   required
-                  value={nomeCategoria ?? ""}
+                  value={nomeCategoria ?? ''}
                   onChange={(event) => {
-                    setarNomeCategoria(event.target.value);
+                    setarNomeCategoria(event.target.value)
                   }}
                 />
                 <label htmlFor="cat_nome">Categoria</label>
@@ -107,7 +106,7 @@ const Categoria = () => {
           <div className="row gap-2">
             <div className="col-sm-12 col-md-2 col-lg-2">
               <div className="d-grid gap-2 mx-auto">
-                {processandoFormulario ? (
+                {processandoRequisicao ? (
                   <button
                     className="btn btn-success btn-lg shadow"
                     type="button"
@@ -135,7 +134,7 @@ const Categoria = () => {
                 <button
                   type="button"
                   className="btn btn-danger btn-lg shadow"
-                  disabled={processandoFormulario}
+                  disabled={processandoRequisicao}
                   onClick={limparCampos}
                 >
                   Cancelar
@@ -157,7 +156,7 @@ const Categoria = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Categoria;
+export default Categoria

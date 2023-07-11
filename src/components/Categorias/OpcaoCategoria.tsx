@@ -1,12 +1,12 @@
-import { useId } from "react";
-import { categoriaProps } from "../../interfaces/interfaceCategoria";
+import { useId } from 'react'
+import { categoriaProps } from '../../interfaces/interfaceCategoria'
 
 interface selectCategoriaProps {
-  nomeSelect: string;
-  categoriaEscolhida: string;
-  listaCategoria: categoriaProps[];
-  carregandoCategorias: boolean;
-  selecionarOpcaoCategoria: (cat_id: string) => void;
+  nomeSelect: string
+  categoriaEscolhida: string
+  listaCategoria: categoriaProps[]
+  carregandoCategorias: boolean
+  selecionarOpcaoCategoria: (cat_id: string) => void
 }
 
 export function OpcaoCategoria({
@@ -16,7 +16,7 @@ export function OpcaoCategoria({
   listaCategoria,
   selecionarOpcaoCategoria,
 }: selectCategoriaProps) {
-  const idSelectCategoria = useId();
+  const idSelectCategoria = useId()
 
   return (
     <div className="form-floating">
@@ -27,21 +27,21 @@ export function OpcaoCategoria({
         name={nomeSelect}
         value={categoriaEscolhida}
         onChange={(event) => {
-          selecionarOpcaoCategoria(event.target.value);
+          selecionarOpcaoCategoria(event.target.value)
         }}
       >
-        <option value={""} disabled>
-          {!carregandoCategorias ? "Selecione" : "Carregando categorias..."}
+        <option value={''} disabled>
+          {!carregandoCategorias ? 'Selecione' : 'Carregando categorias...'}
         </option>
         {listaCategoria.map((categoria) => {
           return (
             <option value={categoria.cat_id} key={categoria.cat_id}>
               {categoria.cat_nome}
             </option>
-          );
+          )
         })}
       </select>
       <label htmlFor={idSelectCategoria}>Categorias</label>
     </div>
-  );
+  )
 }
