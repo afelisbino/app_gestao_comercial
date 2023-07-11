@@ -1,13 +1,13 @@
-import { categoriaProps } from "../../interfaces/interfaceCategoria";
-import { Placeholder } from "../Loaders/Placeholder";
-import { Pencil } from "phosphor-react";
-import { PlaceholderButton } from "../Loaders/PlaceholderButton";
+import { categoriaProps } from '../../interfaces/interfaceCategoria'
+import { Placeholder } from '../Loaders/Placeholder'
+import { Pencil } from 'phosphor-react'
+import { PlaceholderButton } from '../Loaders/PlaceholderButton'
 
 interface tabelaProps {
-  editar: (id: string, nome: string) => void;
-  listarCategoria: categoriaProps[];
-  carregandoCategoria: boolean;
-  processandoRequisicao: boolean;
+  editar: (id: string, nome: string) => void
+  listarCategoria: categoriaProps[]
+  carregandoCategoria: boolean
+  processandoRequisicao: boolean
 }
 
 export function TabelaCategoria({
@@ -72,7 +72,7 @@ export function TabelaCategoria({
                         className="btn btn-warning shadow m-1"
                         disabled={processandoRequisicao}
                         onClick={() => {
-                          editar(categoria.cat_id, categoria.cat_nome);
+                          editar(categoria.cat_id, categoria.cat_nome)
                         }}
                       >
                         <Pencil size={32} color="#ffffff" />
@@ -81,11 +81,11 @@ export function TabelaCategoria({
                     <td className="w-100">{categoria.cat_nome}</td>
                   </tr>
                 </>
-              );
+              )
             })
           )}
         </tbody>
       </table>
     </div>
-  );
+  )
 }

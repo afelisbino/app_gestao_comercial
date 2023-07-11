@@ -7,15 +7,15 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
+} from 'chart.js'
 
-import { Line } from "react-chartjs-2";
-import { graficoLinhaDataSetsProps } from "../../interfaces/interfaceGraficos";
+import { Line } from 'react-chartjs-2'
+import { graficoLinhaDataSetsProps } from '../../interfaces/interfaceGraficos'
 
 interface graficoLinhaProps {
-  tituloGrafico: string;
-  labels: string[];
-  datasets: graficoLinhaDataSetsProps[];
+  tituloGrafico: string
+  labels: string[]
+  datasets: graficoLinhaDataSetsProps[]
 }
 
 export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
@@ -26,26 +26,42 @@ export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
     LineElement,
     Title,
     Tooltip,
-    Legend
-  );
+    Legend,
+  )
 
   const options = {
+    maintainAspectRatio: true,
+    resizeDelay: 500,
     responsive: true,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
       title: {
         display: true,
         text: tituloGrafico,
+        font: {
+          size: 16,
+        },
       },
     },
-  };
+  }
 
   const dataChart = {
-    labels: labels,
-    datasets: datasets,
-  };
+    labels,
+    datasets,
+  }
 
-  return <Line redraw={true} updateMode={"resize"} options={options} data={dataChart} />;
+  return (
+    <Line
+      redraw={true}
+      updateMode={'resize'}
+      options={options}
+      data={dataChart}
+    />
+  )
 }

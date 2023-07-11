@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Placeholder } from "../../Loaders/Placeholder";
-import { PlaceholderButton } from "../../Loaders/PlaceholderButton";
-import { vendaFiadoProps } from "../../../interfaces/interfaceVenda";
-import { CurrencyDollar, ListNumbers } from "phosphor-react";
-import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { useState } from 'react'
+import { Placeholder } from '../../Loaders/Placeholder'
+import { PlaceholderButton } from '../../Loaders/PlaceholderButton'
+import { vendaFiadoProps } from '../../../interfaces/interfaceVenda'
+import { CurrencyDollar, ListNumbers } from 'phosphor-react'
+import { formataValorMoedaBrasileira } from '../../../controllers/NumeroController'
 
 interface tabelaFiadoProps {
-  listaVendasFiado: vendaFiadoProps[];
-  carregandoListaVendasFiados: boolean;
-  carregandoListaItensVenda: boolean;
-  processandoPagamento: boolean;
-  buscaItensSacolaVenda: (vendaId: string) => void;
-  finalizarVendaFiado: (vendaId: string) => void;
+  listaVendasFiado: vendaFiadoProps[]
+  carregandoListaVendasFiados: boolean
+  carregandoListaItensVenda: boolean
+  processandoPagamento: boolean
+  buscaItensSacolaVenda: (vendaId: string) => void
+  finalizarVendaFiado: (vendaId: string) => void
 }
 
 export function TabelaVendasFiadoAberto({
@@ -22,7 +22,7 @@ export function TabelaVendasFiadoAberto({
   buscaItensSacolaVenda,
   finalizarVendaFiado,
 }: tabelaFiadoProps) {
-  const [filtroCliente, setarFiltroCliente] = useState<string>("");
+  const [filtroCliente, setarFiltroCliente] = useState<string>('')
 
   const listaVendasFiadoFiltro =
     filtroCliente.length === 0
@@ -30,8 +30,8 @@ export function TabelaVendasFiadoAberto({
       : listaVendasFiado.filter((cliente: vendaFiadoProps) =>
           cliente.ven_cliente
             .toLowerCase()
-            .includes(filtroCliente.toLowerCase())
-        );
+            .includes(filtroCliente.toLowerCase()),
+        )
 
   return (
     <>
@@ -47,7 +47,7 @@ export function TabelaVendasFiadoAberto({
               key="filtroClienteFiado"
               placeholder="Filtrar pelo nome do cliente"
               onChange={(event) => {
-                setarFiltroCliente(event.target.value);
+                setarFiltroCliente(event.target.value)
               }}
             />
             <label htmlFor="filtroClienteFiado">
@@ -124,12 +124,12 @@ export function TabelaVendasFiadoAberto({
               ) : listaVendasFiadoFiltro.length > 0 ? (
                 listaVendasFiadoFiltro.map((venda) => {
                   return (
-                    <tr>
+                    <tr key={crypto.randomUUID()}>
                       <th className="w-auto" scope="row">
                         <button
                           title="Pagar dívida"
                           type="button"
-                          key={"btn-pagar-" + venda.ven_id}
+                          key={'btn-pagar-' + venda.ven_id}
                           disabled={
                             carregandoListaItensVenda || processandoPagamento
                           }
@@ -143,7 +143,7 @@ export function TabelaVendasFiadoAberto({
                         <button
                           title="Visualizar itens da compra"
                           type="button"
-                          key={"btn-visualizar-itens-" + venda.ven_id}
+                          key={'btn-visualizar-itens-' + venda.ven_id}
                           className="btn btn-info shadow m-1"
                           onClick={() => buscaItensSacolaVenda(venda.ven_id)}
                           data-bs-toggle="modal"
@@ -158,17 +158,17 @@ export function TabelaVendasFiadoAberto({
                         {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
-                  );
+                  )
                 })
               ) : (
                 listaVendasFiado.map((venda) => {
                   return (
-                    <tr>
+                    <tr key={crypto.randomUUID()}>
                       <th className="w-auto" scope="row">
                         <button
                           title="Pagar dívida"
                           type="button"
-                          key={"btn-pagar-" + venda.ven_id}
+                          key={'btn-pagar-' + venda.ven_id}
                           disabled={
                             carregandoListaItensVenda || processandoPagamento
                           }
@@ -182,7 +182,7 @@ export function TabelaVendasFiadoAberto({
                         <button
                           title="Visualizar itens da compra"
                           type="button"
-                          key={"btn-visualizar-itens-" + venda.ven_id}
+                          key={'btn-visualizar-itens-' + venda.ven_id}
                           className="btn btn-info shadow m-1"
                           disabled={carregandoListaItensVenda}
                           onClick={() => buscaItensSacolaVenda(venda.ven_id)}
@@ -198,7 +198,7 @@ export function TabelaVendasFiadoAberto({
                         {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
-                  );
+                  )
                 })
               )}
             </tbody>
@@ -206,5 +206,5 @@ export function TabelaVendasFiadoAberto({
         </div>
       </div>
     </>
-  );
+  )
 }
