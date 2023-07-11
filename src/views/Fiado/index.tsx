@@ -1,89 +1,107 @@
-import { useEffect, useState } from "react";
-import { TabelaItensVenda } from "../../components/Vendas/TabelaItensVenda";
+import { useEffect, useState } from 'react'
+import { TabelaItensVenda } from '../../components/Vendas/TabelaItensVenda'
 import {
   itensVendaProps,
+  pagamentoVenda,
   vendaFiadoProps,
-} from "../../interfaces/interfaceVenda";
+} from '../../interfaces/interfaceVenda'
 import {
   listaItensVenda,
   listaVendaFiadoAberto,
   processaPagamentoVendaFiado,
-  tiposPagamentos,
-} from "../../controllers/VendaController";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { Alerta } from "../../components/Alerta";
-import { TabelaVendasFiadoAberto } from "../../components/Vendas/Fiado/TabelaVendasFiadoAberto";
+} from '../../controllers/VendaController'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { Alerta } from '../../components/Alerta'
+import { TabelaVendasFiadoAberto } from '../../components/Vendas/Fiado/TabelaVendasFiadoAberto'
+import { ListaPagamentos } from '../../components/Vendas/ListaPagamentos'
+import { PagamentoVenda } from '../../components/Vendas/PagamentoVenda'
 
 const Fiado = () => {
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
-  const [tipoPagamento, selecionarTipoPagamento] = useState<string>("");
-  const [tokenVenda, setarTokenVenda] = useState<string>("");
+  const [tokenVenda, setarTokenVenda] = useState<string>('')
 
-  const [carregandoListaVendasFiados, carregarListaVendas] = useState(false);
-  const [carregandoListaItensVenda, carregarListaItensVenda] = useState(false);
-  const [processandoPagamento, processarPagamentoVendaFiado] = useState(false);
+  const [carregandoListaVendasFiados, carregarListaVendas] = useState(false)
+  const [carregandoListaItensVenda, carregarListaItensVenda] = useState(false)
+  const [processandoPagamento, processarPagamentoVendaFiado] = useState(false)
 
   const [listaItensSacolaVenda, setarListaItensSacolaVenda] = useState<
     itensVendaProps[]
-  >([]);
+  >([])
   const [listaVendasFiado, setarListaVendasFiado] = useState<vendaFiadoProps[]>(
-    []
-  );
+    [],
+  )
+  const [listaPagamento, setarListaPagamento] = useState<pagamentoVenda[]>([])
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
+  }
+
+  function adicionarPagamento(
+    valorPago: number,
+    formaPagamentoSelecionado: string,
+    formaPagamentoNome: string,
+  ) {
+    setarListaPagamento([
+      ...listaPagamento,
+      {
+        formaPagamentoNome,
+        formaPagamentoToken: formaPagamentoSelecionado,
+        valorPago,
+        pagamentoId: self.crypto.randomUUID(),
+      },
+    ])
   }
 
   const pagaVendaFiado = async () => {
-    if (tipoPagamento === "") {
+    if (listaPagamento.length === 0) {
       alertarMensagemSistema(
-        "warning",
-        "Precisa selecionar o tipo de pagamento!"
-      );
-    } else if (tokenVenda === "") {
+        'warning',
+        'Precisa selecionar o tipo de pagamento!',
+      )
+    } else if (tokenVenda === '') {
       alertarMensagemSistema(
-        "warning",
-        "Venda não encontrada, entre em contato com o desenvolvedor!"
-      );
+        'warning',
+        'Venda não encontrada, entre em contato com o desenvolvedor!',
+      )
     } else {
-      processarPagamentoVendaFiado(true);
+      processarPagamentoVendaFiado(true)
 
       const status = await processaPagamentoVendaFiado(
         tokenVenda,
-        tipoPagamento
-      );
+        listaPagamento,
+      )
 
-      processarPagamentoVendaFiado(false);
-      buscaListaVendas();
-      selecionarTipoPagamento("");
-      alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
+      processarPagamentoVendaFiado(false)
+      buscaListaVendas()
+      selecionarTipoPagamento('')
+      alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
     }
-  };
+  }
 
   async function buscaListaVendas() {
-    carregarListaVendas(true);
-    setarListaVendasFiado(await listaVendaFiadoAberto());
-    carregarListaVendas(false);
+    carregarListaVendas(true)
+    setarListaVendasFiado(await listaVendaFiadoAberto())
+    carregarListaVendas(false)
   }
 
   async function buscaItensSacolaVenda(vendaToken: string) {
-    carregarListaItensVenda(true);
+    carregarListaItensVenda(true)
 
-    setarListaItensSacolaVenda(await listaItensVenda(vendaToken));
+    setarListaItensSacolaVenda(await listaItensVenda(vendaToken))
 
-    carregarListaItensVenda(false);
+    carregarListaItensVenda(false)
   }
 
   useEffect(() => {
-    buscaListaVendas();
-  }, []);
+    buscaListaVendas()
+  }, [])
 
   return (
     <>
@@ -134,7 +152,7 @@ const Fiado = () => {
                 className="btn-close"
                 disabled={carregandoListaItensVenda}
                 onClick={() => {
-                  setarListaItensSacolaVenda([]);
+                  setarListaItensSacolaVenda([])
                 }}
                 data-bs-dismiss="modal"
                 aria-label="Close"
@@ -170,27 +188,22 @@ const Fiado = () => {
               </h1>
             </div>
             <div className="modal-body">
+              <PagamentoVenda
+                alertarMensagem={alertarMensagemSistema}
+                adicionaPagamentoVenda={adicionarPagamento}
+              />
               <div className="row">
                 <div className="col-12">
-                  <div className="form-floating mb-3">
-                    <select
-                      className="form-select"
-                      id="tipoPagamento"
-                      value={tipoPagamento}
-                      onChange={(event) =>
-                        selecionarTipoPagamento(event.target.value)
-                      }
-                      aria-label="Tipo de pagamento"
-                    >
-                      <option disabled value={""}>
-                        Selecione
-                      </option>
-                      {tiposPagamentos.map((tipo) => {
-                        return <option value={tipo.valor}>{tipo.nome}</option>;
-                      })}
-                    </select>
-                    <label htmlFor="tipoPagamento">Tipo de pagamento</label>
-                  </div>
+                  <ListaPagamentos
+                    listaPagamentoVenda={listaPagamento}
+                    excluirPagamento={(pagamentoId) => {
+                      setarListaPagamento(
+                        listaPagamento.filter(
+                          (pagamento) => pagamento.pagamentoId !== pagamentoId,
+                        ),
+                      )
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -215,7 +228,7 @@ const Fiado = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Fiado;
+export default Fiado
