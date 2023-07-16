@@ -108,7 +108,7 @@ export async function listaItensVenda(
 }
 
 export async function processaPagamentoVendaFiado(
-  tokenVenda: string,
+  tokenVenda: Array<string>,
   formaPagamento: pagamentoVenda[],
 ): Promise<retornoRequisicaoProps> {
   return await instanciaAxios
