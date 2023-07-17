@@ -16,36 +16,6 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
     datasets,
   }
 
-  const plugin = {
-    id: 'emptyDoughnut',
-    afterDraw(chart, args, options) {
-      const { datasets } = chart.data
-      const { color, width, radiusDecrease } = options
-      let hasData: boolean = false
-
-      for (let i = 0; i < datasets.length; i += 1) {
-        const dataset = datasets[i]
-        hasData = dataset.data.length > 0
-      }
-
-      if (!hasData) {
-        const {
-          chartArea: { left, top, right, bottom },
-          ctx,
-        } = chart
-        const centerX = (left + right) / 2
-        const centerY = (top + bottom) / 2
-        const r = Math.min(right - left, bottom - top) / 2
-
-        ctx.beginPath()
-        ctx.lineWidth = width || 2
-        ctx.strokeStyle = color || 'rgba(255, 128, 0, 0.5)'
-        ctx.arc(centerX, centerY, r - radiusDecrease || 0, 0, 2 * Math.PI)
-        ctx.stroke()
-      }
-    },
-  }
-
   return (
     <Doughnut
       redraw={true}
@@ -53,16 +23,12 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
       options={{
         maintainAspectRatio: true,
         resizeDelay: 500,
+        aspectRatio: 1,
         responsive: true,
         layout: {
           autoPadding: true,
         },
         plugins: {
-          emptyDoughnut: {
-            color: 'rgba(105,105,105,0.1)',
-            width: 55,
-            radiusDecrease: 50,
-          },
           legend: {
             fullSize: true,
             position: 'right',
@@ -78,7 +44,6 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
           },
         },
       }}
-      plugins={[plugin]}
       data={data}
     />
   )

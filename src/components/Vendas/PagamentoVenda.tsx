@@ -63,7 +63,7 @@ export function PagamentoVenda(props: pagamentoVendaProps) {
 
   return (
     <form onSubmit={adicionaPagamento}>
-      <div className="d-flex flex-row justify-content-center justify-content-lg-between gap-2 mb-0">
+      <div className="d-flex flex-column flex-md-row flex-xl-row flex-lg-row justify-content-center justify-content-lg-between gap-2 mb-0">
         <div className="col-12 col-lg-5">
           <SelectFormaPagamento
             listaFormaPagamento={listaFormaPagamento}
@@ -91,7 +91,7 @@ export function PagamentoVenda(props: pagamentoVendaProps) {
             <label htmlFor="valorPago">Valor pago</label>
           </div>
         </div>
-        <div>
+        <div className="d-grid d-sm-block">
           <button
             className="btn btn-success btn-shadow btn-lg"
             type="submit"
