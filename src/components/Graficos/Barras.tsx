@@ -35,27 +35,32 @@ export function Barras({
     maintainAspectRatio: true,
     resizeDelay: 500,
     responsive: true,
+    aspectRatio: 2,
     interaction: {
       mode: 'index' as const,
       intersect: false,
     },
     plugins: {
       legend: {
-        position: 'top',
+        position: 'top' as const,
       },
       title: {
         display: true,
-        align: 'center',
         text: tituloGrafico,
-        position: 'top',
+        position: 'top' as const,
         font: {
           size: 16,
         },
       },
     },
+    layout: {
+      autoPadding: true,
+    },
     scales: {
       y: {
-        beginAtZero: false,
+        min: 0,
+        stacked: false,
+        beginAtZero: true,
         grid: {
           display: true,
         },

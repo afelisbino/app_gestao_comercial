@@ -32,7 +32,13 @@ export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
   const options = {
     maintainAspectRatio: true,
     resizeDelay: 500,
+    aspectRatio: 2,
     responsive: true,
+    spanGaps: true,
+    layout: {
+      padding: 0,
+      autopadding: true,
+    },
     interaction: {
       mode: 'index' as const,
       intersect: false,
@@ -47,6 +53,11 @@ export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
         font: {
           size: 16,
         },
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
       },
     },
   }
