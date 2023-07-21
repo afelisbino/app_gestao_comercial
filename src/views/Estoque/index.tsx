@@ -1,152 +1,151 @@
-import { Minus, Plus } from "phosphor-react";
-import { useState, useEffect } from "react";
-import { NumericFormat } from "react-number-format";
-import { Alerta } from "../../components/Alerta";
+import { Minus, Plus } from 'phosphor-react'
+import { useState, useEffect } from 'react'
+import { NumericFormat } from 'react-number-format'
+import { Alerta } from '../../components/Alerta'
 import {
   registraEntradaProdutoEstoque,
   registraSaidaProdutoEstoque,
   buscaListaProdutosEstoque,
-} from "../../controllers/EstoqueController";
+} from '../../controllers/EstoqueController'
 import {
   ativarProduto,
   desativarProduto,
-} from "../../controllers/ProdutoController";
-import { estoqueProps } from "../../interfaces/interfaceEstoque";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { ListaEstoque } from "../../components/Estoque/ListaEstoque";
+} from '../../controllers/ProdutoController'
+import { estoqueProps } from '../../interfaces/interfaceEstoque'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { ListaEstoque } from '../../components/Estoque/ListaEstoque'
 
 const Estoque = () => {
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
   const [alterandoStatusProdutoEstoque, alterarStatusProdutoEstoque] =
-    useState(false);
-  const [alterandoEstoque, alterarQuantidadeEstoque] = useState(false);
+    useState(false)
+  const [alterandoEstoque, alterarQuantidadeEstoque] = useState(false)
   const [carregandoListaProdutosEstoque, carregarListaProdutosEstoque] =
-    useState(false);
+    useState(false)
 
-  const [produtoToken, setarProdutoToken] = useState<string | null>(null);
-  const [novaQuantidadeEstoque, setarNovaQuantidade] = useState<number>(0);
-  const [filtroProdutoEstoque, setarFiltroProdutoEstoque] =
-    useState<string>("");
+  const [produtoToken, setarProdutoToken] = useState<string | null>(null)
+  const [novaQuantidadeEstoque, setarNovaQuantidade] = useState<number>(0)
+  const [filtroProdutoEstoque, setarFiltroProdutoEstoque] = useState<string>('')
 
-  const [listaEstoque, setarListaEstoque] = useState<estoqueProps[]>([]);
+  const [listaEstoque, setarListaEstoque] = useState<estoqueProps[]>([])
 
-  const regexNumero = new RegExp("^[0-9]+$");
+  const regexNumero = /^[0-9]+$/
 
   const listaProdutosEstoqueEmpresa =
     filtroProdutoEstoque.length === 0
       ? listaEstoque
       : regexNumero.test(filtroProdutoEstoque)
       ? filtraProdutoCodigoBarras(filtroProdutoEstoque)
-      : filtraProdutoNome(filtroProdutoEstoque);
+      : filtraProdutoNome(filtroProdutoEstoque)
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
   }
 
   function diminuiQuantidadeEstoque() {
-    setarNovaQuantidade(novaQuantidadeEstoque - 1);
+    setarNovaQuantidade(novaQuantidadeEstoque - 1)
   }
 
   function aumentaQuantidadeEstoque() {
-    setarNovaQuantidade(novaQuantidadeEstoque + 1);
+    setarNovaQuantidade(novaQuantidadeEstoque + 1)
   }
 
   function zeraQuantidadeEstoque() {
-    setarNovaQuantidade(0);
+    setarNovaQuantidade(0)
   }
 
   function alteraQuantidadeProdutoEstoque() {
     if (produtoToken) {
       if (novaQuantidadeEstoque > 0) {
-        salvaEntradaEstoque(produtoToken, novaQuantidadeEstoque);
+        salvaEntradaEstoque(produtoToken, novaQuantidadeEstoque)
       } else if (novaQuantidadeEstoque < 0) {
-        salvaSaidaEstoque(produtoToken, novaQuantidadeEstoque);
+        salvaSaidaEstoque(produtoToken, novaQuantidadeEstoque)
       } else {
         alertarMensagemSistema(
-          "warning",
-          "Quantidade precisa ser diferente de zero!"
-        );
+          'warning',
+          'Quantidade precisa ser diferente de zero!',
+        )
       }
     }
-    zeraQuantidadeEstoque();
+    zeraQuantidadeEstoque()
   }
 
-  async function ativarProdutoEstoque(pro_id: string) {
-    alterarStatusProdutoEstoque(true);
+  async function ativarProdutoEstoque(proId: string) {
+    alterarStatusProdutoEstoque(true)
 
-    await ativarProduto(pro_id);
+    await ativarProduto(proId)
 
-    alterarStatusProdutoEstoque(false);
-    buscaListaProdutoEstoque();
+    alterarStatusProdutoEstoque(false)
+    buscaListaProdutoEstoque()
   }
 
-  async function desativarProdutoEstoque(pro_id: string) {
-    alterarStatusProdutoEstoque(true);
+  async function desativarProdutoEstoque(proId: string) {
+    alterarStatusProdutoEstoque(true)
 
-    await desativarProduto(pro_id);
+    await desativarProduto(proId)
 
-    alterarStatusProdutoEstoque(false);
-    buscaListaProdutoEstoque();
+    alterarStatusProdutoEstoque(false)
+    buscaListaProdutoEstoque()
   }
 
-  async function salvaEntradaEstoque(pro_id: string, quantidade: number) {
-    alterarQuantidadeEstoque(true);
+  async function salvaEntradaEstoque(proId: string, quantidade: number) {
+    alterarQuantidadeEstoque(true)
 
-    let response = await registraEntradaProdutoEstoque(pro_id, quantidade);
+    const response = await registraEntradaProdutoEstoque(proId, quantidade)
 
-    alterarQuantidadeEstoque(false);
-    buscaListaProdutoEstoque();
+    alterarQuantidadeEstoque(false)
+    buscaListaProdutoEstoque()
 
     alertarMensagemSistema(
-      response.status ? "success" : "warning",
-      response.msg
-    );
+      response.status ? 'success' : 'warning',
+      response.msg,
+    )
   }
 
-  async function salvaSaidaEstoque(pro_id: string, quantidade: number) {
-    alterarQuantidadeEstoque(true);
+  async function salvaSaidaEstoque(proId: string, quantidade: number) {
+    alterarQuantidadeEstoque(true)
 
-    let response = await registraSaidaProdutoEstoque(pro_id, quantidade);
+    const response = await registraSaidaProdutoEstoque(proId, quantidade)
 
-    alterarQuantidadeEstoque(false);
-    buscaListaProdutoEstoque();
+    alterarQuantidadeEstoque(false)
+    buscaListaProdutoEstoque()
 
     alertarMensagemSistema(
-      response.status ? "success" : "warning",
-      response.msg
-    );
+      response.status ? 'success' : 'warning',
+      response.msg,
+    )
   }
 
   async function buscaListaProdutoEstoque() {
-    carregarListaProdutosEstoque(true);
-    setarListaEstoque(await buscaListaProdutosEstoque());
-    carregarListaProdutosEstoque(false);
+    carregarListaProdutosEstoque(true)
+    setarListaEstoque(await buscaListaProdutosEstoque())
+    carregarListaProdutosEstoque(false)
   }
 
   function filtraProdutoCodigoBarras(filtro: string): estoqueProps[] {
-    let produtoCodigoBarras = listaEstoque.find((produto: estoqueProps) =>
-      produto.pro_codigos.some((codigoBarras) => codigoBarras === filtro)
-    );
+    const produtoCodigoBarras = listaEstoque.find((produto: estoqueProps) =>
+      produto.pro_codigos.some((codigoBarras) => codigoBarras === filtro),
+    )
 
-    return produtoCodigoBarras ? [produtoCodigoBarras] : [];
+    return produtoCodigoBarras ? [produtoCodigoBarras] : []
   }
 
   function filtraProdutoNome(filtro: string): estoqueProps[] {
     return listaEstoque.filter((produto: estoqueProps) =>
-      produto.pro_nome.toLowerCase().includes(filtro.toLowerCase())
-    );
+      produto.pro_nome.toLowerCase().includes(filtro.toLowerCase()),
+    )
   }
 
   useEffect(() => {
-    buscaListaProdutoEstoque();
-  }, []);
+    buscaListaProdutoEstoque()
+  }, [])
 
   return (
     <>
@@ -177,7 +176,7 @@ const Estoque = () => {
               key="produtoPesquisa"
               placeholder="Buscar por nome do produto ou codigo de barras"
               onChange={(event) => {
-                setarFiltroProdutoEstoque(event.target.value);
+                setarFiltroProdutoEstoque(event.target.value)
               }}
             />
             <label htmlFor="produtoPesquisa">
@@ -281,7 +280,7 @@ const Estoque = () => {
                 listaProdutos={listaProdutosEstoqueEmpresa.filter(
                   (produto) =>
                     produto.pro_qtd_atual <= produto.pro_qtd_minimo &&
-                    produto.pro_qtd_atual > 0
+                    produto.pro_qtd_atual > 0,
                 )}
                 carregandoLista={carregandoListaProdutosEstoque}
                 alterandoQuantidadeEstoque={alterandoEstoque}
@@ -301,7 +300,7 @@ const Estoque = () => {
             >
               <ListaEstoque
                 listaProdutos={listaProdutosEstoqueEmpresa.filter(
-                  (produto) => produto.pro_qtd_atual === 0
+                  (produto) => produto.pro_qtd_atual === 0,
                 )}
                 carregandoLista={carregandoListaProdutosEstoque}
                 alterandoQuantidadeEstoque={alterandoEstoque}
@@ -321,7 +320,7 @@ const Estoque = () => {
             >
               <ListaEstoque
                 listaProdutos={listaProdutosEstoqueEmpresa.filter(
-                  (produto) => !produto.pro_disponivel
+                  (produto) => !produto.pro_disponivel,
                 )}
                 carregandoLista={carregandoListaProdutosEstoque}
                 alterandoQuantidadeEstoque={alterandoEstoque}
@@ -351,7 +350,7 @@ const Estoque = () => {
                 className="btn-close"
                 disabled={alterandoEstoque}
                 onClick={() => {
-                  zeraQuantidadeEstoque();
+                  zeraQuantidadeEstoque()
                 }}
                 data-bs-dismiss="modal"
                 aria-label="Close"
@@ -363,15 +362,15 @@ const Estoque = () => {
                   <NumericFormat
                     className="form-control form-control-lg text-center"
                     displayType="input"
-                    decimalSeparator={","}
-                    thousandSeparator={"."}
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
                     allowLeadingZeros={true}
                     decimalScale={2}
                     fixedDecimalScale
                     allowNegative={false}
                     value={novaQuantidadeEstoque}
                     onValueChange={(value) => {
-                      setarNovaQuantidade(parseFloat(value.value) ?? 0);
+                      setarNovaQuantidade(parseFloat(value.value) ?? 0)
                     }}
                   />
                 </div>
@@ -404,7 +403,7 @@ const Estoque = () => {
                 className="btn btn-danger"
                 disabled={alterandoEstoque}
                 onClick={() => {
-                  zeraQuantidadeEstoque();
+                  zeraQuantidadeEstoque()
                 }}
                 data-bs-dismiss="modal"
               >
@@ -415,7 +414,7 @@ const Estoque = () => {
                 className="btn btn-success"
                 disabled={alterandoEstoque}
                 onClick={() => {
-                  alteraQuantidadeProdutoEstoque();
+                  alteraQuantidadeProdutoEstoque()
                 }}
                 data-bs-dismiss="modal"
               >
@@ -426,7 +425,7 @@ const Estoque = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Estoque;
+export default Estoque

@@ -4,25 +4,25 @@ import {
   Eye,
   EyeSlash,
   Pencil,
-} from "phosphor-react";
-import { produtoProps } from "../../interfaces/interfaceProdutos";
-import { Placeholder } from "../Loaders/Placeholder";
-import { ChangeEvent, useState } from "react";
+} from 'phosphor-react'
+import { produtoProps } from '../../interfaces/interfaceProdutos'
+import { Placeholder } from '../Loaders/Placeholder'
+import { ChangeEvent, useState } from 'react'
 import {
   adicionaMascaraValor,
   formataValorMoedaBrasileira,
-} from "../../controllers/NumeroController";
-import { PlaceholderButton } from "../Loaders/PlaceholderButton";
+} from '../../controllers/NumeroController'
+import { PlaceholderButton } from '../Loaders/PlaceholderButton'
 
 interface tabelaProdutoProps {
-  listaProdutos: produtoProps[];
-  carregandoListaProdutos: boolean;
-  processandoRequisicao: boolean;
-  editarProduto: (idProduto: string) => void;
-  desativarProduto: (idProduto: string) => void;
-  ativarProduto: (idProduto: string) => void;
-  visualizarCodigosBarrasProduto: (idProduto: string) => void;
-  visualizarHistoricoEstoqueProduto: (idProduto: string) => void;
+  listaProdutos: produtoProps[]
+  carregandoListaProdutos: boolean
+  processandoRequisicao: boolean
+  editarProduto: (idProduto: string) => void
+  desativarProduto: (idProduto: string) => void
+  ativarProduto: (idProduto: string) => void
+  visualizarCodigosBarrasProduto: (idProduto: string) => void
+  visualizarHistoricoEstoqueProduto: (idProduto: string) => void
 }
 
 export function TabelaProdutos({
@@ -35,18 +35,18 @@ export function TabelaProdutos({
   visualizarCodigosBarrasProduto,
   visualizarHistoricoEstoqueProduto,
 }: tabelaProdutoProps) {
-  const [filtroProduto, setarFiltroProduto] = useState("");
+  const [filtroProduto, setarFiltroProduto] = useState('')
 
   const produtosFiltrados =
     filtroProduto.length === 0
       ? []
       : listaProdutos.filter((produto) =>
-          produto.pro_nome.toLowerCase().includes(filtroProduto.toLowerCase())
-        );
+          produto.pro_nome.toLowerCase().includes(filtroProduto.toLowerCase()),
+        )
 
   const aplicaFiltroProduto = (event: ChangeEvent<HTMLInputElement>) => {
-    setarFiltroProduto(event.target.value);
-  };
+    setarFiltroProduto(event.target.value)
+  }
 
   return (
     <>
@@ -155,11 +155,11 @@ export function TabelaProdutos({
                             <button
                               type="button"
                               title="Editar produto"
-                              key={produto.pro_id + "-edita_produto"}
+                              key={produto.pro_id + '-edita_produto'}
                               className="btn btn-warning shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                editarProduto(produto.pro_id);
+                                editarProduto(produto.pro_id)
                               }}
                               data-bs-toggle="modal"
                               data-bs-target="#produtoModal"
@@ -169,10 +169,10 @@ export function TabelaProdutos({
                             {produto.pro_disponivel ? (
                               <button
                                 type="button"
-                                key={produto.pro_id + "-desativa_produto"}
+                                key={produto.pro_id + '-desativa_produto'}
                                 title="Desativar produto"
                                 onClick={() => {
-                                  desativarProduto(produto.pro_id);
+                                  desativarProduto(produto.pro_id)
                                 }}
                                 className="btn btn-danger shadow"
                                 disabled={processandoRequisicao}
@@ -182,10 +182,10 @@ export function TabelaProdutos({
                             ) : (
                               <button
                                 type="button"
-                                key={produto.pro_id + "-ativa_produto"}
+                                key={produto.pro_id + '-ativa_produto'}
                                 title="Ativar produto"
                                 onClick={() => {
-                                  ativarProduto(produto.pro_id);
+                                  ativarProduto(produto.pro_id)
                                 }}
                                 className="btn btn-success shadow"
                                 disabled={processandoRequisicao}
@@ -195,12 +195,12 @@ export function TabelaProdutos({
                             )}
                             <button
                               type="button"
-                              key={produto.pro_id + "-codigo_barra_produto"}
+                              key={produto.pro_id + '-codigo_barra_produto'}
                               title="Gerenciar codigos de barras do produto"
                               className="btn btn-secondary shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                visualizarCodigosBarrasProduto(produto.pro_id);
+                                visualizarCodigosBarrasProduto(produto.pro_id)
                               }}
                               data-bs-toggle="modal"
                               data-bs-target="#codigoBarrasProdutoEdicaoModal"
@@ -209,13 +209,13 @@ export function TabelaProdutos({
                             </button>
                             <button
                               type="button"
-                              key={produto.pro_id + "-historico_produto"}
+                              key={produto.pro_id + '-historico_produto'}
                               title="Historico de estoque do produto"
                               className="btn btn-info shadow"
                               onClick={() => {
                                 visualizarHistoricoEstoqueProduto(
-                                  produto.pro_id
-                                );
+                                  produto.pro_id,
+                                )
                               }}
                               disabled={processandoRequisicao}
                               data-bs-toggle="modal"
@@ -231,17 +231,17 @@ export function TabelaProdutos({
                         <td className="w-auto">{produto.pro_nome}</td>
                         <td className="w-auto">
                           {formataValorMoedaBrasileira(
-                            Number(produto.pro_valor_venda)
+                            Number(produto.pro_valor_venda),
                           )}
                         </td>
                         <td className="w-auto">
                           {adicionaMascaraValor(
-                            produto.est_qtd_atual.toString()
+                            produto.est_qtd_atual.toString(),
                           )}
                         </td>
                       </tr>
                     </>
-                  );
+                  )
                 })
               ) : (
                 produtosFiltrados.map((produto) => {
@@ -253,11 +253,11 @@ export function TabelaProdutos({
                             <button
                               type="button"
                               title="Editar produto"
-                              key={produto.pro_id + "-edita_produto"}
+                              key={produto.pro_id + '-edita_produto'}
                               className="btn btn-warning shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                editarProduto(produto.pro_id);
+                                editarProduto(produto.pro_id)
                               }}
                               data-bs-toggle="modal"
                               data-bs-target="#produtoModal"
@@ -267,10 +267,10 @@ export function TabelaProdutos({
                             {produto.pro_disponivel ? (
                               <button
                                 type="button"
-                                key={produto.pro_id + "-desativa_produto"}
+                                key={produto.pro_id + '-desativa_produto'}
                                 title="Desativar produto"
                                 onClick={() => {
-                                  desativarProduto(produto.pro_id);
+                                  desativarProduto(produto.pro_id)
                                 }}
                                 className="btn btn-danger shadow"
                                 disabled={processandoRequisicao}
@@ -280,10 +280,10 @@ export function TabelaProdutos({
                             ) : (
                               <button
                                 type="button"
-                                key={produto.pro_id + "-ativa_produto"}
+                                key={produto.pro_id + '-ativa_produto'}
                                 title="Ativar produto"
                                 onClick={() => {
-                                  ativarProduto(produto.pro_id);
+                                  ativarProduto(produto.pro_id)
                                 }}
                                 className="btn btn-success shadow"
                                 disabled={processandoRequisicao}
@@ -293,12 +293,12 @@ export function TabelaProdutos({
                             )}
                             <button
                               type="button"
-                              key={produto.pro_id + "-codigo_barra_produto"}
+                              key={produto.pro_id + '-codigo_barra_produto'}
                               title="Gerenciar codigos de barras do produto"
                               className="btn btn-secondary shadow"
                               disabled={processandoRequisicao}
                               onClick={() => {
-                                visualizarCodigosBarrasProduto(produto.pro_id);
+                                visualizarCodigosBarrasProduto(produto.pro_id)
                               }}
                               data-bs-toggle="modal"
                               data-bs-target="#codigoBarrasProdutoEdicaoModal"
@@ -307,13 +307,13 @@ export function TabelaProdutos({
                             </button>
                             <button
                               type="button"
-                              key={produto.pro_id + "-historico_produto"}
+                              key={produto.pro_id + '-historico_produto'}
                               title="Historico de estoque do produto"
                               className="btn btn-info shadow"
                               onClick={() => {
                                 visualizarHistoricoEstoqueProduto(
-                                  produto.pro_id
-                                );
+                                  produto.pro_id,
+                                )
                               }}
                               disabled={processandoRequisicao}
                               data-bs-toggle="modal"
@@ -329,17 +329,17 @@ export function TabelaProdutos({
                         <td className="w-auto">{produto.pro_nome}</td>
                         <td className="w-auto">
                           {formataValorMoedaBrasileira(
-                            Number(produto.pro_valor_venda)
+                            Number(produto.pro_valor_venda),
                           )}
                         </td>
                         <td className="w-auto">
                           {adicionaMascaraValor(
-                            produto.est_qtd_atual.toString()
+                            produto.est_qtd_atual.toString(),
                           )}
                         </td>
                       </tr>
                     </>
-                  );
+                  )
                 })
               )}
             </tbody>
@@ -347,5 +347,5 @@ export function TabelaProdutos({
         </div>
       </div>
     </>
-  );
+  )
 }

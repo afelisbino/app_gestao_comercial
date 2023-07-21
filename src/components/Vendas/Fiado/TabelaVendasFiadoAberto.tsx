@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { Placeholder } from "../../Loaders/Placeholder";
-import { PlaceholderButton } from "../../Loaders/PlaceholderButton";
-import { vendaFiadoProps } from "../../../interfaces/interfaceVenda";
-import { CurrencyDollar, ListNumbers } from "phosphor-react";
-import { formataValorMoedaBrasileira } from "../../../controllers/NumeroController";
+import { ChangeEvent, useState } from 'react'
+import { vendaFiadoProps } from '../../../interfaces/interfaceVenda'
+import { ListNumbers } from 'phosphor-react'
+import { formataValorMoedaBrasileira } from '../../../controllers/NumeroController'
+import { TabelaCabecalho } from '../../Tabela/TabelaCabecalho'
+import { TabelaCarregamento } from '../../Tabela/TabelaCarregamento'
 
 interface tabelaFiadoProps {
-  listaVendasFiado: vendaFiadoProps[];
-  carregandoListaVendasFiados: boolean;
-  carregandoListaItensVenda: boolean;
-  processandoPagamento: boolean;
-  buscaItensSacolaVenda: (vendaId: string) => void;
-  finalizarVendaFiado: (vendaId: string) => void;
+  listaVendasFiado: vendaFiadoProps[]
+  carregandoListaVendasFiados: boolean
+  carregandoListaItensVenda: boolean
+  processandoPagamento: boolean
+  vendasSelecionadas: Array<string>
+  buscaItensSacolaVenda: (vendaId: string) => void
+  selecionarVenda: (vendaId: Array<string>) => void
 }
 
 export function TabelaVendasFiadoAberto({
@@ -19,10 +20,11 @@ export function TabelaVendasFiadoAberto({
   carregandoListaItensVenda,
   carregandoListaVendasFiados,
   processandoPagamento,
+  vendasSelecionadas,
   buscaItensSacolaVenda,
-  finalizarVendaFiado,
+  selecionarVenda,
 }: tabelaFiadoProps) {
-  const [filtroCliente, setarFiltroCliente] = useState<string>("");
+  const [filtroCliente, setarFiltroCliente] = useState<string>('')
 
   const listaVendasFiadoFiltro =
     filtroCliente.length === 0
@@ -30,92 +32,71 @@ export function TabelaVendasFiadoAberto({
       : listaVendasFiado.filter((cliente: vendaFiadoProps) =>
           cliente.ven_cliente
             .toLowerCase()
-            .includes(filtroCliente.toLowerCase())
-        );
+            .includes(filtroCliente.toLowerCase()),
+        )
 
+  const selecionaVenda = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      selecionarVenda([...vendasSelecionadas, event.target.value])
+    } else {
+      selecionarVenda(
+        vendasSelecionadas.filter((venda) => venda !== event.target.value),
+      )
+    }
+  }
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              disabled={
-                carregandoListaVendasFiados || listaVendasFiado.length === 0
-              }
-              className="form-control"
-              key="filtroClienteFiado"
-              placeholder="Filtrar pelo nome do cliente"
-              onChange={(event) => {
-                setarFiltroCliente(event.target.value);
-              }}
-            />
-            <label htmlFor="filtroClienteFiado">
-              Filtrar pelo nome do cliente
-            </label>
-          </div>
+      <div className="d-flex flex-column">
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            disabled={
+              carregandoListaVendasFiados || listaVendasFiado.length === 0
+            }
+            className="form-control"
+            key="filtroClienteFiado"
+            placeholder="Filtrar pelo nome do cliente"
+            onChange={(event) => {
+              setarFiltroCliente(event.target.value)
+            }}
+          />
+          <label htmlFor="filtroClienteFiado">
+            Filtrar pelo nome do cliente
+          </label>
         </div>
-      </div>
-      <div className="row">
+        {vendasSelecionadas.length > 0 && (
+          <div>
+            <button
+              title="Pagar dívida"
+              type="button"
+              key={'btn-pagar'}
+              disabled={carregandoListaItensVenda || processandoPagamento}
+              className="btn btn-success shadow m-1"
+              data-bs-toggle="modal"
+              data-bs-target="#finalizarFiadoVendaModal"
+            >
+              Pagar vendas selecionadas
+            </button>
+          </div>
+        )}
         <div className="table-responsive mt-3">
           <table className="table border rounded">
             <caption>Lista de vendas em abertos</caption>
-            <thead>
-              <tr>
-                <th scope="col">Opções</th>
-                <th scope="col">Nome do cliente</th>
-                <th scope="col">Data da compra</th>
-                <th scope="col">Valor da compra</th>
-              </tr>
-            </thead>
+            <TabelaCabecalho
+              colunas={[
+                'Selecione',
+                'Itens Comprados',
+                'Cliente',
+                'Data/Hora da Compra',
+                'Valor (R$)',
+              ]}
+            />
             <tbody className="overflow-auto">
               {carregandoListaVendasFiados ? (
                 <>
-                  <tr>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-50">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-50">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="w-auto" scope="row">
-                      <PlaceholderButton />
-                      <PlaceholderButton />
-                    </th>
-                    <td className="w-50">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                    <td className="w-auto">
-                      <Placeholder />
-                    </td>
-                  </tr>
+                  <TabelaCarregamento opcao={true} totalColunas={5} />
+                  <TabelaCarregamento opcao={true} totalColunas={5} />
+                  <TabelaCarregamento opcao={true} totalColunas={5} />
                 </>
               ) : listaVendasFiado.length === 0 ? (
                 <td colSpan={4} className="text-center p-3">
@@ -124,26 +105,25 @@ export function TabelaVendasFiadoAberto({
               ) : listaVendasFiadoFiltro.length > 0 ? (
                 listaVendasFiadoFiltro.map((venda) => {
                   return (
-                    <tr>
-                      <th className="w-auto" scope="row">
-                        <button
-                          title="Pagar dívida"
-                          type="button"
-                          key={"btn-pagar-" + venda.ven_id}
-                          disabled={
-                            carregandoListaItensVenda || processandoPagamento
-                          }
-                          className="btn btn-success shadow m-1"
-                          data-bs-toggle="modal"
-                          data-bs-target="#finalizarFiadoVendaModal"
-                          onClick={() => finalizarVendaFiado(venda.ven_id)}
-                        >
-                          <CurrencyDollar size={32} color="#ffffff" />
-                        </button>
+                    <tr key={crypto.randomUUID()}>
+                      <th>
+                        <div className="form-check">
+                          <input
+                            className="form-check-input shadow-sm"
+                            style={{ width: '1.3rem', height: '1.3rem' }}
+                            type="checkbox"
+                            checked={vendasSelecionadas.includes(venda.ven_id)}
+                            onChange={selecionaVenda}
+                            value={venda.ven_id}
+                            key={self.crypto.randomUUID()}
+                          />
+                        </div>
+                      </th>
+                      <td className="w-auto" scope="row">
                         <button
                           title="Visualizar itens da compra"
                           type="button"
-                          key={"btn-visualizar-itens-" + venda.ven_id}
+                          key={'btn-visualizar-itens-' + venda.ven_id}
                           className="btn btn-info shadow m-1"
                           onClick={() => buscaItensSacolaVenda(venda.ven_id)}
                           data-bs-toggle="modal"
@@ -151,38 +131,37 @@ export function TabelaVendasFiadoAberto({
                         >
                           <ListNumbers size={32} color="#ffffff" />
                         </button>
-                      </th>
+                      </td>
                       <td className="w-50">{venda.ven_cliente}</td>
                       <td className="w-auto">{venda.ven_data}</td>
                       <td className="w-auto">
                         {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
-                  );
+                  )
                 })
               ) : (
                 listaVendasFiado.map((venda) => {
                   return (
-                    <tr>
-                      <th className="w-auto" scope="row">
-                        <button
-                          title="Pagar dívida"
-                          type="button"
-                          key={"btn-pagar-" + venda.ven_id}
-                          disabled={
-                            carregandoListaItensVenda || processandoPagamento
-                          }
-                          className="btn btn-success shadow m-1"
-                          data-bs-toggle="modal"
-                          data-bs-target="#finalizarFiadoVendaModal"
-                          onClick={() => finalizarVendaFiado(venda.ven_id)}
-                        >
-                          <CurrencyDollar size={32} color="#ffffff" />
-                        </button>
+                    <tr key={crypto.randomUUID()}>
+                      <th className="w-auto">
+                        <div className="form-check m-3">
+                          <input
+                            className="form-check-input shadow-sm"
+                            style={{ width: '1.3rem', height: '1.3rem' }}
+                            type="checkbox"
+                            checked={vendasSelecionadas.includes(venda.ven_id)}
+                            onChange={selecionaVenda}
+                            value={venda.ven_id}
+                            key={self.crypto.randomUUID()}
+                          />
+                        </div>
+                      </th>
+                      <td className="w-auto" scope="row">
                         <button
                           title="Visualizar itens da compra"
                           type="button"
-                          key={"btn-visualizar-itens-" + venda.ven_id}
+                          key={'btn-visualizar-itens-' + venda.ven_id}
                           className="btn btn-info shadow m-1"
                           disabled={carregandoListaItensVenda}
                           onClick={() => buscaItensSacolaVenda(venda.ven_id)}
@@ -191,14 +170,14 @@ export function TabelaVendasFiadoAberto({
                         >
                           <ListNumbers size={32} color="#ffffff" />
                         </button>
-                      </th>
+                      </td>
                       <td className="w-50">{venda.ven_cliente}</td>
                       <td className="w-auto">{venda.ven_data}</td>
                       <td className="w-auto">
                         {formataValorMoedaBrasileira(Number(venda.ven_total))}
                       </td>
                     </tr>
-                  );
+                  )
                 })
               )}
             </tbody>
@@ -206,5 +185,5 @@ export function TabelaVendasFiadoAberto({
         </div>
       </div>
     </>
-  );
+  )
 }

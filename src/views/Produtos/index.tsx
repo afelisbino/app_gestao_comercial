@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { TabelaProdutos } from "../../components/Estoque/TabelaProdutos";
-import { produtoProps } from "../../interfaces/interfaceProdutos";
+import { useEffect, useState } from 'react'
+import { TabelaProdutos } from '../../components/Estoque/TabelaProdutos'
+import { produtoProps } from '../../interfaces/interfaceProdutos'
 import {
   adicionarNovoCodigoBarrasProduto,
   ativarProduto,
@@ -9,133 +9,130 @@ import {
   buscarListaTodosProdutos,
   deletarCodigoBarrasProduto,
   desativarProduto,
-} from "../../controllers/ProdutoController";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { Alerta } from "../../components/Alerta";
-import { codigoBarrasProps } from "../../interfaces/interfaceCodigoBarrasProduto";
-import { historicoProdutoEstoqueProps } from "../../interfaces/interfaceHistoricoEstoqueEmpresa";
-import { retornoRequisicaoProps } from "../../interfaces/interfaceReturnoRequisicao";
-import { TabelaCodigoBarras } from "../../components/Estoque/TabelaCodigoBarras";
-import { TabelaHistoricoEstoqueProduto } from "../../components/Estoque/TabelaHistoricoEstoqueProduto";
-import { FormularioProduto } from "../../components/Estoque/FormularioProduto";
-import { FormularioCodigoBarras } from "../../components/Estoque/FormularioCodigoBarras";
+} from '../../controllers/ProdutoController'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { Alerta } from '../../components/Alerta'
+import { codigoBarrasProps } from '../../interfaces/interfaceCodigoBarrasProduto'
+import { historicoProdutoEstoqueProps } from '../../interfaces/interfaceHistoricoEstoqueEmpresa'
+import { retornoRequisicaoProps } from '../../interfaces/interfaceReturnoRequisicao'
+import { TabelaCodigoBarras } from '../../components/Estoque/TabelaCodigoBarras'
+import { TabelaHistoricoEstoqueProduto } from '../../components/Estoque/TabelaHistoricoEstoqueProduto'
+import { FormularioProduto } from '../../components/Estoque/FormularioProduto'
+import { FormularioCodigoBarras } from '../../components/Estoque/FormularioCodigoBarras'
 
 const Produtos = () => {
-  const [listaProdutos, setarListaProdutos] = useState<produtoProps[]>([]);
+  const [listaProdutos, setarListaProdutos] = useState<produtoProps[]>([])
   const [listaHistoricoProduto, setarListaHistoricoProduto] = useState<
     historicoProdutoEstoqueProps[]
-  >([]);
+  >([])
   const [listaCodigoBarras, setarListaCodigoBarras] = useState<
     codigoBarrasProps[]
-  >([]);
+  >([])
 
-  const [tokenProduto, setarTokenProduto] = useState<string | null>(null);
+  const [tokenProduto, setarTokenProduto] = useState<string | null>(null)
 
-  const [carregandoListaProdutos, carregarListaProdutos] = useState(false);
+  const [carregandoListaProdutos, carregarListaProdutos] = useState(false)
   const [carregandoListaHistorico, carregarListaHistoricoProduto] =
-    useState(false);
+    useState(false)
   const [carregandoListaCodigosBarras, carregarListaCodigosBarras] =
-    useState(false);
+    useState(false)
 
-  const [processandoRequisicao, processarRequisicao] = useState(false);
-  const [processandoFormulario, processarFormulario] = useState(false);
+  const [processandoRequisicao, processarRequisicao] = useState(false)
+  const [processandoFormulario, processarFormulario] = useState(false)
 
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
-  const [dadosProduto, setarDadosProduto] = useState<produtoProps | null>(null);
+  const [dadosProduto, setarDadosProduto] = useState<produtoProps | null>(null)
 
   document
-    .querySelector("#produtoModal")
-    ?.addEventListener("hidden.bs.modal", (event) => {
-      setarDadosProduto(null);
-    });
+    .querySelector('#produtoModal')
+    ?.addEventListener('hidden.bs.modal', (event) => {
+      setarDadosProduto(null)
+    })
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
 
     setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+      alertarMensagem(null)
+    }, 10000)
   }
 
   async function buscaListaProdutos() {
-    carregarListaProdutos(true);
+    carregarListaProdutos(true)
 
-    setarListaProdutos(await buscarListaTodosProdutos());
+    setarListaProdutos(await buscarListaTodosProdutos())
 
-    carregarListaProdutos(false);
+    carregarListaProdutos(false)
   }
 
   async function buscarListaCodigosBarras(idProduto: string) {
-    setarTokenProduto(idProduto);
+    setarTokenProduto(idProduto)
 
-    carregarListaCodigosBarras(true);
+    carregarListaCodigosBarras(true)
 
-    setarListaCodigoBarras(await buscarListaCodigoBarrasProduto(idProduto));
+    setarListaCodigoBarras(await buscarListaCodigoBarrasProduto(idProduto))
 
-    carregarListaCodigosBarras(false);
+    carregarListaCodigosBarras(false)
   }
 
   async function removerCodigoBarrasProduto(codigoId: string) {
-    processarRequisicao(true);
+    processarRequisicao(true)
 
     const status: retornoRequisicaoProps = await deletarCodigoBarrasProduto(
-      codigoId
-    );
+      codigoId,
+    )
 
-    alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
-    processarRequisicao(false);
+    alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
+    processarRequisicao(false)
 
-    if (tokenProduto) buscarListaCodigosBarras(tokenProduto);
+    if (tokenProduto) buscarListaCodigosBarras(tokenProduto)
   }
 
   async function adicionarCodigoBarras(codigoBarraProduto: string) {
     if (tokenProduto) {
-      processarRequisicao(true);
+      processarRequisicao(true)
 
       const status: retornoRequisicaoProps =
-        await adicionarNovoCodigoBarrasProduto(
-          tokenProduto,
-          codigoBarraProduto
-        );
+        await adicionarNovoCodigoBarrasProduto(tokenProduto, codigoBarraProduto)
 
-      processarRequisicao(false);
-      alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
-      buscarListaCodigosBarras(tokenProduto);
+      processarRequisicao(false)
+      alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
+      buscarListaCodigosBarras(tokenProduto)
     }
   }
 
-  async function ativarProdutoEstoque(pro_id: string) {
-    processarRequisicao(true);
+  async function ativarProdutoEstoque(proId: string) {
+    processarRequisicao(true)
 
-    await ativarProduto(pro_id);
+    await ativarProduto(proId)
 
-    processarRequisicao(false);
-    buscaListaProdutos();
+    processarRequisicao(false)
+    buscaListaProdutos()
   }
 
-  async function desativarProdutoEstoque(pro_id: string) {
-    processarRequisicao(true);
+  async function desativarProdutoEstoque(proId: string) {
+    processarRequisicao(true)
 
-    await desativarProduto(pro_id);
+    await desativarProduto(proId)
 
-    processarRequisicao(false);
-    buscaListaProdutos();
+    processarRequisicao(false)
+    buscaListaProdutos()
   }
 
-  async function buscarListaHistoricoEstoqueProduto(pro_id: string) {
-    carregarListaHistoricoProduto(true);
+  async function buscarListaHistoricoEstoqueProduto(proId: string) {
+    carregarListaHistoricoProduto(true)
 
-    setarListaHistoricoProduto(await buscarListaHistoricoProduto(pro_id));
+    setarListaHistoricoProduto(await buscarListaHistoricoProduto(proId))
 
-    carregarListaHistoricoProduto(false);
+    carregarListaHistoricoProduto(false)
   }
 
   useEffect(() => {
-    buscaListaProdutos();
-  }, []);
+    buscaListaProdutos()
+  }, [])
 
   return (
     <>
@@ -172,8 +169,8 @@ const Produtos = () => {
         editarProduto={(idProduto) => {
           setarDadosProduto(
             listaProdutos.find((produto) => produto.pro_id === idProduto) ??
-              null
-          );
+              null,
+          )
         }}
         ativarProduto={ativarProdutoEstoque}
         desativarProduto={desativarProdutoEstoque}
@@ -196,8 +193,8 @@ const Produtos = () => {
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="produtoCadastroModalLabel">
                 {dadosProduto?.pro_id
-                  ? "Alterar dados do " + dadosProduto.pro_nome
-                  : "Cadastrar novo produto"}
+                  ? 'Alterar dados do ' + dadosProduto.pro_nome
+                  : 'Cadastrar novo produto'}
               </h1>
               <button
                 type="button"
@@ -277,7 +274,7 @@ const Produtos = () => {
                     processandoRequisicao={processandoRequisicao}
                     buscandoListaCodigoBarras={carregandoListaCodigosBarras}
                     removerCodigoBarras={(id, item) => {
-                      removerCodigoBarrasProduto(id ?? "");
+                      removerCodigoBarrasProduto(id ?? '')
                     }}
                   />
                 </div>
@@ -325,7 +322,7 @@ const Produtos = () => {
                 type="button"
                 className="btn-close"
                 onClick={() => {
-                  setarListaHistoricoProduto([]);
+                  setarListaHistoricoProduto([])
                 }}
                 data-bs-dismiss="modal"
                 aria-label="Close"
@@ -341,7 +338,7 @@ const Produtos = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Produtos;
+export default Produtos

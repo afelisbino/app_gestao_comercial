@@ -1,17 +1,17 @@
-import { formataValorMoedaBrasileira } from "../../controllers/NumeroController";
+import { formataValorMoedaBrasileira } from '../../controllers/NumeroController'
 
 interface listaProdutoProps {
-  pro_id: string;
-  pro_nome: string;
-  pro_valor: number;
-  pro_qtd_atual_estoque: number;
-  processandoVenda: boolean;
+  pro_id: string
+  pro_nome: string
+  pro_valor: number
+  pro_qtd_atual_estoque: number
+  processandoVenda: boolean
   adicionarProduto: (
     qtdAtualEstoque: number,
     idProduto: string,
     nomeProduto: string,
-    valorProduto: number
-  ) => void;
+    valorProduto: number,
+  ) => void
 }
 
 export function ItemProduto({
@@ -26,9 +26,9 @@ export function ItemProduto({
     <div
       key={pro_id}
       className="card shadow border-0 text-bg-light bg-gradient"
-      style={{ width: "18rem", height: "auto" }}
+      style={{ width: '18rem', height: 'auto' }}
     >
-      <div className="card-body" style={{ height: "10em" }}>
+      <div className="card-body" style={{ height: '10em' }}>
         <h5 className="card-title text-center text-wrap user-select-none mb-3">
           {pro_nome}
         </h5>
@@ -41,7 +41,7 @@ export function ItemProduto({
         <div className="d-grid gap-2">
           <button
             type="button"
-            key={"button-add-" + pro_id}
+            key={'button-add-' + pro_id}
             className="btn btn-success btn-lg shadow"
             disabled={processandoVenda}
             onClick={() => {
@@ -49,8 +49,8 @@ export function ItemProduto({
                 pro_qtd_atual_estoque,
                 pro_id,
                 pro_nome,
-                pro_valor
-              );
+                pro_valor,
+              )
             }}
           >
             Adicionar
@@ -58,5 +58,5 @@ export function ItemProduto({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,89 +1,150 @@
-import { useEffect, useState } from "react";
-import { TabelaItensVenda } from "../../components/Vendas/TabelaItensVenda";
+import { useEffect, useState } from 'react'
+import { TabelaItensVenda } from '../../components/Vendas/TabelaItensVenda'
 import {
   itensVendaProps,
+  pagamentoVenda,
   vendaFiadoProps,
-} from "../../interfaces/interfaceVenda";
+} from '../../interfaces/interfaceVenda'
 import {
   listaItensVenda,
   listaVendaFiadoAberto,
   processaPagamentoVendaFiado,
-  tiposPagamentos,
-} from "../../controllers/VendaController";
-import { Spinner } from "../../components/Loaders/Spinner";
-import { Alerta } from "../../components/Alerta";
-import { TabelaVendasFiadoAberto } from "../../components/Vendas/Fiado/TabelaVendasFiadoAberto";
+} from '../../controllers/VendaController'
+import { Spinner } from '../../components/Loaders/Spinner'
+import { Alerta } from '../../components/Alerta'
+import { TabelaVendasFiadoAberto } from '../../components/Vendas/Fiado/TabelaVendasFiadoAberto'
+import { ListaPagamentos } from '../../components/Vendas/ListaPagamentos'
+import { PagamentoVenda } from '../../components/Vendas/PagamentoVenda'
+import { formataValorMoedaBrasileira } from '../../controllers/NumeroController'
 
 const Fiado = () => {
-  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null);
-  const [tipoAlerta, adicionarTipoAlerta] = useState<string>("info");
+  const [mensagemAlerta, alertarMensagem] = useState<string | null>(null)
+  const [tipoAlerta, adicionarTipoAlerta] = useState<string>('info')
 
-  const [tipoPagamento, selecionarTipoPagamento] = useState<string>("");
-  const [tokenVenda, setarTokenVenda] = useState<string>("");
-
-  const [carregandoListaVendasFiados, carregarListaVendas] = useState(false);
-  const [carregandoListaItensVenda, carregarListaItensVenda] = useState(false);
-  const [processandoPagamento, processarPagamentoVendaFiado] = useState(false);
+  const [carregandoListaVendasFiados, carregarListaVendas] = useState(false)
+  const [carregandoListaItensVenda, carregarListaItensVenda] = useState(false)
+  const [processandoPagamento, processarPagamentoVendaFiado] = useState(false)
 
   const [listaItensSacolaVenda, setarListaItensSacolaVenda] = useState<
     itensVendaProps[]
-  >([]);
+  >([])
   const [listaVendasFiado, setarListaVendasFiado] = useState<vendaFiadoProps[]>(
-    []
-  );
+    [],
+  )
+  const [listaPagamento, setarListaPagamento] = useState<pagamentoVenda[]>([])
+  const [vendaSelecionada, selecionarVenda] = useState<{
+    listaVendaFiadoSelecionado: Array<string>
+    totalPagar: number
+  }>({
+    listaVendaFiadoSelecionado: [],
+    totalPagar: 0,
+  })
 
-  function alertarMensagemSistema(tipo: string, mensagem: string) {
-    adicionarTipoAlerta(tipo);
-    alertarMensagem(mensagem);
+  const calculaTotalVendaSelecionado = (vendaSelecionada: Array<string>) => {
+    const totalPagar: Array<number> = []
 
-    setTimeout(() => {
-      alertarMensagem(null);
-    }, 10000);
+    vendaSelecionada.forEach((venda) => {
+      const vendasFiado = listaVendasFiado.find(
+        (vendaFiado) => vendaFiado.ven_id === venda,
+      )
+      totalPagar.push(Number(vendasFiado?.ven_total ?? 0))
+    })
+
+    selecionarVenda({
+      listaVendaFiadoSelecionado: vendaSelecionada,
+      totalPagar: totalPagar.reduce(
+        (total, valorPagar) => total + valorPagar,
+        0,
+      ),
+    })
   }
 
+  function alertarMensagemSistema(tipo: string, mensagem: string) {
+    adicionarTipoAlerta(tipo)
+    alertarMensagem(mensagem)
+
+    setTimeout(() => {
+      alertarMensagem(null)
+    }, 10000)
+  }
+
+  function adicionarPagamento(
+    valorPago: number,
+    formaPagamentoSelecionado: string,
+    formaPagamentoNome: string,
+  ) {
+    setarListaPagamento([
+      ...listaPagamento,
+      {
+        formaPagamentoNome,
+        formaPagamentoToken: formaPagamentoSelecionado,
+        valorPago,
+        pagamentoId: self.crypto.randomUUID(),
+      },
+    ])
+  }
+
+  const valorPago = listaPagamento.reduce(
+    (valorPago, pagamento) => valorPago + pagamento.valorPago,
+    0,
+  )
+  const valorTrocoCompra: number =
+    valorPago > 0 ? valorPago - vendaSelecionada.totalPagar : 0
+
   const pagaVendaFiado = async () => {
-    if (tipoPagamento === "") {
+    const valorSerPago = vendaSelecionada.totalPagar
+
+    if (listaPagamento.length === 0) {
       alertarMensagemSistema(
-        "warning",
-        "Precisa selecionar o tipo de pagamento!"
-      );
-    } else if (tokenVenda === "") {
+        'warning',
+        'Precisa selecionar o tipo de pagamento!',
+      )
+    } else if (vendaSelecionada.listaVendaFiadoSelecionado.length === 0) {
       alertarMensagemSistema(
-        "warning",
-        "Venda não encontrada, entre em contato com o desenvolvedor!"
-      );
+        'warning',
+        'Precisa selecionar ao menos uma venda!',
+      )
+    } else if (valorPago < valorSerPago || valorPago <= 0) {
+      alertarMensagemSistema(
+        'warning',
+        'Total pago está inferior ao valor total da conta!',
+      )
     } else {
-      processarPagamentoVendaFiado(true);
+      processarPagamentoVendaFiado(true)
 
       const status = await processaPagamentoVendaFiado(
-        tokenVenda,
-        tipoPagamento
-      );
+        vendaSelecionada.listaVendaFiadoSelecionado,
+        listaPagamento,
+      )
 
-      processarPagamentoVendaFiado(false);
-      buscaListaVendas();
-      selecionarTipoPagamento("");
-      alertarMensagemSistema(status.status ? "success" : "warning", status.msg);
+      processarPagamentoVendaFiado(false)
+      selecionarVenda({
+        listaVendaFiadoSelecionado: [],
+        totalPagar: 0,
+      })
+      setarListaPagamento([])
+      buscaListaVendas()
+      alertarMensagemSistema(status.status ? 'success' : 'warning', status.msg)
     }
-  };
+  }
 
   async function buscaListaVendas() {
-    carregarListaVendas(true);
-    setarListaVendasFiado(await listaVendaFiadoAberto());
-    carregarListaVendas(false);
+    carregarListaVendas(true)
+    setarListaVendasFiado(await listaVendaFiadoAberto())
+    carregarListaVendas(false)
   }
 
   async function buscaItensSacolaVenda(vendaToken: string) {
-    carregarListaItensVenda(true);
+    carregarListaItensVenda(true)
 
-    setarListaItensSacolaVenda(await listaItensVenda(vendaToken));
+    setarListaItensSacolaVenda(await listaItensVenda(vendaToken))
 
-    carregarListaItensVenda(false);
+    carregarListaItensVenda(false)
   }
 
   useEffect(() => {
-    buscaListaVendas();
-  }, []);
+    buscaListaVendas()
+  }, [])
 
   return (
     <>
@@ -103,14 +164,18 @@ const Fiado = () => {
       ) : (
         <></>
       )}
-      <TabelaVendasFiadoAberto
-        listaVendasFiado={listaVendasFiado}
-        carregandoListaItensVenda={carregandoListaItensVenda}
-        carregandoListaVendasFiados={carregandoListaVendasFiados}
-        processandoPagamento={processandoPagamento}
-        buscaItensSacolaVenda={buscaItensSacolaVenda}
-        finalizarVendaFiado={setarTokenVenda}
-      />
+      <div className="d-flex flex-column">
+        <TabelaVendasFiadoAberto
+          listaVendasFiado={listaVendasFiado}
+          carregandoListaItensVenda={carregandoListaItensVenda}
+          carregandoListaVendasFiados={carregandoListaVendasFiados}
+          processandoPagamento={processandoPagamento}
+          vendasSelecionadas={vendaSelecionada.listaVendaFiadoSelecionado}
+          buscaItensSacolaVenda={buscaItensSacolaVenda}
+          selecionarVenda={calculaTotalVendaSelecionado}
+        />
+      </div>
+
       <div
         className="modal fade"
         id="itensCompradoVendaModal"
@@ -134,7 +199,7 @@ const Fiado = () => {
                 className="btn-close"
                 disabled={carregandoListaItensVenda}
                 onClick={() => {
-                  setarListaItensSacolaVenda([]);
+                  setarListaItensSacolaVenda([])
                 }}
                 data-bs-dismiss="modal"
                 aria-label="Close"
@@ -170,28 +235,46 @@ const Fiado = () => {
               </h1>
             </div>
             <div className="modal-body">
-              <div className="row">
-                <div className="col-12">
-                  <div className="form-floating mb-3">
-                    <select
-                      className="form-select"
-                      id="tipoPagamento"
-                      value={tipoPagamento}
-                      onChange={(event) =>
-                        selecionarTipoPagamento(event.target.value)
-                      }
-                      aria-label="Tipo de pagamento"
-                    >
-                      <option disabled value={""}>
-                        Selecione
-                      </option>
-                      {tiposPagamentos.map((tipo) => {
-                        return <option value={tipo.valor}>{tipo.nome}</option>;
-                      })}
-                    </select>
-                    <label htmlFor="tipoPagamento">Tipo de pagamento</label>
-                  </div>
+              <div className="d-flex flex-row border rounded py-2 my-3">
+                <div className="col-12 col-lg-6">
+                  <h4 className="text-center text-muted">
+                    {'Valor a ser pago: '.concat(
+                      formataValorMoedaBrasileira(vendaSelecionada.totalPagar),
+                    )}
+                  </h4>
                 </div>
+                <div className="col-12 col-lg-6">
+                  <h4 className="text-center text-muted">
+                    {'Total pago: ' +
+                      formataValorMoedaBrasileira(
+                        listaPagamento.reduce(
+                          (totalPago, pagamento) =>
+                            totalPago + pagamento.valorPago,
+                          0,
+                        ),
+                      )}
+                  </h4>
+                </div>
+              </div>
+              <PagamentoVenda
+                alertarMensagem={alertarMensagemSistema}
+                adicionaPagamentoVenda={adicionarPagamento}
+              />
+              <ListaPagamentos
+                listaPagamentoVenda={listaPagamento}
+                excluirPagamento={(pagamentoId) => {
+                  setarListaPagamento(
+                    listaPagamento.filter(
+                      (pagamento) => pagamento.pagamentoId !== pagamentoId,
+                    ),
+                  )
+                }}
+              />
+              <hr />
+              <div className="d-flex flex-row justify-content-center">
+                <h1 className="text-danger text-center p-2 mt-1">
+                  {'Troco: ' + formataValorMoedaBrasileira(valorTrocoCompra)}
+                </h1>
               </div>
             </div>
             <div className="modal-footer">
@@ -215,7 +298,7 @@ const Fiado = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Fiado;
+export default Fiado
