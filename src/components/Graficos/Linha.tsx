@@ -70,7 +70,7 @@ export function Linha({ tituloGrafico, labels, datasets }: graficoLinhaProps) {
   return (
     <Line
       redraw={true}
-      updateMode={'resize'}
+      updateMode={'default'}
       options={options}
       data={dataChart}
     />
