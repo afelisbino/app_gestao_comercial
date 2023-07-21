@@ -83,7 +83,7 @@ export function Barras({
       redraw={true}
       options={options}
       data={dataChart}
-      updateMode={'resize'}
+      updateMode={'default'}
     />
   )
 }

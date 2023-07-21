@@ -19,7 +19,7 @@ export function Rosca({ tituloGrafico, labels, datasets }: graficoRoscaProps) {
   return (
     <Doughnut
       redraw={true}
-      updateMode={'resize'}
+      updateMode={'default'}
       options={{
         maintainAspectRatio: true,
         resizeDelay: 500,
