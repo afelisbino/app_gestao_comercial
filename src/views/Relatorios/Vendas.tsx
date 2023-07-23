@@ -23,7 +23,10 @@ import {
 } from '../../controllers/RelatorioVendasController'
 import { itensVendaProps } from '../../interfaces/interfaceVenda'
 import { TabelaVendasFinalizado } from '../../components/Vendas/TabelaVendasFinalizado'
-import { listaItensVenda } from '../../controllers/VendaController'
+import {
+  listaItensVenda,
+  processaCancelamentoVenda,
+} from '../../controllers/VendaController'
 
 import { TabelaItensVenda } from '../../components/Vendas/TabelaItensVenda'
 import { Alerta } from '../../components/Alerta'
@@ -34,6 +37,7 @@ import { gerarCorAleatorio } from '../../controllers/GraficoControllers'
 
 const Vendas = () => {
   const [buscandoEstatisticasAtuais, buscarEstatisticasAtuais] = useState(false)
+  const [cancelandoVenda, cancelarVenda] = useState(false)
   const [buscandoEstatisticasPeriodo, buscarEstatisticasPeriodo] =
     useState(false)
   const [buscandoItensVenda, buscarItensVenda] = useState(false)
@@ -324,6 +328,13 @@ const Vendas = () => {
     setarItensVenda(await listaItensVenda(vendaToken))
 
     buscarItensVenda(false)
+  }
+
+  async function cancelaVenda(vendaToken: string) {
+    cancelarVenda(true)
+    await processaCancelamentoVenda(vendaToken)
+    cancelarVenda(false)
+    setarListaVendas([])
   }
 
   useEffect(() => {
@@ -653,6 +664,8 @@ const Vendas = () => {
                         buscandoLista={buscandoEstatisticasPeriodo}
                         buscandoItensVenda={buscandoItensVenda}
                         visualizarItensVenda={buscaItensVenda}
+                        cancelandoVenda={cancelandoVenda}
+                        cancelarVenda={cancelaVenda}
                       />
                     </div>
                   </div>

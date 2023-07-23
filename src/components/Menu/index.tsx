@@ -1,10 +1,10 @@
-import { UserCircle } from "phosphor-react";
-import { opcaoMenuProps } from "../../interfaces/interfaceNavbar";
-import { menuApp } from "../../controllers/MenuController";
+import { UserCircle } from 'phosphor-react'
+import { opcaoMenuProps } from '../../interfaces/interfaceNavbar'
+import { menuApp } from '../../controllers/MenuController'
 
 function logout() {
-  localStorage.clear();
-  window.location.reload();
+  localStorage.clear()
+  window.location.reload()
 }
 
 const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
@@ -45,25 +45,25 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
                     return (
                       <li key={id} className="nav-item">
                         <a
-                          key={id + "-categoria"}
+                          key={id + '-categoria'}
                           className="nav-link"
                           href="#"
                           data-bs-dismiss="offcanvas"
                           onClick={() => {
-                            selecionarOpcaoMenu(telaItemCategoria);
+                            selecionarOpcaoMenu(telaItemCategoria)
                           }}
                         >
                           {categoria}
                         </a>
                       </li>
-                    );
+                    )
                   } else {
                     return (
                       <li key={id} className="nav-item dropdown">
-                        {localStorage.getItem("tipoUsuario") === "0" ? (
+                        {localStorage.getItem('tipoUsuario') === '0' ? (
                           !admin ? (
                             <a
-                              key={id + "-categoria"}
+                              key={id + '-categoria'}
                               className="nav-link dropdown-toggle"
                               href="#"
                               role="button"
@@ -77,7 +77,7 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
                           )
                         ) : (
                           <a
-                            key={id + "-categoria"}
+                            key={id + '-categoria'}
                             className="nav-link dropdown-toggle"
                             href="#"
                             role="button"
@@ -88,48 +88,48 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
                           </a>
                         )}
                         <ul className="dropdown-menu">
-                          {localStorage.getItem("tipoUsuario") === "0"
+                          {localStorage.getItem('tipoUsuario') === '0'
                             ? itens.map(({ id, telaItem, nome, admin }) => {
                                 if (!admin) {
                                   return (
                                     <li key={id}>
                                       <a
-                                        key={id + "-item"}
+                                        key={id + '-item'}
                                         className="dropdown-item"
                                         href="#"
                                         data-bs-dismiss="offcanvas"
                                         onClick={() => {
-                                          selecionarOpcaoMenu(telaItem);
+                                          selecionarOpcaoMenu(telaItem)
                                         }}
                                       >
                                         {nome}
                                       </a>
                                     </li>
-                                  );
+                                  )
                                 }
                               })
                             : itens.map(({ id, telaItem, nome }) => {
                                 return (
                                   <li key={id}>
                                     <a
-                                      key={id + "-item"}
+                                      key={id + '-item'}
                                       className="dropdown-item"
                                       href="#"
                                       data-bs-dismiss="offcanvas"
                                       onClick={() => {
-                                        selecionarOpcaoMenu(telaItem);
+                                        selecionarOpcaoMenu(telaItem)
                                       }}
                                     >
                                       {nome}
                                     </a>
                                   </li>
-                                );
+                                )
                               })}
                         </ul>
                       </li>
-                    );
+                    )
                   }
-                }
+                },
               )}
             </ul>
             <hr />
@@ -142,9 +142,9 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
               >
                 <UserCircle size={32} color="#2a2828" />
                 <strong>
-                  {localStorage.getItem("tipoUsuario") === "1"
-                    ? " Administrador"
-                    : " Operador"}
+                  {localStorage.getItem('tipoUsuario') === '1'
+                    ? ' Administrador'
+                    : ' Operador'}
                 </strong>
               </a>
               <ul className="dropdown-menu text-small shadow">
@@ -163,7 +163,7 @@ const Menu = ({ selecionarOpcaoMenu }: opcaoMenuProps) => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Menu;
+export default Menu
