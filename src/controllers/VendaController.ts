@@ -127,3 +127,22 @@ export async function processaPagamentoVendaFiado(
       return { status: false, msg: 'Erro ao processar, tente novamente!' }
     })
 }
+
+export async function processaCancelamentoVenda(
+  tokenVenda: string,
+): Promise<retornoRequisicaoProps> {
+  return await instanciaAxios
+    .put(
+      'venda/cancelar',
+      JSON.stringify({
+        tokenVenda,
+      }),
+    )
+    .then(({ data }) => {
+      return data
+    })
+    .catch((error) => {
+      console.log(error)
+      return { status: false, msg: 'Erro ao processar, tente novamente!' }
+    })
+}
