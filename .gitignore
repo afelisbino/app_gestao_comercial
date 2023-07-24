@@ -27,3 +27,4 @@ src/assets/images/empty-cart.svg:Zone.Identifier
 src/assets/images/empty-data.svg:Zone.Identifier
 src/assets/images/loading-data.svg:Zone.Identifier
 src/assets/images/not-found.svg:Zone.Identifier
+*.Identifier
