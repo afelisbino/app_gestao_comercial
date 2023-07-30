@@ -40,7 +40,9 @@ const Fiado = () => {
     totalPagar: 0,
   })
 
-  const calculaTotalVendaSelecionado = (vendaSelecionada: Array<string>) => {
+  const calculaTotalVendaSelecionado = (
+    vendaSelecionada: Array<string>,
+  ): number => {
     const totalPagar: Array<number> = []
 
     vendaSelecionada.forEach((venda) => {
@@ -57,6 +59,8 @@ const Fiado = () => {
         0,
       ),
     })
+
+    return totalPagar.reduce((total, valorPagar) => total + valorPagar, 0)
   }
 
   function alertarMensagemSistema(tipo: string, mensagem: string) {

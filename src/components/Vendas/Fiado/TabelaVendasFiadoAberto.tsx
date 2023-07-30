@@ -12,7 +12,7 @@ interface tabelaFiadoProps {
   processandoPagamento: boolean
   vendasSelecionadas: Array<string>
   buscaItensSacolaVenda: (vendaId: string) => void
-  selecionarVenda: (vendaId: Array<string>) => void
+  selecionarVenda: (vendaId: Array<string>) => number
 }
 
 export function TabelaVendasFiadoAberto({
@@ -25,6 +25,7 @@ export function TabelaVendasFiadoAberto({
   selecionarVenda,
 }: tabelaFiadoProps) {
   const [filtroCliente, setarFiltroCliente] = useState<string>('')
+  const [valorTotalSerPago, setarValorPago] = useState<number>(0)
 
   const listaVendasFiadoFiltro =
     filtroCliente.length === 0
@@ -37,10 +38,14 @@ export function TabelaVendasFiadoAberto({
 
   const selecionaVenda = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      selecionarVenda([...vendasSelecionadas, event.target.value])
+      setarValorPago(
+        selecionarVenda([...vendasSelecionadas, event.target.value]),
+      )
     } else {
-      selecionarVenda(
-        vendasSelecionadas.filter((venda) => venda !== event.target.value),
+      setarValorPago(
+        selecionarVenda(
+          vendasSelecionadas.filter((venda) => venda !== event.target.value),
+        ),
       )
     }
   }
@@ -65,18 +70,25 @@ export function TabelaVendasFiadoAberto({
           </label>
         </div>
         {vendasSelecionadas.length > 0 && (
-          <div>
-            <button
-              title="Pagar dívida"
-              type="button"
-              key={'btn-pagar'}
-              disabled={carregandoListaItensVenda || processandoPagamento}
-              className="btn btn-success shadow m-1"
-              data-bs-toggle="modal"
-              data-bs-target="#finalizarFiadoVendaModal"
-            >
-              Pagar vendas selecionadas
-            </button>
+          <div className="d-flex flex-row justify-content-between">
+            <div>
+              <button
+                title="Pagar dívida"
+                type="button"
+                key={'btn-pagar'}
+                disabled={carregandoListaItensVenda || processandoPagamento}
+                className="btn btn-success shadow m-1"
+                data-bs-toggle="modal"
+                data-bs-target="#finalizarFiadoVendaModal"
+              >
+                Pagar vendas selecionadas
+              </button>
+            </div>
+            <div>
+              <h3 className="text-center text-danger">
+                Total: {formataValorMoedaBrasileira(valorTotalSerPago)}
+              </h3>
+            </div>
           </div>
         )}
         <div className="table-responsive mt-3">
